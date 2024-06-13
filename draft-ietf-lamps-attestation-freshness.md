@@ -96,7 +96,7 @@ An end entity requesting a certificate from a Certification Authority (CA)
 may wish to offer believable claims about the protections afforded
 to the corresponding private key, such as whether the private key
 resides on a hardware security module or the protection capabilities
-provided by the hardware, and claims about the platform itself. 
+provided by the hardware, and claims about the platform itself.
 
 To convey these claims in Evidence, as part of remote attestation,
 the remote attestation extension {{I-D.ietf-lamps-csr-attestation}} has
@@ -120,7 +120,7 @@ a one-shot message. For this reason CMP and EST are used by the end entity
 to obtain the nonce from the RA/CA.
 
 CMP and EST conveniently offer a mechanism to request
-information from the RA/CA prior to a certification request. 
+information from the RA/CA prior to a certification request.
 
 Once the nonce
 is obtained the end entity can issue an API call to the Attester
@@ -180,7 +180,7 @@ request interchangeably.
 # Conveying a Nonce in CMP {#CMP}
 
 Section 5.3.19.16 of {{I-D.ietf-lamps-rfc4210bis}} defines the
-general request message (genm) and general response (genp). 
+general request message (genm) and general response (genp).
 The NonceRequest payload of the genm message, which is
 send by the end entity to request a nonce, contains optional
 details on the length of nonce the Attester requires.  The
@@ -310,7 +310,7 @@ or a hint about the verification service, are included in the request.
  |                   |                                 |               |
  +===================+=================================+===============+
 ~~~
- 
+
 To retrieve a nonce using a GET, the EST client would use the following
 HTTP request-line:
 
