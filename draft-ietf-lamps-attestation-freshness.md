@@ -23,17 +23,26 @@ pi:
   text-list-symbols: -o*+
   docmapping: yes
 author:
- -
-      ins: H. Tschofenig
+ -    ins: H. Tschofenig
       name: Hannes Tschofenig
+      org: Siemens
+      abbrev: Siemens
+      street: Werner-von-Siemens-Strasse 1
+      code: '80333'
+      city: Munich
+      country: Germany
       email: hannes.tschofenig@siemens.com
-      org: Siemens
-
- -
-      ins: H. Brockhaus
+      uri: https://www.siemens.com
+ -    ins: H. Brockhaus
       name: Hendrik Brockhaus
-      email: hendrik.brockhaus@siemens.com
       org: Siemens
+      abbrev: Siemens
+      street: Werner-von-Siemens-Strasse 1
+      code: '80333'
+      city: Munich
+      country: Germany
+      email: hendrik.brockhaus@siemens.com
+      uri: https://www.siemens.com
 
 
 normative:
@@ -44,8 +53,12 @@ normative:
   RFC7030:
   RFC5280:
   RFC5785:
+  RFC8615:
   RFC7159:
+  RFC9482:
 informative:
+  RFC2986:
+  RFC4211:
   RFC9334:
   I-D.tschofenig-rats-psa-token:
   I-D.ietf-rats-eat:
@@ -58,21 +71,14 @@ informative:
 
 --- abstract
 
-Certificate Management Protocol (CMP) and Enrollment over Secure
-Transport (EST) define protocol messages for X.509v3 certificate
-creation and management. Both protocol provide interactions
-between client systems and PKI management entities, such as a Registration
-Authority (RA) and a Certification Authority (CA).
-
-CMP and EST allow an RA/CA to request additional information it has to
-provide in a certification request. When an end entity
-places attestation Evidence in a Certificate Signing Request (CSR)
-it may need to demonstrate freshness of the provided Evidence.
-Attestation technology today often accomplishes this task via the
-help of nonces.
+When an end entity places attestation Evidence in a Certificate Signing
+Request (CSR) it may need to demonstrate freshness of the provided
+Evidence. Attestation technology today often accomplishes this task via
+the help of nonces.
 
 This document specifies how nonces are provided by an RA/CA to
-the end entity for inclusion in Evidence.
+the end entity for inclusion in Evidence by using the Certificate
+Management Protocol (CMP) and Enrollment over Secure Transport (EST).
 
 --- middle
 
@@ -85,12 +91,14 @@ certificate renewal and certificate revocation.
 The Certificate Management Protocol (CMP) {{I-D.ietf-lamps-rfc4210bis}}
 defines protocol messages for X.509v3 certificate creation and
 management. CMP provides interactions between end entities and
-PKI components, such as a Registration Authority (RA) and a
-Certification Authority (CA).
+PKI management entities, such as a Registration Authority (RA) and a
+Certification Authority (CA).  CMP uses for Certificate Signing Requests
+(CSRs) mainly the Certificate Request Message Format (CRMF) {{RFC4211}}
+but also offers using PKCS#10 {{RFC2986}}.
 
 Enrollment over Secure Transport (EST) {{RFC7030}}{{RFC8295}} is another
-certificate management protocol, which provides a sub-set
-of the features offered by CMP.
+certificate management protocol, which provides a sub-set of the features
+offered by CMP mainly using PKCS#10 for Certificate Signing Requests (CSRs).
 
 An end entity requesting a certificate from a Certification Authority (CA)
 may wish to offer believable claims about the protections afforded
@@ -102,7 +110,8 @@ To convey these claims in Evidence, as part of remote attestation,
 the remote attestation extension {{I-D.ietf-lamps-csr-attestation}} has
 been defined. It describes how to encode Evidence produced by an Attester
 for inclusion in Certificate Signing Requests (CSRs), and any
-certificates necessary for validating it.
+certificates necessary for validating it into Certificate Request Message
+Format (CRMF) or PKCS#10.
 
 A Verifier or Relying Party might need to learn the point in time
 an Evidence has been produced.  This is essential in deciding whether
@@ -161,7 +170,7 @@ Party in step (3).
 The functionality of this document is described in two
 sections, namely:
 
-- {{CMP}} describes how to convey the nonce CMP, and
+- {{CMP}} describes how to convey the nonce using CMP, and
 - {{EST}} offers the equivalent functionality for EST.
 
 # Terminology and Requirements Language
@@ -179,7 +188,7 @@ request interchangeably.
 
 # Conveying a Nonce in CMP {#CMP}
 
-Section 5.3.19.16 of {{I-D.ietf-lamps-rfc4210bis}} defines the
+Section 5.3.19 of {{I-D.ietf-lamps-rfc4210bis}} defines the
 general request message (genm) and general response (genp).
 The NonceRequest payload of the genm message, which is
 send by the end entity to request a nonce, contains optional
@@ -192,7 +201,7 @@ entity, contains the nonce.
  GenMsg:    {id-it TBD1}, NonceRequestValue
  GenRep:    {id-it TBD2}, NonceResponseValue | < absent >
 
- id-it-NonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
+ id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
  NonceRequestValue ::= SEQUENCE {
     len INTEGER OPTIONAL,
     -- indicates the required length of the requested nonce
@@ -200,7 +209,7 @@ entity, contains the nonce.
     -- indicates which Verifier to request a nonce from
  }
 
- id-it-NonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
+ id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
  NonceResponseValue ::= SEQUENCE {
     nonce OCTET STRING
     -- contains the nonce of length len
@@ -212,7 +221,7 @@ entity, contains the nonce.
 ~~~
 
 Note: The EvidenceHint structure is defined in {{I-D.ietf-lamps-csr-attestation}}.
-The hint is intended for an Attester to indicate to the EST server
+The hint is intended for an Attester to indicate to the Relying Party
 which Verifier should be invoked to request a nonce.
 
 The use of the general request/response message exchange leads to an
@@ -242,13 +251,13 @@ End Entity                                          RA/CA
                                                 Generate nonce*
                                                 Create response
               --<<-- NonceResponse --<<--
-                      (nonce, expiry)
+                    (nonce, expiry)
 
 Generate key pair
 Generate Evidence*
 Generate certification request message
               -->>-- certification request -->>--
-                    (+Evidence including nonce)
+                   +Evidence including nonce)
                                                Verify request
                                                Verify Evidence*
                                                Check for replay*
@@ -263,11 +272,37 @@ Store certificate
 ~~~
 {: #fig-cmp-msg title="CMP Exchange with Nonce and Evidence."}
 
+If HTTP transfer of the NonceRequest and Nonce Response message is
+used, the OPTIONAL \<operation> path segment defined in Section 3.6
+of {{I-D.ietf-lamps-rfc4210bis}} MAY be used.
+
+~~~
+ +------------------------+-----------------+-------------------+
+ | Operation              |Operation path   | Details           |
+ +========================+=================+===================+
+ | Get Attestation        | getnonce        | {{CMP}}           |
+ | Freshness Nonce        |                 |                   |
+ +------------------------+-----------------+-------------------+
+~~~
+
+If CoAP transfer of the NonceRequest and Nonce Response message is
+used, the OPTIONAL \<operation> path segment defined in Section 2.1
+of {{RFC9482}} MAY be used.
+
+~~~
+ +------------------------+-----------------+-------------------+
+ | Operation              |Operation path   | Details           |
+ +========================+=================+===================+
+ | Get Attestation        | nonce           | {{CMP}}           |
+ | Freshness Nonce        |                 |                   |
+ +------------------------+-----------------+-------------------+
+~~~
+
 # Conveying a Nonce in EST {#EST}
 
-The EST client can request a nonce for its Attester.
-This function is generally performed after requesting CA certificates
-and before other EST functions.
+The EST client can request a nonce for its Attester from the EST
+server.  This function is generally performed after requesting CA
+certificates and before other EST functions.
 
 The EST server MUST support the use of the path-prefix of "/.well-
 known/" as defined in {{RFC5785}} and the registered name of "est".
@@ -275,13 +310,13 @@ Thus, a valid EST server URI path begins with
 "https://www.example.com/.well-known/est".  Each EST operation is
 indicated by a path-suffix that indicates the intended operation.
 
-The following operation is defined by this specificaion:
+The following operation is defined by this specification:
 
 ~~~
  +------------------------+-----------------+-------------------+
  | Operation              |Operation path   | Details           |
  +========================+=================+===================+
- | Retrieval of a nonce   | /nonce          | This section      |
+ | Retrieval of a nonce   | /nonce          | {{EST}}           |
  +------------------------+-----------------+-------------------+
 ~~~
 
@@ -366,7 +401,7 @@ a CBOR structure?]
 
 # Nonce Processing Guidelines
 
-When the RA/CA is requested or configured to transmit a nonce to an
+When the RA/CA is requested to transmit a nonce to an
 end entity then it interacts with the Verifier.
 The Verifier is, according to the IETF RATS architecture {{RFC9334}}, "a role
 performed by an entity that appraises the validity of Evidence about
@@ -374,8 +409,11 @@ an Attester and produces Attestation Results to be used by a Relying
 Party." Since the Verifier validates Evidence it is also the source
 of the nonce to check for replay.
 
+[Open Issue: Who is the source of the nonce? According to Mike St.John, it can also be the Relying Party generating the nonce and providing it together with the Evidence to the Verifyer.]
+
 The nonce value MUST contain a random byte sequence whereby the length
-depends on the used remote attestation technology.
+depends on the used remote attestation technology as specific nonce
+length may be required by the end entity.
 Since the nonce is relayed with the RA/CA, it MUST be copied to
 the respective structure, as described in {{EST}} and {{CMP}}, for
 transmission to the Attester.
@@ -383,17 +421,18 @@ transmission to the Attester.
 For example, the PSA attestation token {{I-D.tschofenig-rats-psa-token}}
 supports nonces of length 32, 48 and 64 bytes. Other attestation
 technologies use nonces of similar length. The assumption in this
-specification is that the RA/CA have out-of-band knowledge about the
-required nonce length required for the attestation technology used by
+specification is that the RA/CA have either out-of-band knowledge or
+in-band knowledge by using the len field in the NonceRequest, knowledge
+about the nonce length required for the attestation technology used by
 the end entity. The nonces of incorrect length will cause the remote
 attestation protocol to fail.
 
-When the end entity receives the nonce it MUST use it, if remote
-attestation is available and supports nonces. It is better for an
-RA/CA to be aggressive in sending a nonce, at least where there is a
-reasonable chance the client supports remote attestation and the
-client should be allowed to ignore the nonce if it either does not
-support it or cannot use it for policy reasons.
+When the end entity requests a nonce, the RA/CA SHOULD send a nonce in the
+response. If a specific lengths of the nonce was requested, the RA/CA
+should provide a nonce of the requested size. The end entity MUST use the
+received nonce if remote attestation is available and supports the
+received nonce length. The end entity may truncate or pad the received
+nonce to the required length.
 
 While the semantics of the attestation API and the software/hardware
 architecture is out-of-scope of this specification, the API will return
@@ -412,7 +451,25 @@ does not contain the nonce, as explained in
 
 #  IANA Considerations
 
-TBD:
+This document defines new entries with the following content in the
+"CMP Well-Known URI Path Segments" registry (see
+https://www.iana.org/assignments/cmp/) as defined in {{RFC8615}}.
+
+~~~
+ +----------------+---------------------------+-----------------+
+ | Path Segment   | Description               | Reference       |
+ +================+===========================+=================+
+ | getnonce       | Get Attestation Freshness | {{cmp}}         |
+ |                | Nonce over HTTP           |                 |
+ +----------------+---------------------------+-----------------+
+ | nonce          | Get Attestation Freshness | {{cmp}}         |
+ |                | Nonce over CoAP           |                 |
+ +----------------+---------------------------+-----------------+
+~~~
+
+[Open Issue: I did not find the registry where the path segments defined
+in Section 3.2.2 of RFC 7030 are registered. Therefore, I am uncertain if
+the new path segment /nonce needs to be registered somewhere.]
 
 #  Security Considerations
 
@@ -436,7 +493,7 @@ utility:
 
 Since each specification of an attestation technology offers guidance
 for replay protection with nonces (and other techniques) this document
-needs to defer specific guidance to the respective specifications.
+defer specific guidance to the respective specifications.
 
 For the use of Evidence in a CSR the security considerations of
 {{I-D.ietf-lamps-csr-attestation}} are relevant to this document.
@@ -446,5 +503,5 @@ For the use of Evidence in a CSR the security considerations of
 
 # Acknowledgments
 
-We would like to thank Russ Housley, Thomas Fossati, Watson Ladd, Ionut Mihalcea
-and Carl Wallace for their review comments.
+We would like to thank Russ Housley, Thomas Fossati, Watson Ladd, Ionut Mihalcea,
+Carl Wallace, and Michael StJohns for their review comments.
