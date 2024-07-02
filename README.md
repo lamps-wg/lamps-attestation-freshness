@@ -1,6 +1,6 @@
-#  Freshness for Remote Attestation in CSRs 
+# Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP) and for Enrollment over Secure Transport (EST)
 
-This is the working area for the IETF [LAMPS Working Group](https://datatracker.ietf.org/wg/lamps/documents/) Internet-Draft, "TODO - Your title".
+This is the working area for the IETF [LAMPS Working Group](https://datatracker.ietf.org/wg/lamps/documents/) Internet-Draft, "Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP) and for Enrollment over Secure Transport (EST)".
 
 * [Editor's Copy](https://hannestschofenig.github.io/lamps-attestation-freshness/#go.draft-ietf-lamps-attestation-freshness.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-lamps-attestation-freshness)
