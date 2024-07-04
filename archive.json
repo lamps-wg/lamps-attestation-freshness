@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-02T01:09:43.007170+00:00",
+  "timestamp": "2024-07-04T01:09:41.369596+00:00",
   "repo": "hannestschofenig/lamps-attestation-freshness",
   "labels": [
     {
@@ -50,5 +50,32 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOMJDuNc50LZDr",
+      "title": "Updates the hole document to reduce wording from the former certTempl\u2026",
+      "url": "https://github.com/hannestschofenig/lamps-attestation-freshness/pull/1",
+      "state": "OPEN",
+      "author": "HBrock",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026ate approach and added path segments for the new message type,",
+      "createdAt": "2024-07-02T10:17:47Z",
+      "updatedAt": "2024-07-02T10:17:48Z",
+      "baseRepository": "hannestschofenig/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "7c23976329008469206c6c54a90d15dcb777a134",
+      "headRepository": "hannestschofenig/lamps-attestation-freshness",
+      "headRefName": "Hendrik",
+      "headRefOid": "8dbb325e9f6737dc3aef4a44e3f71d7c1bf12c2e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
