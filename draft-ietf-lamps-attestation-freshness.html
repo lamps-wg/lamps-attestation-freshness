@@ -8,13 +8,8 @@
 <meta content="Hannes Tschofenig" name="author">
 <meta content="Hendrik Brockhaus" name="author">
 <meta content="
-       When an end entity places attestation Evidence in a Certificate Signing
-Request (CSR) it may need to demonstrate freshness of the provided
-Evidence. Attestation technology today often accomplishes this task via
-the help of nonces. 
-       This document specifies how nonces are provided by an RA/CA to
-the end entity for inclusion in Evidence by using the Certificate
-Management Protocol (CMP) and Enrollment over Secure Transport (EST). 
+       When an end entity includes attestation Evidence in a Certificate Signing Request (CSR), it may be necessary to demonstrate the freshness of the provided Evidence. Current attestation technology commonly achieves this using nonces. 
+       This document outlines the process through which nonces are supplied to the end entity by an RA/CA for inclusion in Evidence, leveraging the Certificate Management Protocol (CMP) and Enrollment over Secure Transport (EST) 
     " name="description">
 <meta content="xml2rfc 3.22.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -1035,7 +1030,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tschofenig &amp; Brockhaus</td>
-<td class="center">Expires 7 January 2025</td>
+<td class="center">Expires 9 January 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1048,12 +1043,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-attestation-freshness-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-07-06" class="published">6 July 2024</time>
+<time datetime="2024-07-08" class="published">8 July 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-01-07">7 January 2025</time></dd>
+<dd class="expires"><time datetime="2025-01-09">9 January 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1070,13 +1065,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP) and for Enrollment over Secure Transport (EST)</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">When an end entity places attestation Evidence in a Certificate Signing
-Request (CSR) it may need to demonstrate freshness of the provided
-Evidence. Attestation technology today often accomplishes this task via
-the help of nonces.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">This document specifies how nonces are provided by an RA/CA to
-the end entity for inclusion in Evidence by using the Certificate
-Management Protocol (CMP) and Enrollment over Secure Transport (EST).<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">When an end entity includes attestation Evidence in a Certificate Signing Request (CSR), it may be necessary to demonstrate the freshness of the provided Evidence. Current attestation technology commonly achieves this using nonces.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document outlines the process through which nonces are supplied to the end entity by an RA/CA for inclusion in Evidence, leveraging the Certificate Management Protocol (CMP) and Enrollment over Secure Transport (EST)<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1097,7 +1087,7 @@ Management Protocol (CMP) and Enrollment over Secure Transport (EST).<a href="#s
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 7 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1137,6 +1127,17 @@ Management Protocol (CMP) and Enrollment over Secure Transport (EST).<a href="#s
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-conveying-a-nonce-in-est" class="internal xref">Conveying a Nonce in EST</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-request-methods" class="internal xref">Request Methods</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-example-requests" class="internal xref">Example Requests</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-server-response" class="internal xref">Server Response</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-nonce-processing-guidelines" class="internal xref">Nonce Processing Guidelines</a></p>
@@ -1173,20 +1174,30 @@ Management Protocol (CMP) and Enrollment over Secure Transport (EST).<a href="#s
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">The management of certificates, including issuance, CA certificate provisioning, renewal, and revocation, has been automated through several standardized protocols.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The Certificate Management Protocol (CMP) <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> defines messages for X.509v3 certificate creation and management. CMP facilitates interactions between end entities and PKI management entities, such as a Registration Authority (RA) and a Certification Authority (CA). For Certificate Signing Requests (CSRs), CMP primarily uses the Certificate Request Message Format (CRMF) <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span> but also supports PKCS#10 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">Enrollment over Secure Transport (EST) <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span><span>[<a href="#RFC8295" class="cite xref">RFC8295</a>]</span> is another certificate management protocol that offers a subset of CMP's features, mainly utilizing PKCS#10 for CSRs.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">When an end entity requests a certificate from a Certification Authority (CA), it may need to present credible claims about the protections of the corresponding private key, such as the use of a hardware security module or the protection capabilities provided by the hardware, as well as claims about the platform itself.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">To include these claims as Evidence in remote attestation, the remote attestation extension <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> has been defined. It specifies how to encode Evidence produced by an Attester for inclusion in CSRs, and any certificates necessary for validating it, into CRMF or PKCS#10.
-A Verifier or Relying Party might need to know the exact time when Evidence was produced to determine if the Claims are fresh and reflect the latest state of the Attester.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">Current attestation technologies, such as <span>[<a href="#TPM20" class="cite xref">TPM20</a>]</span> and <span>[<a href="#I-D.tschofenig-rats-psa-token" class="cite xref">I-D.tschofenig-rats-psa-token</a>]</span>, often ensure the freshness of Evidence using nonces. More details about ensuring the freshness of Evidence can be found in Section 10 of <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">Since an end entity needs to obtain a nonce from the Verifier via the Relying Party, an additional roundtrip is necessary. However, a CSR is a one-shot message. Therefore, CMP and EST are used by the end entity to obtain the nonce from the RA/CA. CMP and EST conveniently offer mechanisms to request information from the RA/CA before submitting a certification request.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8">Once the nonce is obtained, the end entity can call an API to the Attester, passing the nonce as an input parameter. The Attester then returns the Evidence, which is embedded into a CSR and sent back to the RA/CA in a certification request message.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9"><a href="#fig-arch" class="auto internal xref">Figure 1</a> illustrates this interaction. The nonce is obtained in step (1) using the extension to CMP/EST defined in this document. The CSR extension of <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> is used to convey Evidence to the RA/CA in step (2). The Verifier processes the received information and returns an Attestation Result to the Relying Party in step (3).<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-1">The management of certificates, encompassing issuance, CA certificate provisioning, renewal, and revocation, has been streamlined through standardized protocols.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The Certificate Management Protocol (CMP) <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> defines messages for X.509v3 certificate creation and management. CMP facilitates interactions between end entities and PKI management entities, such as Registration Authorities (RAs) and Certification Authorities (CAs). For Certificate Signing Requests (CSRs), CMP primarily utilizes the Certificate Request Message Format (CRMF) <span>[<a href="#RFC4211" class="cite xref">RFC4211</a>]</span> but also supports PKCS#10 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">Enrollment over Secure Transport (EST) (<span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>, <span>[<a href="#RFC8295" class="cite xref">RFC8295</a>]</span>) is another certificate management protocol that provides a subset of CMP's features, primarily using PKCS#10 for CSRs.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">When an end entity requests a certificate from a Certification Authority (CA), it may need to assert credible claims about the protections of the corresponding private key, such as the use of a hardware security module or the protective capabilities provided by the hardware, as well as claims about the platform itself.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">To include these claims as Evidence in remote attestation, the remote attestation extension <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> has been defined. It specifies how Evidence produced by an Attester is encoded for inclusion in CRMF or PKCS#10, along with any necessary certificates for its validation.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">For a Verifier or Relying Party to ensure the freshness of the Evidence, knowing the exact time of its production is crucial. Current attestation technologies, like T<span>[<a href="#TPM20" class="cite xref">TPM20</a>]</span> and <span>[<a href="#I-D.tschofenig-rats-psa-token" class="cite xref">I-D.tschofenig-rats-psa-token</a>]</span>, often employ nonces to ensure the freshness of Evidence. Further details on ensuring Evidence freshness can be found in Section 10 of <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">Since an end entity requires a nonce from the Verifier via the Relying Party, an additional roundtrip is necessary. However, a CSR is a one-shot message. Therefore, CMP and EST enable the end entity to request information from the RA/CA before submitting a certification request conveniently.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">Once the nonce is obtained, the end entity invokes an API on the Attester, providing the nonce as an input parameter. The Attester then returns the Evidence, which is embedded into a CSR and submitted back to the RA/CA in a certification request message.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9"><a href="#fig-arch" class="auto internal xref">Figure 1</a> illustrates this interaction:<a href="#section-1-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-10.1">
+          <p id="section-1-10.1.1">The nonce is acquired in step (1) using the extension to CMP/EST defined in this document.<a href="#section-1-10.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-10.2">
+          <p id="section-1-10.2.1">The CSR extension <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> conveys Evidence to the RA/CA in step (2).<a href="#section-1-10.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-10.3">
+          <p id="section-1-10.3.1">The Verifier processes the received information and sends an Attestation Result to the Relying Party in step (3).<a href="#section-1-10.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
 <span id="name-architecture-with-backgroun"></span><div id="fig-arch">
 <figure id="figure-1">
-        <div id="section-1-10.1">
-          <div class="alignLeft art-svg artwork" id="section-1-10.1.1">
+        <div id="section-1-11.1">
+          <div class="alignLeft art-svg artwork" id="section-1-11.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="352" width="448" viewBox="0 0 448 352" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,176 L 8,320" fill="none" stroke="black"></path>
               <path d="M 48,240 L 48,272" fill="none" stroke="black"></path>
@@ -1238,20 +1249,20 @@ A Verifier or Relying Party might need to know the exact time when Evidence was 
                 <text x="60" y="292">Attester</text>
                 <text x="168" y="292">(2)</text>
               </g>
-            </svg><a href="#section-1-10.1.1" class="pilcrow">¶</a>
+            </svg><a href="#section-1-11.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
 <a href="#name-architecture-with-backgroun" class="selfRef">Architecture with Background Check Model.</a>
         </figcaption></figure>
 </div>
-<p id="section-1-11">The functionality described in this document is divided into two sections:<a href="#section-1-11" class="pilcrow">¶</a></p>
+<p id="section-1-12">The functionality described in this document is divided into two sections:<a href="#section-1-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-12.1">
-          <p id="section-1-12.1.1"><a href="#CMP" class="auto internal xref">Section 3</a> describes how to convey the nonce using CMP.<a href="#section-1-12.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1-13.1">
+          <p id="section-1-13.1.1"><a href="#CMP" class="auto internal xref">Section 3</a> describes how to convey the nonce using CMP.<a href="#section-1-13.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-12.2">
-          <p id="section-1-12.2.1"><a href="#EST" class="auto internal xref">Section 4</a> describes the equivalent functionality for EST.<a href="#section-1-12.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-13.2">
+          <p id="section-1-13.2.1"><a href="#EST" class="auto internal xref">Section 4</a> describes the equivalent functionality for EST.<a href="#section-1-13.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -1278,12 +1289,11 @@ request interchangeably.<a href="#section-2-3" class="pilcrow">¶</a></p>
       </h2>
 <p id="section-3-1">Section 5.3.19 of <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> defines the
 general request message (genm) and general response (genp).
-The NonceRequest payload of the genm message, which is
-send by the end entity to request a nonce, contains optional
-details on the length of nonce the Attester requires.  The
-NonceResponse payload of the genp message, which is
-sent by the CA/RA in response to a request message by the end
-entity, contains the nonce.<a href="#section-3-1" class="pilcrow">¶</a></p>
+The NonceRequest payload of the genm message, sent by the end
+entity to request a nonce, optionally includes details on the
+required length of the nonce from the Attester. The NonceResponse
+payload of the genp message, sent by the CA/RA in response to the
+request, contains the nonce itself.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3-2">
 <pre>
  GenMsg:    {id-it TBD1}, NonceRequestValue
@@ -1309,25 +1319,27 @@ entity, contains the nonce.<a href="#section-3-1" class="pilcrow">¶</a></p>
 </pre><a href="#section-3-2" class="pilcrow">¶</a>
 </div>
 <p id="section-3-3">Note: The EvidenceHint structure is defined in <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>.
-The hint is intended for an Attester to indicate to the Relying Party
-which Verifier should be invoked to request a nonce.<a href="#section-3-3" class="pilcrow">¶</a></p>
+It allows the Attester to specify to the Relying Party which Verifier should be
+contacted to obtain the nonce.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">The use of the general request/response message exchange leads to an
 extra roundtrip to convey the nonce from the CA/RA to the end entity
 (and ultimately to the Attester inside the end entity).<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">The end entity MUST construct a NonceRequest request message to
-trigger the RA/CA to transmit a nonce in the response.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">[Open Issue: Should the request message indicate the remote attestation
-capability of the Attester rather than relying on "policy
-information"?  This may also allow the Attester (and the end entity)
-to inform the the CA/RA about the type
-of attestation technology/technologies available.]<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">If the end entity supports remote attestation and the policy requires
-Evidence in a CSR to be provided, the RA/CA issues an NonceResponse
-response message containing a nonce.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8"><a href="#fig-cmp-msg" class="auto internal xref">Figure 2</a> showns the interaction graphically.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-5">The use of the general request/response message exchange introduces an additional
+roundtrip for transmitting the nonce from the CA/RA to the end entity (and
+subsequently to the Attester within the end entity).<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">The end entity MUST construct a NonceRequest message to prompt
+the RA/CA to send a nonce in response.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">Open Issue: Should the request message indicate the remote attestation capability
+of the Attester rather than relying solely on "policy information"? This might
+allow the Attester (and the end entity) to inform the RA/CA about the specific
+attestation technologies available.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">If the end entity supports remote attestation and the policy dictates the inclusion
+of Evidence in a CSR, the RA/CA responds with a NonceResponse message containing
+the requested nonce.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-9">The interaction is illustrated in <a href="#fig-cmp-msg" class="auto internal xref">Figure 2</a>.<a href="#section-3-9" class="pilcrow">¶</a></p>
 <span id="name-cmp-exchange-with-nonce-and"></span><div id="fig-cmp-msg">
 <figure id="figure-2">
-        <div class="alignLeft art-text artwork" id="section-3-9.1">
+        <div class="alignLeft art-text artwork" id="section-3-10.1">
 <pre>
 End Entity                                          RA/CA
 ==========                                      =============
@@ -1361,10 +1373,10 @@ Store certificate
 <a href="#name-cmp-exchange-with-nonce-and" class="selfRef">CMP Exchange with Nonce and Evidence.</a>
         </figcaption></figure>
 </div>
-<p id="section-3-10">If HTTP transfer of the NonceRequest and Nonce Response message is
-used, the OPTIONAL &lt;operation&gt; path segment defined in Section 3.6
-of <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> MAY be used.<a href="#section-3-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-11">
+<p id="section-3-11">If HTTP is used to transfer the NonceRequest and NonceResponse
+messages, the OPTIONAL &lt;operation&gt; path segment defined in Section 3.6
+of <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> MAY be used.<a href="#section-3-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-12">
 <pre>
  +------------------------+-----------------+-------------------+
  | Operation              |Operation path   | Details           |
@@ -1372,12 +1384,12 @@ of <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-
  | Get Attestation        | getnonce        | {{CMP}}           |
  | Freshness Nonce        |                 |                   |
  +------------------------+-----------------+-------------------+
-</pre><a href="#section-3-11" class="pilcrow">¶</a>
+</pre><a href="#section-3-12" class="pilcrow">¶</a>
 </div>
-<p id="section-3-12">If CoAP transfer of the NonceRequest and Nonce Response message is
-used, the OPTIONAL &lt;operation&gt; path segment defined in Section 2.1
-of <span>[<a href="#RFC9482" class="cite xref">RFC9482</a>]</span> MAY be used.<a href="#section-3-12" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-13">
+<p id="section-3-13">If CoAP is used for transferring NonceRequest and NonceResponse messages,
+the OPTIONAL &lt;operation&gt; path segment defined in Section 2.1 of
+<span>[<a href="#RFC9482" class="cite xref">RFC9482</a>]</span> MAY be used.<a href="#section-3-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-14">
 <pre>
  +------------------------+-----------------+-------------------+
  | Operation              |Operation path   | Details           |
@@ -1385,7 +1397,7 @@ of <span>[<a href="#RFC9482" class="cite xref">RFC9482</a>]</span> MAY be used.<
  | Get Attestation        | nonce           | {{CMP}}           |
  | Freshness Nonce        |                 |                   |
  +------------------------+-----------------+-------------------+
-</pre><a href="#section-3-13" class="pilcrow">¶</a>
+</pre><a href="#section-3-14" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1394,14 +1406,14 @@ of <span>[<a href="#RFC9482" class="cite xref">RFC9482</a>]</span> MAY be used.<
       <h2 id="name-conveying-a-nonce-in-est">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-conveying-a-nonce-in-est" class="section-name selfRef">Conveying a Nonce in EST</a>
       </h2>
-<p id="section-4-1">The EST client can request a nonce for its Attester from the EST
-server.  This function is generally performed after requesting CA
-certificates and before other EST functions.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">The EST server MUST support the use of the path-prefix of "/.well-
-known/" as defined in <span>[<a href="#RFC5785" class="cite xref">RFC5785</a>]</span> and the registered name of "est".
-Thus, a valid EST server URI path begins with
-"https://www.example.com/.well-known/est".  Each EST operation is
-indicated by a path-suffix that indicates the intended operation.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-1">The EST client requests a nonce for its Attester from the EST server.
+This function typically follows the request for CA certificates and
+precedes other EST operations.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The EST server MUST support the path-prefix of "/.well-known/" as
+defined in <span>[<a href="#RFC5785" class="cite xref">RFC5785</a>]</span> and the registered name of "est".
+Therefore, a valid EST server URI path begins with
+"https://www.example.com/.well-known/est". Each EST operation is
+indicated by a path-suffix that specifies the intended operation.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">The following operation is defined by this specification:<a href="#section-4-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4-4">
 <pre>
@@ -1412,23 +1424,28 @@ indicated by a path-suffix that indicates the intended operation.<a href="#secti
  +------------------------+-----------------+-------------------+
 </pre><a href="#section-4-4" class="pilcrow">¶</a>
 </div>
-<p id="section-4-5">The operation path is appended to the path-prefix to form
-the URI used with HTTP GET or POST to perform the desired EST
-operation.  An example valid URI absolute path for the "/nonce"
-operation is "/.well-known/est/nonce".<a href="#section-4-5" class="pilcrow">¶</a></p>
-<p id="section-4-6">An EST client uses a GET or a POST depending on whether parameters
-are included:<a href="#section-4-6" class="pilcrow">¶</a></p>
+<p id="section-4-5">The operation path is appended to the path-prefix to form the URI
+used with HTTP GET or POST to perform the desired EST operation.
+An example of a valid URI absolute path for the "/nonce" operation
+is "/.well-known/est/nonce".<a href="#section-4-5" class="pilcrow">¶</a></p>
+<div id="request-methods">
+<section id="section-4.1">
+        <h3 id="name-request-methods">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-request-methods" class="section-name selfRef">Request Methods</a>
+        </h3>
+<p id="section-4.1-1">An EST client uses either a GET or a POST method, depending on
+whether additional parameters need to be conveyed:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4-7.1">
-          <p id="section-4-7.1.1">A GET request MUST be used when the EST client does not want to
-convey extra parameters.<a href="#section-4-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.1-2.1">
+            <p id="section-4.1-2.1.1">A GET request MUST be used when the EST client does not want to
+convey extra parameters.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-4-7.2">
-          <p id="section-4-7.2.1">A POST request MUST be used when parameters, like nonce length
-or a hint about the verification service, are included in the request.<a href="#section-4-7.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.1-2.2">
+            <p id="section-4.1-2.2.1">A POST request MUST be used when parameters, such as nonce length
+or a hint about the verification service, are included in the request.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-      </ul>
-<div class="alignLeft art-text artwork" id="section-4-8">
+        </ul>
+<div class="alignLeft art-text artwork" id="section-4.1-3">
 <pre>
  +-------------------+---------------------------------+---------------+
  | Message type      | Media type(s)                   | Reference     |
@@ -1440,19 +1457,24 @@ or a hint about the verification service, are included in the request.<a href="#
  | Nonce Response    | application/json                | This section  |
  |                   |                                 |               |
  +===================+=================================+===============+
-</pre><a href="#section-4-8" class="pilcrow">¶</a>
+</pre><a href="#section-4.1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-4-9">To retrieve a nonce using a GET, the EST client would use the following
-HTTP request-line:<a href="#section-4-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4-10">
+</section>
+</div>
+<div id="example-requests">
+<section id="section-4.2">
+        <h3 id="name-example-requests">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-example-requests" class="section-name selfRef">Example Requests</a>
+        </h3>
+<p id="section-4.2-1">To retrieve a nonce using a GET request:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-2">
 <pre>
 GET /.well-known/est/nonce HTTP/1.1
-</pre><a href="#section-4-10" class="pilcrow">¶</a>
+</pre><a href="#section-4.2-2" class="pilcrow">¶</a>
 </div>
-<p id="section-4-11">To retrieve a nonce by specifying the size of the requested nonce
-(and/or by including a hint about the Verification service) a POST
-message is used, as shown below:<a href="#section-4-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4-12">
+<p id="section-4.2-3">To retrieve a nonce while specifying the size and providing a hint about the
+verification service using a POST request:<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-4">
 <pre>
 POST /.well-known/est/nonce HTTP/1.1
 Content-Type: application/json
@@ -1460,24 +1482,34 @@ Content-Type: application/json
   "len": 8,
   "hint": "https://example.com"
 }
-</pre><a href="#section-4-12" class="pilcrow">¶</a>
+</pre><a href="#section-4.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-4-13">The payload in a POST request MUST be of content-type of "application/json"
-and MUST contain a JSON object <span>[<a href="#RFC7159" class="cite xref">RFC7159</a>]</span> with the member "len" and/or
-"hint". The value of the "len" member indicates the length of the requested
-nonce value in bytes. The "hint" member contains either be a rfc822Name, a
-dNSName, a uri, or a test value (based on the definition in the EvidenceHint
-structure from <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>).<a href="#section-4-13" class="pilcrow">¶</a></p>
-<p id="section-4-14">The EST server MAY request HTTP-based client authentication, as
-explained in Section 3.2.3 of <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>.<a href="#section-4-14" class="pilcrow">¶</a></p>
-<p id="section-4-15">If the request is successful, the EST server response MUST contain
+<p id="section-4.2-5">The payload in a POST request MUST be of content-type "application/json" and
+MUST contain a JSON object  <span>[<a href="#RFC7159" class="cite xref">RFC7159</a>]</span> with the member "len" indicating the
+length of the requested nonce value in bytes, and optionally the "hint" member,
+which specifies an FQDN based on the definition in the EvidenceHint structure
+from <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>).<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="server-response">
+<section id="section-4.3">
+        <h3 id="name-server-response">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-server-response" class="section-name selfRef">Server Response</a>
+        </h3>
+<p id="section-4.3-1">If successful, the EST server MUST respond with an HTTP 200 status code and a
+content-type of "application/json", containing a JSON object <span>[<a href="#RFC7159" class="cite xref">RFC7159</a>]</span> with
+the "nonce" member. The "expiry" member is optional and indicates the validity
+period of the nonce.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">The EST server MAY request HTTP-based client authentication, as
+explained in Section 3.2.3 of <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">If the request is successful, the EST server response MUST contain
 a HTTP 200 response code with a content-type of "application/json"
 and a JSON object  <span>[<a href="#RFC7159" class="cite xref">RFC7159</a>]</span> with the member nonce. The expiry
 member is optional and indicates the time the nonce is considered
 valid. After the expiry time is expired, the session is likely
-garbage collected.<a href="#section-4-15" class="pilcrow">¶</a></p>
-<p id="section-4-16">Below is a non-normative example of the response given by the EST server:<a href="#section-4-16" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4-17">
+garbage collected.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">Below is an example response:<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.3-5">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1486,11 +1518,13 @@ Content-Type: application/json
     "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=",
     "expiry": "2031-10-12T07:20:50.52Z"
 }
-</pre><a href="#section-4-17" class="pilcrow">¶</a>
+</pre><a href="#section-4.3-5" class="pilcrow">¶</a>
 </div>
-<p id="section-4-18">[Open Issue: Should we also register a content type for use with
-EST over CoAP where the nonce and the expiry field is encoded in
-a CBOR structure?]<a href="#section-4-18" class="pilcrow">¶</a></p>
+<p id="section-4.3-6">Open Issue: Should a specific content type be registered for use
+with EST over CoAP, where the nonce and expiry fields are encoded
+in a CBOR structure?<a href="#section-4.3-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="nonce-processing-guidelines">
@@ -1498,46 +1532,40 @@ a CBOR structure?]<a href="#section-4-18" class="pilcrow">¶</a></p>
       <h2 id="name-nonce-processing-guidelines">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-nonce-processing-guidelines" class="section-name selfRef">Nonce Processing Guidelines</a>
       </h2>
-<p id="section-5-1">When the RA/CA is requested to transmit a nonce to an
-end entity then it interacts with the Verifier.
-The Verifier is, according to the IETF RATS architecture <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>, "a role
-performed by an entity that appraises the validity of Evidence about
-an Attester and produces Attestation Results to be used by a Relying
-Party." Since the Verifier validates Evidence it is also the source
-of the nonce to check for replay.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">[Open Issue: Who generates the nonce? According to Mike St.John, the Relying Party can generate the nonce and provide it along with the evidence to the Verifier. However, according to the RATS architecture, the nonce is generated by the Verifier.]<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">The nonce value MUST contain a random byte sequence whereby the length
+<p id="section-5-1">When the RA/CA is requested to provide a nonce to an
+end entity, it interacts with the Verifier.
+According to the IETF RATS architecture <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>, the Verifier is
+responsible for validating Evidence about an Attester and generating
+Attestation Results for use by a Relying Party. The Verifier also acts as
+the source of the nonce to prevent replay attacks.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">The nonce value MUST contain a random byte sequence whereby the length
 depends on the used remote attestation technology as specific nonce
-length may be required by the end entity.
-Since the nonce is relayed with the RA/CA, it MUST be copied to
-the respective structure, as described in <a href="#EST" class="auto internal xref">Section 4</a> and <a href="#CMP" class="auto internal xref">Section 3</a>, for
-transmission to the Attester.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">For example, the PSA attestation token <span>[<a href="#I-D.tschofenig-rats-psa-token" class="cite xref">I-D.tschofenig-rats-psa-token</a>]</span>
-supports nonces of length 32, 48 and 64 bytes. Other attestation
-technologies use nonces of similar length. The assumption in this
-specification is that the RA/CA have either out-of-band knowledge or
-in-band knowledge by using the len field in the NonceRequest, knowledge
-about the nonce length required for the attestation technology used by
-the end entity. The nonces of incorrect length will cause the remote
-attestation protocol to fail.<a href="#section-5-4" class="pilcrow">¶</a></p>
-<p id="section-5-5">When the end entity requests a nonce, the RA/CA SHOULD send a nonce in the
-response. If a specific lengths of the nonce was requested, the RA/CA
-should provide a nonce of the requested size. The end entity MUST use the
-received nonce if remote attestation is available and supports the
-received nonce length. The end entity may truncate or pad the received
-nonce to the required length.<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">While the semantics of the attestation API and the software/hardware
-architecture is out-of-scope of this specification, the API will return
-Evidence from the Attester in a format specific to the attestation technology
-utilized. The encoding of the returned evidence varies but will be placed
-inside the CSR, as specified in <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. The
-software creating the CSR will not have to interpret the Evidence format
-- it is treated as an opaque blob. It is important to note that the
-nonce is carried in the Evidence, either implicitly or explicitly, and
-it MUST NOT be conveyed in CSR structures outside the Evidence payload.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">The processing of the CSR containing Evidence is described in
-<span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. Note that the issued certificates
-do not contain the nonce, as explained in
+length may be required by the end entity. This specification assumes
+that the RA/CA possesses knowledge, either out-of-band or through the
+len field in the NonceRequest, regarding the required nonce length for
+the attestation technology. Nonces of incorrect length will cause the
+remote attestation protocol to fail.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">For instance, the PSA attestation token <span>[<a href="#I-D.tschofenig-rats-psa-token" class="cite xref">I-D.tschofenig-rats-psa-token</a>]</span>
+supports nonce lengths of 32, 48, and 64 bytes. Other attestation
+technologies employ nonces of similar lengths.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">When the end entity requests a nonce, the RA/CA SHOULD respond with a nonce
+in the specified length.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">If a specific length was requested, the RA/CA must provide a nonce of that size.
+The end entity MUST use the received nonce if the remote attestation supports
+the requested length. If necessary, the end entity MAY adjust the length of the
+nonce by truncating or padding it accordingly.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-6">While this specification does not address the semantics of the attestation API
+or the underlying software/hardware architecture, the API returns Evidence from
+the Attester in a format specific to the attestation technology used. The
+returned Evidence is encapsulated within the CSR, as defined in
+<span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. The software generating the CSR treats
+the Evidence as an opaque blob and does not interpret its format. It's crucial
+to note that the nonce is included in the Evidence, either implicitly or
+explicitly, and MUST NOT be conveyed in CSR structures outside of the Evidence
+payload.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">The processing of CSRs containing Evidence is detailed  in
+<span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. mportantly, certificates issued based
+on this process do not contain the nonce, as specified in
 <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>.<a href="#section-5-7" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1569,12 +1597,18 @@ registry defined in <span>[<a href="#RFC8615" class="cite xref">RFC8615</a>]</sp
       <h2 id="name-security-considerations">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-7-1">This specification defines how to obtain a nonce via CMP and EST and assumes that the nonce does not require confidentiality protection, without impacting the security property of the remote attestation protocol. <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> defines the IETF remote attestation architecture and discusses nonce-based freshness in great detail.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">Section 8.4 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> places requirements on the randomness and privacy of the nonce generation for use with an Entity Attestation Token (EAT). These requirements, adopted by attestation technologies such as the PSA attestation token <span>[<a href="#I-D.tschofenig-rats-psa-token" class="cite xref">I-D.tschofenig-rats-psa-token</a>]</span>, are of general utility:<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">The nonce MUST have at least 64 bits of entropy.
-To avoid conveying privacy-related information in the nonce, it should be derived using a salt from a true and reliable random number generator or another source of randomness.
-Each specification of an attestation technology provides guidance for replay protection with nonces (and other techniques). This document defers specific guidance to the respective specifications.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">For the use of Evidence in a CSR, the security considerations of <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> are relevant to this document.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-1">This specification details the process of obtaining a nonce via CMP and EST, assuming that the nonce does not require confidentiality protection while maintaining the security properties of the remote attestation protocol. <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> defines the IETF remote attestation architecture and extensively discusses nonce-based freshness.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Section 8.4 of <span>[<a href="#I-D.ietf-rats-eat" class="cite xref">I-D.ietf-rats-eat</a>]</span> specifies requirements for the randomness and privacy of nonce generation when used with the Entity Attestation Token (EAT). These requirements, which are also adopted by attestation technologies like the PSA attestation token <span>[<a href="#I-D.tschofenig-rats-psa-token" class="cite xref">I-D.tschofenig-rats-psa-token</a>]</span>, provide general utility:<a href="#section-7-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7-3.1">
+          <p id="section-7-3.1.1">The nonce MUST have at least 64 bits of entropy.<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-7-3.2">
+          <p id="section-7-3.2.1">To prevent disclosure of privacy-sensitive information, it should be derived using a salt from a genuinely random number generator or another reliable source of randomness.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-7-4">Each attestation technology specification offers guidance on replay protection using nonces and other techniques. Specific recommendations are deferred to these individual specifications in this document.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">Regarding the use of Evidence in a CSR, the security considerations outlined in <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> are pertinent to this specification.<a href="#section-7-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-8">
@@ -1589,11 +1623,11 @@ Each specification of an attestation technology provides guidance for replay pro
 <dl class="references">
 <dt id="I-D.ietf-lamps-csr-attestation">[I-D.ietf-lamps-csr-attestation]</dt>
         <dd>
-<span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, and <span class="refAuthor">M. Wiseman</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-09</span>, <time datetime="2024-05-10" class="refDate">10 May 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-09">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-09</a>&gt;</span>. </dd>
+<span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-10</span>, <time datetime="2024-07-07" class="refDate">7 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-10">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-10</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-rfc4210bis">[I-D.ietf-lamps-rfc4210bis]</dt>
         <dd>
-<span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, and <span class="refAuthor">J. Gray</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure -- Certificate Management Protocol (CMP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc4210bis-11</span>, <time datetime="2024-06-05" class="refDate">5 June 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc4210bis-11">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc4210bis-11</a>&gt;</span>. </dd>
+<span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, and <span class="refAuthor">J. Gray</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure -- Certificate Management Protocol (CMP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc4210bis-12</span>, <time datetime="2024-07-08" class="refDate">8 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc4210bis-12">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc4210bis-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
@@ -1638,7 +1672,7 @@ Each specification of an attestation technology provides guidance for replay pro
 <dl class="references">
 <dt id="I-D.ietf-rats-eat">[I-D.ietf-rats-eat]</dt>
         <dd>
-<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-28</span>, <time datetime="2024-06-25" class="refDate">25 June 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-28">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-28</a>&gt;</span>. </dd>
+<span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-eat-29</span>, <time datetime="2024-07-08" class="refDate">8 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-29">https://datatracker.ietf.org/doc/html/draft-ietf-rats-eat-29</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.tschofenig-rats-psa-token">[I-D.tschofenig-rats-psa-token]</dt>
         <dd>
@@ -1684,11 +1718,7 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#appendix-A
 <div dir="auto" class="left"><span class="country-name">Germany</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:hannes.tschofenig@siemens.com" class="email">hannes.tschofenig@siemens.com</a>
-</div>
-<div class="url">
-<span>URI:</span>
-<a href="https://www.siemens.com" class="url">https://www.siemens.com</a>
+<a href="mailto:hannes.tschofenig@gmx.net" class="email">hannes.tschofenig@gmx.net</a>
 </div>
 </address>
 <address class="vcard">
