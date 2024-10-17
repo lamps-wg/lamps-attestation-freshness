@@ -5,7 +5,7 @@
 LAMPS                                                      H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 9 January 2025                                      8 July 2024
+Expires: 20 April 2025                                   17 October 2024
 
 
   Nonce-based Freshness for Remote Attestation in Certificate Signing
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 January 2025.
+   This Internet-Draft will expire on 20 April 2025.
 
 Copyright Notice
 
@@ -124,34 +124,46 @@ Table of Contents
 
    Figure 1 illustrates this interaction:
 
-   *  The nonce is acquired in step (1) using the extension to CMP/EST
-      defined in this document.
+   *  The nonce is requested in step (0) and obtained in step (1) using
+      the extension to CMP/EST defined in this document.
 
    *  The CSR extension [I-D.ietf-lamps-csr-attestation] conveys
       Evidence to the RA/CA in step (2).
 
-   *  The Verifier processes the received information and sends an
-      Attestation Result to the Relying Party in step (3).
+   *  The Verifier processes the received Evidence and returns the
+      Attestation Result to the Relying Party.  The CA uses the
+      Attestation Result with the Appraisal Policy and other information
+      to create the requested certificate.  The certificate is returned
+      to the End Entity in step (3).
 
-                                 .---------------.
-                                 |               |
-                                 |   Verifier    |
-                                 |               |
-                                 '---------------'
-                                      |    ^  |    (3)
-                                      |    |  | Attestation
-                                      |    |  |   Result
-                       (1)            |    |  v
-    .------------.   Nonce in    .----|----|-----.
-    |            |   CMP or EST  |    |    |     |
-    |  End       |<-------------------+    |     |
-    |  Entity    |               |         |     |
-    |    ^       |-------------->|---------'     |
-    |    |       |   Evidence    | Relying       |
-    |    v       |   in CSR      | Party (RA/CA) |
-    |  Attester  |     (2)       |               |
-    |            |               |               |
-    '------------'               '---------------'
+    Attester               Relying Party         Verifier
+    (End Entity)           (RA/CA)
+        |                       |                     |
+        |  Certificate          |                     |
+        |  Management           |                     |
+        |  Protocol             |                     |
+        |<--------------------->|                     |
+        |                       |                     |
+        |                       |                     |
+        |  Request Nonce (0)    |                     |
+        |---------------------->|                     |
+        |                       |  Request Nonce      |
+        |                       |-------------------->|
+        |                       |  Nonce              |
+        |                       |<--------------------|
+        |  Nonce (1)            |                     |
+        |<----------------------|                     |
+        |                       |                     |
+        |  Attested CSR (2)     |                     |
+        |---------------------->|                     |
+        |                       |  Evidence           |
+        |                       |-------------------->|
+        |                       |  Attestation Result |
+        |                       |<--------------------|
+        |  Certificate (3)      |                     |
+        |<----------------------|                     |
+        |                       |                     |
+        |                       |                     |
 
             Figure 1: Architecture with Background Check Model.
 
@@ -488,17 +500,17 @@ Table of Contents
               Ounsworth, M., Tschofenig, H., Birkholz, H., Wiseman, M.,
               and N. Smith, "Use of Remote Attestation with
               Certification Signing Requests", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-csr-attestation-10, 7
-              July 2024, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-lamps-csr-attestation-10>.
+              Internet-Draft, draft-ietf-lamps-csr-attestation-12, 12
+              October 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lamps-csr-attestation-12>.
 
    [I-D.ietf-lamps-rfc4210bis]
               Brockhaus, H., von Oheimb, D., Ounsworth, M., and J. Gray,
               "Internet X.509 Public Key Infrastructure -- Certificate
               Management Protocol (CMP)", Work in Progress, Internet-
-              Draft, draft-ietf-lamps-rfc4210bis-12, 8 July 2024,
+              Draft, draft-ietf-lamps-rfc4210bis-14, 9 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              rfc4210bis-12>.
+              rfc4210bis-14>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -543,17 +555,17 @@ Table of Contents
    [I-D.ietf-rats-eat]
               Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-29, 8 July
-              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              rats-eat-29>.
+              Progress, Internet-Draft, draft-ietf-rats-eat-31, 6
+              September 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-rats-eat-31>.
 
    [I-D.tschofenig-rats-psa-token]
               Tschofenig, H., Frost, S., Brossard, M., Shaw, A. L., and
               T. Fossati, "Arm's Platform Security Architecture (PSA)
               Attestation Token", Work in Progress, Internet-Draft,
-              draft-tschofenig-rats-psa-token-23, 24 June 2024,
+              draft-tschofenig-rats-psa-token-24, 23 September 2024,
               <https://datatracker.ietf.org/doc/html/draft-tschofenig-
-              rats-psa-token-23>.
+              rats-psa-token-24>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
