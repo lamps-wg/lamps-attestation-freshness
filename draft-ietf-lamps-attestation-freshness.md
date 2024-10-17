@@ -1,16 +1,11 @@
 ---
-title: Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP) and for Enrollment over Secure Transport (EST)
-
-abbrev: Nonce Extension for CMP/EST
+v: 3
 docname:  draft-ietf-lamps-attestation-freshness-latest
-category: std
-
+cat: std
 ipr: trust200902
-area: Security
-workgroup: LAMPS
-keyword: Internet-Draft
-
-stand_alone: yes
+consensus: 'true'
+submissiontype: IETF
+lang: en
 pi:
   rfcedstyle: yes
   toc: yes
@@ -22,6 +17,18 @@ pi:
   inline: yes
   text-list-symbols: -o*+
   docmapping: yes
+title: Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP) and for Enrollment over Secure Transport (EST)
+abbrev: Freshness Nonces for Remote Attestation
+area: sec
+wg: LAMPS Working Group
+keyword:
+- Remote Attestation
+- Certificate Signing Request
+- Certificate Management Protocol (CMP)
+- Enrollment over Secure Transport (EST)
+date: 2024
+github: "wg-lamps/lamps-attestation-freshness"
+stand_alone: yes
 author:
  -    ins: H. Tschofenig
       name: Hannes Tschofenig
@@ -84,17 +91,19 @@ When an end entity requests a certificate from a Certification Authority (CA), i
 
 To include these claims as Evidence in remote attestation, the remote attestation extension {{I-D.ietf-lamps-csr-attestation}} has been defined. It specifies how Evidence produced by an Attester is encoded for inclusion in CRMF or PKCS#10, along with any necessary certificates for its validation.
 
-For a Verifier or Relying Party to ensure the freshness of the Evidence, knowing the exact time of its production is crucial. Current attestation technologies, like T{{TPM20}} and {{I-D.tschofenig-rats-psa-token}}, often employ nonces to ensure the freshness of Evidence. Further details on ensuring Evidence freshness can be found in Section 10 of {{RFC9334}}.
+For a Verifier or Relying Party to ensure the freshness of the Evidence, knowing the exact time of its production is crucial. Current attestation technologies, like {{TPM20}} and {{I-D.tschofenig-rats-psa-token}}, often employ nonces to ensure the freshness of Evidence. Further details on ensuring Evidence freshness can be found in {{Section 10 of RFC9334}}.
 
-Since an end entity requires a nonce from the Verifier via the Relying Party, an additional roundtrip is necessary. However, a CSR is a one-shot message. Therefore, CMP and EST enable the end entity to request information from the RA/CA before submitting a certification request conveniently.
+{{Section 4 of I-D.ietf-lamps-csr-attestation}} provides examples where a CSR contains one or more Evidence statements. For each Evidence statement the end entity may wish to request a separate nonce.
 
-Once the nonce is obtained, the end entity invokes an API on the Attester, providing the nonce as an input parameter. The Attester then returns the Evidence, which is embedded into a CSR and submitted back to the RA/CA in a certification request message.
+Since an end entity requires one or more nonces from one or more Verifier via the RA/CA, an additional roundtrip is necessary. However, a CSR is a one-shot message. Therefore, CMP and EST enable the end entity to request information from the RA/CA before submitting a certification request conveniently.
+
+Once a nonce is obtained, the end entity invokes the API on an Attester, providing the nonce as an input parameter. The Attester then returns an Evidence, which is embedded into a CSR and potentially together with further Evidence statements, submitted back to the RA/CA in a certification request message.
 
 {{fig-arch}} illustrates this interaction:
 
-- The nonce is acquired in step (1) using the extension to CMP/EST defined in this document.
-- The CSR extension {{I-D.ietf-lamps-csr-attestation}} conveys Evidence to the RA/CA in step (2).
-- The Verifier processes the received information and sends an Attestation Result to the Relying Party in step (3).
+- One or more nonces are acquired in step (1) using the extension to CMP/EST defined in this document.
+- The CSR extension {{I-D.ietf-lamps-csr-attestation}} conveys one or more Evidence statements to the RA/CA in step (2).
+- One ore more Verifier processes the received information and send Attestation Results to the Relying Party in step (3).
 
 ~~~ aasvg
                               .---------------.
@@ -104,16 +113,16 @@ Once the nonce is obtained, the end entity invokes an API on the Attester, provi
                               '---------------'
                                    |    ^  |    (3)
                                    |    |  | Attestation
-                                   |    |  |   Result
+                                   |    |  |  Result(s)
                     (1)            |    |  v
- .------------.   Nonce in    .----|----|-----.
- |            |   CMP or EST  |    |    |     |
+ .------------.  Nonce(s) in  .----|----|-----.
+ |            |  CMP or EST   |    |    |     |
  |  End       |<-------------------+    |     |
  |  Entity    |               |         |     |
  |    ^       |-------------->|---------'     |
- |    |       |   Evidence    | Relying       |
- |    v       |   in CSR      | Party (RA/CA) |
- |  Attester  |     (2)       |               |
+ |    |       |  Evidence     | Relying       |
+ |    v       |  statement(s) | Party (RA/CA) |
+ |  Attester  |  in CSR (2)   |               |
  |            |               |               |
  '------------'               '---------------'
 ~~~
@@ -152,43 +161,49 @@ request, contains the nonce itself.
  GenRep:    {id-it TBD2}, NonceResponseValue | < absent >
 
  id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
- NonceRequestValue ::= SEQUENCE {
+ NonceRequestValue ::= SEQUENCE SIZE (1..MAX) OF NonceRequest
+ NonceRequest ::= SEQUENCE {
     len INTEGER OPTIONAL,
     -- indicates the required length of the requested nonce
+    type OBJECT IDENTIFIER OPTIONAL,
+    -- indicates which Evidence type to request a nonce for
     hint EvidenceHint OPTIONAL
     -- indicates which Verifier to request a nonce from
  }
 
  id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
- NonceResponseValue ::= SEQUENCE {
-    nonce OCTET STRING
+ NonceResponseValue ::= SEQUENCE SIZE (1..MAX) OF NonceResponse
+ NonceResponse ::= SEQUENCE {
+    nonce OCTET STRING,
     -- contains the nonce of length len
     -- provided by the Verifier indicated with hint
-    expiry Time OPTIONAL
+    expiry Time OPTIONAL,
     -- indicates how long the Verifier considers the
     -- nonce valid
+    type OBJECT IDENTIFIER OPTIONAL,
+    -- indicates which Evidence type to request a nonce for
+    hint EvidenceHint OPTIONAL
+    -- indicates which Verifier to request a nonce from
  }
 ~~~
 
-Note: The EvidenceHint structure is defined in {{I-D.ietf-lamps-csr-attestation}}.
-It allows the Attester to specify to the Relying Party which Verifier should be
-contacted to obtain the nonce.
-
-The use of the general request/response message exchange leads to an
-extra roundtrip to convey the nonce from the CA/RA to the end entity
-(and ultimately to the Attester inside the end entity).
+The end entity may request one or more nonces for different Verifier. 
+The EVIDENCE-STATEMENT type and the EvidenceHint are defined in {{I-D.ietf-lamps-csr-attestation}}.
+They allow the Attester to specify to the Relying Party which Verifier should be
+contacted to obtain a nonce. If a NonceRequest structure does not
+contain type or hint, the RA/CA should respond with a nonce it MAY
+generated by itself.
 
 The use of the general request/response message exchange introduces an additional
-roundtrip for transmitting the nonce from the CA/RA to the end entity (and
+roundtrip for transmitting nonce(s) from the CA/RA to the end entity (and
 subsequently to the Attester within the end entity).
 
-The end entity MUST construct a NonceRequest message to prompt
-the RA/CA to send a nonce in response.
+The end entity MUST construct a id-it-nonceRequest message to prompt
+the RA/CA to send a nonce(s) in response. The message may contain one ore more NonceRequest structures, at a maximum one per Evidence statement the end entity wishes to provide in a CSR. If a NonceRequest structure does neither contain a type nor a hint, the RA/CA may generate a nonce itself and provide it in the respective NonceResponse structure.
 
-Open Issue: Should the request message indicate the remote attestation capability
-of the Attester rather than relying solely on "policy information"? This might
-allow the Attester (and the end entity) to inform the RA/CA about the specific
-attestation technologies available.
+NonceRequest, NonceResponse, and EvidenceStatement structures can contain a type field and a hint field. In terms of type and hint content, the order in which the NonceRequest structures were sent in the request message MUST match the order of the NonceResponse structures in the response message and the EvicenceStatements in the CSR later. This is important so that the RA/CA can send the Evidence statement to the Verifier who generated the nonce used by the Attester who generated it.
+
+When reciving nonces from the RA/CA in a id-it-nonceResponse message, the end entity MUST us the 
 
 If the end entity supports remote attestation and the policy dictates the inclusion
 of Evidence in a CSR, the RA/CA responds with a NonceResponse message containing
@@ -289,16 +304,16 @@ convey extra parameters.
 or a hint about the verification service, are included in the request.
 
 ~~~
- +-------------------+---------------------------------+---------------+
- | Message type      | Media type(s)                   | Reference     |
- | (per operation)   |                                 |               |
- +===================+=================================+===============+
- | Nonce Request     | N/A (for GET) or                | This section  |
- |                   | application/json (for POST)     |               |
- +===================+=================================+===============+
- | Nonce Response    | application/json                | This section  |
- |                   |                                 |               |
- +===================+=================================+===============+
+ +------------------+------------------------------+---------------+
+ | Message type     | Media type(s)                | Reference     |
+ | (per operation)  |                              |               |
+ +==================+==============================+===============+
+ | Nonce Request    | N/A (for GET) or             | This section  |
+ |                  | application/json (for POST)  |               |
+ +==================+==============================+===============+
+ | Nonce Response   | application/json             | This section  |
+ |                  |                              |               |
+ +==================+==============================+===============+
 ~~~
 
 ## Example Requests
