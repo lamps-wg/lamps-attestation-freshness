@@ -39,7 +39,6 @@ author:
       email: hendrik.brockhaus@siemens.com
       uri: https://www.siemens.com
 
-
 normative:
   RFC2119:
   I-D.ietf-lamps-csr-attestation:
@@ -92,30 +91,41 @@ Once the nonce is obtained, the end entity invokes an API on the Attester, provi
 
 {{fig-arch}} illustrates this interaction:
 
-- The nonce is acquired in step (1) using the extension to CMP/EST defined in this document.
+- The nonce is requested in step (0) and obtained in step (1) using the extension to CMP/EST defined in this document.
 - The CSR extension {{I-D.ietf-lamps-csr-attestation}} conveys Evidence to the RA/CA in step (2).
-- The Verifier processes the received information and sends an Attestation Result to the Relying Party in step (3).
+- The Verifier processes the received Evidence and returns the Attestation Result to the Relying Party. The CA
+uses the Attestation Result with the Appraisal Policy and other information to create the requested certificate.
+The certificate is returned to the End Entity in step (3).
 
 ~~~ aasvg
-                              .---------------.
-                              |               |
-                              |   Verifier    |
-                              |               |
-                              '---------------'
-                                   |    ^  |    (3)
-                                   |    |  | Attestation
-                                   |    |  |   Result
-                    (1)            |    |  v
- .------------.   Nonce in    .----|----|-----.
- |            |   CMP or EST  |    |    |     |
- |  End       |<-------------------+    |     |
- |  Entity    |               |         |     |
- |    ^       |-------------->|---------'     |
- |    |       |   Evidence    | Relying       |
- |    v       |   in CSR      | Party (RA/CA) |
- |  Attester  |     (2)       |               |
- |            |               |               |
- '------------'               '---------------'
+ Attester               Relying Party         Verifier
+ (End Entity)           (RA/CA)
+     |                       |                     |
+     |  Certificate          |                     |
+     |  Management           |                     |
+     |  Protocol             |                     |
+     |<--------------------->|                     |
+     |                       |                     |
+     |                       |                     |
+     |  Request Nonce (0)    |                     |
+     |---------------------->|                     |
+     |                       |  Request Nonce      |
+     |                       |-------------------->|
+     |                       |  Nonce              |
+     |                       |<--------------------|
+     |  Nonce (1)            |                     |
+     |<----------------------|                     |
+     |                       |                     |
+     |  Attested CSR (2)     |                     |
+     |---------------------->|                     |
+     |                       |  Evidence           |
+     |                       |-------------------->|
+     |                       |  Attestation Result |
+     |                       |<--------------------|
+     |  Certificate (3)      |                     |
+     |<----------------------|                     |
+     |                       |                     |
+     |                       |                     |
 ~~~
 {: #fig-arch title="Architecture with Background Check Model."}
 
