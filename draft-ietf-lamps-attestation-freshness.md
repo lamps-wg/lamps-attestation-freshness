@@ -222,7 +222,7 @@ request, contains the nonce itself.
 ~~~
 
 The end entity may request one or more nonces for different Verifier. The
-EVIDENCE-STATEMENT type and the EvidenceHint are defined in 
+EVIDENCE-STATEMENT type and the EvidenceHint are defined in
 {{I-D.ietf-lamps-csr-attestation}}. They allow the Attester to specify to
 the Relying Party which Verifier should be contacted to obtain a nonce.
 If a NonceRequest structure does not contain type or hint, the RA/CA should
