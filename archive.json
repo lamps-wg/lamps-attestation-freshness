@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-20T01:27:10.436714+00:00",
+  "timestamp": "2024-10-22T01:21:40.689903+00:00",
   "repo": "lamps-wg/lamps-attestation-freshness",
   "labels": [
     {
@@ -188,24 +188,26 @@
       "id": "PR_kwDOMJDuNc5-_V_Q",
       "title": "Updated the draft to align with the changes csr-attestation draft",
       "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/4",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "HBrock",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-10-17T15:54:05Z",
-      "updatedAt": "2024-10-17T15:54:06Z",
+      "updatedAt": "2024-10-21T13:23:01Z",
       "baseRepository": "lamps-wg/lamps-attestation-freshness",
       "baseRefName": "main",
       "baseRefOid": "dfe5b239467c9321bfe4450a6ced11e2ceaf073a",
       "headRepository": "lamps-wg/lamps-attestation-freshness",
       "headRefName": "Hendrik",
-      "headRefOid": "a9f4547b292091e6562d53bc37b44b063872c9fa",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "17f9202d817473cb3da33cdfb2b6b615099a0473",
+      "closedAt": "2024-10-21T13:23:01Z",
+      "mergedAt": "2024-10-21T13:23:01Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "82d5b658be29b4e3f441835c394826432949d8e4"
+      },
       "comments": [],
       "reviews": []
     }
