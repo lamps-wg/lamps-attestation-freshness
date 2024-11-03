@@ -46,6 +46,7 @@ author:
       email: hendrik.brockhaus@siemens.com
       uri: https://www.siemens.com
 
+
 normative:
   RFC2119:
   I-D.ietf-lamps-csr-attestation:
@@ -57,6 +58,28 @@ normative:
   RFC8615:
   RFC7159:
   RFC9482:
+  X.680:
+    target: https://www.itu.int/rec/T-REC.X.680
+    title: >
+      Information Technology - Abstract Syntax Notation One (ASN.1):
+      Specification of basic notation
+    author:
+      org: ITU-T
+    date: '2021-02'
+    seriesinfo:
+      ITU-T Recommendation X.680
+  X.690:
+    target: https://www.itu.int/rec/T-REC.X.690
+    title: >
+      Information Technology - ASN.1 encoding rules:
+      Specification of Basic Encoding Rules (BER),
+      Canonical Encoding Rules (CER)
+      and Distinguished Encoding Rules (DER)
+    author:
+      org: ITU-T
+    date: '2021-02'
+    seriesinfo:
+      ITU-T Recommendation X.690
 informative:
   RFC2986:
   RFC4211:
@@ -123,42 +146,42 @@ together with further Evidence statements, submitted back to the RA/CA in a cert
 
 {{fig-arch}} illustrates this interaction:
 
-- The nonce is requested in step (0) and obtained in step (1) using the extension to CMP/EST defined
+- One or more nonces are requested in step (0) and obtained in step (1) using the extension to CMP/EST defined
 in this document.
-- The CSR extension {{I-D.ietf-lamps-csr-attestation}} conveys Evidence to the RA/CA in step (2).
-- The Verifier processes the received Evidence and returns the Attestation Result to the Relying Party.
-The CA uses the Attestation Result with the Appraisal Policy and other information to create the
+- The CSR extension {{I-D.ietf-lamps-csr-attestation}} conveys one or more Evidence statements to the RA/CA in step (2).
+- One ore more Verifier process the received Evidence and return the Attestation Result(s) to the Relying Party.
+The CA uses the Attestation Result(s) with the Appraisal Policy and other information to create the
 requested certificate. The certificate is returned to the End Entity in step (3).
 
 ~~~ aasvg
- Attester               Relying Party         Verifier
- (End Entity)           (RA/CA)
-     |                       |                     |
-     |  Certificate          |                     |
-     |  Management           |                     |
-     |  Protocol             |                     |
-     |<--------------------->|                     |
-     |                       |                     |
-     |                       |                     |
-     |  Request Nonce (0)    |                     |
-     |---------------------->|                     |
-     |                       |  Request Nonce      |
-     |                       |-------------------->|
-     |                       |  Nonce              |
-     |                       |<--------------------|
-     |  Nonce (1)            |                     |
-     |<----------------------|                     |
-     |                       |                     |
-     |  Attested CSR (2)     |                     |
-     |---------------------->|                     |
-     |                       |  Evidence           |
-     |                       |-------------------->|
-     |                       |  Attestation Result |
-     |                       |<--------------------|
-     |  Certificate (3)      |                     |
-     |<----------------------|                     |
-     |                       |                     |
-     |                       |                     |
+Attester                 Relying Party            One or more
+(End Entity)             (RA/CA)                   Verifier
+    |                         |                        |
+    |  Certificate            |                        |
+    |  Management             |                        |
+    |  Protocol               |                        |
+    |<----------------------->|                        |
+    |                         |                        |
+    |                         |                        |
+    |  Request Nonce(s)(0)    |                        |
+    |------------------------>|                        |
+    |                         |  Request Nonce(s)      |
+    |                         |----------------------->|
+    |                         |  Nonce(s)              |
+    |                         |<-----------------------|
+    |  Nonce(s) (1)           |                        |
+    |<------------------------|                        |
+    |                         |                        |
+    |  Attested CSR (2)       |                        |
+    |------------------------>|                        |
+    |                         |  Evidence(s)           |
+    |                         |----------------------->|
+    |                         |  Attestation Result(s) |
+    |                         |<-----------------------|
+    |  Certificate (3)        |                        |
+    |<------------------------|                        |
+    |                         |                        |
+    |                         |                        |
 ~~~
 {: #fig-arch title="Architecture with Background Check Model."}
 
@@ -199,9 +222,9 @@ request, contains the nonce itself.
  NonceRequest ::= SEQUENCE {
     len INTEGER OPTIONAL,
     -- indicates the required length of the requested nonce
-    type OBJECT IDENTIFIER OPTIONAL,
+    type EVIDENCE-STATEMENT.&id({EvidenceStatementSet}) OPTIONAL,
     -- indicates which Evidence type to request a nonce for
-    hint EvidenceHint OPTIONAL
+    hint UTF8String OPTIONAL
     -- indicates which Verifier to request a nonce from
  }
 
@@ -211,18 +234,18 @@ request, contains the nonce itself.
     nonce OCTET STRING,
     -- contains the nonce of length len
     -- provided by the Verifier indicated with hint
-    expiry Time OPTIONAL,
-    -- indicates how long the Verifier considers the
-    -- nonce valid
-    type OBJECT IDENTIFIER OPTIONAL,
+    expiry INTEGER OPTIONAL,
+    -- indicates how long in seconds the Verifier considers
+    -- the nonce valid
+    type EVIDENCE-STATEMENT.&id({EvidenceStatementSet}) OPTIONAL,
     -- indicates which Evidence type to request a nonce for
-    hint EvidenceHint OPTIONAL
+    hint UTF8String OPTIONAL
     -- indicates which Verifier to request a nonce from
  }
 ~~~
 
 The end entity may request one or more nonces for different Verifier. The
-EVIDENCE-STATEMENT type and the EvidenceHint are defined in
+EVIDENCE-STATEMENT type is defined in
 {{I-D.ietf-lamps-csr-attestation}}. They allow the Attester to specify to
 the Relying Party which Verifier should be contacted to obtain a nonce.
 If a NonceRequest structure does not contain type or hint, the RA/CA should
@@ -233,11 +256,12 @@ roundtrip for transmitting nonce(s) from the CA/RA to the end entity (and
 subsequently to the Attester within the end entity).
 
 The end entity MUST construct a id-it-nonceRequest message to prompt
-the RA/CA to send a nonce(s) in response. The message may contain one ore more
+the RA/CA to send a nonce(s) in response. The message may contain one or more
 NonceRequest structures, at a maximum one per Evidence statement the end
 entity wishes to provide in a CSR. If a NonceRequest structure does neither
-contain a type nor a hint, the RA/CA may generate a nonce itself and provide
+contain a type nor a hint, the RA/CA MAY generate a nonce itself and provide
 it in the respective NonceResponse structure.
+If an RA/CA is not able to provide a requested nonce, it MUST provide an empty OCTET STRING in the respective NonceResponse structure.
 
 NonceRequest, NonceResponse, and EvidenceStatement structures can contain a type
 field and a hint field. In terms of type and hint content, the order in which the
@@ -246,9 +270,11 @@ the NonceResponse structures in the response message and the EvicenceStatements 
 the CSR later. This is important so that the RA/CA can send the Evidence statement
 to the Verifier who generated the nonce used by the Attester who generated it.
 
-If the end entity supports remote attestation and the policy dictates the inclusion
-of Evidence in a CSR, the RA/CA responds with a NonceResponse message containing
-the requested nonce.
+When receiving nonces from the RA/CA in a id-it-nonceResponse message, the end entity MUST use them to request Evidence Statements from the respective Attester optionally indicated by type and hint.
+If a nonce is provides in a NonceResponse structure without indicating any type or hint, it can be used for all Evidence statements requiring a nonce.
+
+An Evidence statement generated using a nonce provided with an expiry value will be accepted by the Verifyer as valid until the respective expiry time elapsed.
+It is expected that the respective messages are delivered in a timely manner.
 
 The interaction is illustrated in {{fig-cmp-msg}}.
 
@@ -256,24 +282,25 @@ The interaction is illustrated in {{fig-cmp-msg}}.
 End Entity                                          RA/CA
 ==========                                      =============
 
-              -->>-- NonceRequest -->>--
+            -->>--- id-it-NonceRequest --->>--
                                                 Verify request
-                                                Generate nonce*
+                                                Generate nonce(s)*
                                                 Create response
-              --<<-- NonceResponse --<<--
-                    (nonce, expiry)
+            --<<--- id-it-NonceResponse ---<<--
+                    (nonce(s), expiry)
 
 Generate key pair
-Generate Evidence*
-Generate certification request message
-              -->>-- certification request -->>--
-                   +Evidence including nonce)
+Generate Evidence(s)*
+Generate certification
+  request message
+            -->>--- certification request --->>--
+                +Evidence(s) including nonce)
                                                Verify request
-                                               Verify Evidence*
+                                               Verify Evidence(s)*
                                                Check for replay*
                                                Issue certificate
                                                Create response
-              --<<-- certification response --<<--
+            --<<--- certification response ---<<--
 Handle response
 Store certificate
 
@@ -283,8 +310,8 @@ Store certificate
 {: #fig-cmp-msg title="CMP Exchange with Nonce and Evidence."}
 
 If HTTP is used to transfer the NonceRequest and NonceResponse
-messages, the OPTIONAL \<operation> path segment defined in Section 3.6
-of {{I-D.ietf-lamps-rfc4210bis}} MAY be used.
+messages, the OPTIONAL \<operation> path segment defined in
+{{Section 3.6 of I-D.ietf-lamps-rfc4210bis}} MAY be used.
 
 ~~~
  +------------------------+-----------------+-------------------+
@@ -296,8 +323,8 @@ of {{I-D.ietf-lamps-rfc4210bis}} MAY be used.
 ~~~
 
 If CoAP is used for transferring NonceRequest and NonceResponse messages,
-the OPTIONAL \<operation> path segment defined in Section 2.1 of
-{{RFC9482}} MAY be used.
+the OPTIONAL \<operation> path segment defined in
+{{Section 2.1 of RFC9482}} MAY be used.
 
 ~~~
  +------------------------+-----------------+-------------------+
@@ -310,7 +337,7 @@ the OPTIONAL \<operation> path segment defined in Section 2.1 of
 
 # Conveying a Nonce in EST {#EST}
 
-The EST client requests a nonce for its Attester from the EST server.
+The EST client requests one or more nonces for its Attester from the EST server.
 This function typically follows the request for CA certificates and
 precedes other EST operations.
 
@@ -359,60 +386,62 @@ or a hint about the verification service, are included in the request.
 
 ## Example Requests
 
-To retrieve a nonce using a GET request:
+To retrieve one nonce without providing length, type, or hint using a GET request:
 
 ~~~
 GET /.well-known/est/nonce HTTP/1.1
 ~~~
 
-To retrieve a nonce while specifying the size and providing a hint about the
-verification service using a POST request:
+To retrieve one or more nonces while specifying the length, type, and/or hint using a POST request:
 
 ~~~
 POST /.well-known/est/nonce HTTP/1.1
 Content-Type: application/json
-{
-  "len": 8,
-  "hint": "https://example.com"
-}
+[
+  {
+    "len": 8,
+    "type": "<OID>",
+    "hint": "https://example.com"
+  },
+  ...
+]
 ~~~
 
+< ToDo: Fix the json structure regarding the sequence of len, type, and hint and how the OID for type shall be encoded. >
+
 The payload in a POST request MUST be of content-type "application/json" and
-MUST contain a JSON object  {{RFC7159}} with the member "len" indicating the
-length of the requested nonce value in bytes, and optionally the "hint" member,
-which specifies an FQDN based on the definition in the EvidenceHint structure
-from {{I-D.ietf-lamps-csr-attestation}}).
+MUST contain an array of JSON objects {{RFC7159}} containing "len", "type", and "hint" members
+The optional member "len" indicating the
+length of the requested nonce value in bytes. The optional "type" (containing an EvicenceStatement OID as defined in {{I-D.ietf-lamps-csr-attestation}}) and "hint" members (containing an FQDN based on the definition in the EvidenceHint structure as defined in {{I-D.ietf-lamps-csr-attestation}}) indicate the Verifyer to use.
 
 ## Server Response
 
 If successful, the EST server MUST respond with an HTTP 200 status code and a
-content-type of "application/json", containing a JSON object {{RFC7159}} with
+content-type of "application/json", containing an array of JSON objects {{RFC7159}} with
 the "nonce" member. The "expiry" member is optional and indicates the validity
 period of the nonce.
-
-
+The optional "type" and "hint" members are copied from the request.
 
 The EST server MAY request HTTP-based client authentication, as
 explained in Section 3.2.3 of {{RFC7030}}.
-
-If the request is successful, the EST server response MUST contain
-a HTTP 200 response code with a content-type of "application/json"
-and a JSON object  {{RFC7159}} with the member nonce. The expiry
-member is optional and indicates the time the nonce is considered
-valid. After the expiry time is expired, the session is likely
-garbage collected.
 
 Below is an example response:
 
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/json
-
-{
+[
+  {
     "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=",
     "expiry": "2031-10-12T07:20:50.52Z"
-}
+    "type": "<OID>",
+    "hint": "https://example.com"
+  },
+  ...
+]
 ~~~
+
+< ToDo: Fix the json structure regarding the sequence of len, type, and hint and how the OID for type shall be encoded. >
 
 Open Issue: Should a specific content type be registered for use
 with EST over CoAP, where the nonce and expiry fields are encoded
@@ -439,9 +468,6 @@ For instance, the PSA attestation token {{I-D.tschofenig-rats-psa-token}}
 supports nonce lengths of 32, 48, and 64 bytes. Other attestation
 technologies employ nonces of similar lengths.
 
-When the end entity requests a nonce, the RA/CA SHOULD respond with a nonce
-in the specified length.
-
 If a specific length was requested, the RA/CA must provide a nonce of that size.
 The end entity MUST use the received nonce if the remote attestation supports
 the requested length. If necessary, the end entity MAY adjust the length of the
@@ -449,7 +475,7 @@ nonce by truncating or padding it accordingly.
 
 While this specification does not address the semantics of the attestation API
 or the underlying software/hardware architecture, the API returns Evidence from
-the Attester in a format specific to the attestation technology used. The
+the Attester in a format specific to the attestation technology used and specified by the type and hint. The
 returned Evidence is encapsulated within the CSR, as defined in
 {{I-D.ietf-lamps-csr-attestation}}. The software generating the CSR treats
 the Evidence as an opaque blob and does not interpret its format. It's crucial
@@ -458,7 +484,7 @@ explicitly, and MUST NOT be conveyed in CSR structures outside of the Evidence
 payload.
 
 The processing of CSRs containing Evidence is detailed  in
-{{I-D.ietf-lamps-csr-attestation}}. mportantly, certificates issued based
+{{I-D.ietf-lamps-csr-attestation}}. Importantly, certificates issued based
 on this process do not contain the nonce, as specified in
 {{I-D.ietf-lamps-csr-attestation}}.
 
@@ -481,6 +507,14 @@ registry defined in {{RFC8615}}.
 
 [Open Issue: Register path segments for EST]
 
+IANA is also requested to register the following ASN.1 {{X.680}}
+module OID in the "SMI Security for PKIX Module Identifier" registry
+(1.3.6.1.5.5.7.0). This OID is defined in {{asn1}}.
+
+| Decimal | Description           | References |
+|:--------|:----------------------|:-----------|
+| TBDMOD  | id-mod-att-fresh-req  | This-RFC   |
+
 #  Security Considerations
 
 This specification details the process of obtaining a nonce via CMP and EST,
@@ -495,7 +529,7 @@ token {{I-D.tschofenig-rats-psa-token}}, provide general utility:
 
 - The nonce MUST have at least 64 bits of entropy.
 - To prevent disclosure of privacy-sensitive information, it should be derived using a
-- salt from a genuinely random number generator or another reliable source of randomness.
+salt from a genuinely random number generator or another reliable source of randomness.
 
 Each attestation technology specification offers guidance on replay protection using nonces
 and other techniques. Specific recommendations are deferred to these individual specifications
@@ -504,9 +538,78 @@ in this document.
 Regarding the use of Evidence in a CSR, the security considerations outlined in
 {{I-D.ietf-lamps-csr-attestation}} are pertinent to this specification.
 
---- back
-
 # Acknowledgments
 
 We would like to thank Russ Housley, Thomas Fossati, Watson Ladd, Ionut Mihalcea,
 Carl Wallace, and Michael StJohns for their review comments.
+
+--- back
+
+# ASN.1 Module {#asn1}
+
+The following module adheres to ASN.1 specifications {{X.680}} and
+{{X.690}}.
+
+~~~ asn1
+<CODE BEGINS>
+
+att-fres-req
+  { iso(1) identified-organization(3) dod(6) internet(1)
+  security(5) mechanisms(5) pkix(7) id-mod(0)
+  id-mod-att-fresh-req (TBDMOD) }
+
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+EXPORTS ALL;
+IMPORTS
+
+id-it, InfoTypeAndValue{}
+  FROM PKIXCMP-2023
+    { iso(1) identified-organization(3) dod(6) internet(1)
+      security(5) mechanisms(5) pkix(7) id-mod(0)
+      id-mod-cmp2023-02(TBD-PKIXCMP-23) }
+-- RFC Editor: The value for id-mod-cmp2023-02 must be set as soon
+-- as it is assigned by I-D.ietf-lamps-rfc4210bis
+
+EVIDENCE-STATEMENT, EvidenceStatementSet
+  FROM CSR-ATTESTATION-2023
+    { iso(1) identified-organization(3) dod(6) internet(1) security(5)
+      mechanisms(5) pkix(7) id-mod(0) id-mod-pkix-attest-01(TBD-CSR-ATTESTATION-2023) }
+-- RFC Editor: The value for id-mod-pkix-attest-01 must be set as soon
+-- as it is assigned by I-D.ietf-lamps-csr-attestation
+
+;
+
+-- NonceRequest and NonceResponse messages
+
+ id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
+ NonceRequestValue ::= SEQUENCE SIZE (1..MAX) OF NonceRequest
+ NonceRequest ::= SEQUENCE {
+    len    INTEGER OPTIONAL,
+    -- indicates the required length of the requested nonce
+    type   EVIDENCE-STATEMENT.&id({EvidenceStatementSet}) OPTIONAL,
+    -- indicates which Evidence type to request a nonce for
+    hint   UTF8String OPTIONAL
+    -- indicates which Verifier to request a nonce from
+ }
+
+ id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
+ NonceResponseValue ::= SEQUENCE SIZE (1..MAX) OF NonceResponse
+ NonceResponse ::= SEQUENCE {
+    nonce  OCTET STRING,
+    -- contains the nonce of length len
+    -- provided by the Verifier indicated with hint
+    expiry INTEGER OPTIONAL,
+    -- indicates how long in seconds the Verifier considers
+    -- the nonce valid
+    type   EVIDENCE-STATEMENT.&id({EvidenceStatementSet}) OPTIONAL,
+    -- indicates which Evidence type to request a nonce for
+    hint UTF8String OPTIONAL
+    -- indicates which Verifier to request a nonce from
+ }
+
+END
+
+
+<CODE ENDS>
+~~~
