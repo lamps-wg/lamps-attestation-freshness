@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-03T01:26:18.103348+00:00",
+  "timestamp": "2024-11-05T01:19:21.546647+00:00",
   "repo": "lamps-wg/lamps-attestation-freshness",
   "labels": [
     {
@@ -210,6 +210,56 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOMJDuNc6Audu0",
+      "title": "Adding an ASN.1 module for CMP and following up on my proposed change\u2026",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/5",
+      "state": "MERGED",
+      "author": "HBrock",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026s from 2 weeks ago",
+      "createdAt": "2024-11-03T14:32:17Z",
+      "updatedAt": "2024-11-03T21:32:32Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "1ec4390a12228a8a2ffe072a5176ab3fbe319518",
+      "headRepository": "lamps-wg/lamps-attestation-freshness",
+      "headRefName": "ASN.1_Module",
+      "headRefOid": "c78645aa51cbdcc8a68bbc29cc335e0b00a52a44",
+      "closedAt": "2024-11-03T21:32:29Z",
+      "mergedAt": "2024-11-03T21:32:28Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "4daaad90a5f6b32127155651dec1cdb1b3c4365b"
+      },
+      "comments": [
+        {
+          "author": "hannestschofenig",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for all the work, Hendrik",
+          "createdAt": "2024-11-03T21:32:22Z",
+          "updatedAt": "2024-11-03T21:32:22Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMJDuNc6Pw2YN",
+          "commit": {
+            "abbreviatedOid": "c78645a"
+          },
+          "author": "hannestschofenig",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-03T21:32:11Z",
+          "updatedAt": "2024-11-03T21:32:11Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
