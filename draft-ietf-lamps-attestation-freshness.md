@@ -26,7 +26,7 @@ keyword:
 - Certificate Signing Request
 - Certificate Management Protocol (CMP)
 - Enrollment over Secure Transport (EST)
-date: 2024
+date: 2025
 github: "wg-lamps/lamps-attestation-freshness"
 stand_alone: yes
 author:
@@ -84,8 +84,8 @@ informative:
   RFC2986:
   RFC4211:
   RFC9334:
-  I-D.tschofenig-rats-psa-token:
-  I-D.ietf-rats-eat:
+  RFC9783:
+  RFC9711:
   TPM20:
      author:
         org: Trusted Computing Group
@@ -130,7 +130,7 @@ is encoded for inclusion in CRMF or PKCS#10, along with any necessary certificat
 
 For a Verifier or Relying Party to ensure the freshness of the Evidence, knowing the exact time of its
 production is crucial. Current attestation technologies, like {{TPM20}} and
-{{I-D.tschofenig-rats-psa-token}}, often employ nonces to ensure the freshness of Evidence. Further
+{{RFC9783}}, often employ nonces to ensure the freshness of Evidence. Further
 details on ensuring Evidence freshness can be found in {{Section 10 of RFC9334}}.
 
 {{Section 4 of I-D.ietf-lamps-csr-attestation}} provides examples where a CSR contains one or more
@@ -464,7 +464,7 @@ len field in the NonceRequest, regarding the required nonce length for
 the attestation technology. Nonces of incorrect length will cause the
 remote attestation protocol to fail.
 
-For instance, the PSA attestation token {{I-D.tschofenig-rats-psa-token}}
+For instance, the PSA attestation token {{RFC9783}}
 supports nonce lengths of 32, 48, and 64 bytes. Other attestation
 technologies employ nonces of similar lengths.
 
@@ -522,10 +522,10 @@ assuming that the nonce does not require confidentiality protection while mainta
 the security properties of the remote attestation protocol. {{RFC9334}} defines the
 IETF remote attestation architecture and extensively discusses nonce-based freshness.
 
-Section 8.4 of {{I-D.ietf-rats-eat}} specifies requirements for the randomness and
+Section 8.4 of {{RFC9711}} specifies requirements for the randomness and
 privacy of nonce generation when used with the Entity Attestation Token (EAT). These
 requirements, which are also adopted by attestation technologies like the PSA attestation
-token {{I-D.tschofenig-rats-psa-token}}, provide general utility:
+token {{RFC9783}}, provide general utility:
 
 - The nonce MUST have at least 64 bits of entropy.
 - To prevent disclosure of privacy-sensitive information, it should be derived using a
