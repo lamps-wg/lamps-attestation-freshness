@@ -477,7 +477,7 @@ The NonceResponse control is identified by:
 id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 ~~~
 
-# Generic Nonce Request Message Flow Example
+## Generic Nonce Request Message Flow
 
 The client sends id-cmc-nonceReq structure to the server. Upon reciving and processing the request, 
 the server responds with id-cmc-nonceResp.
