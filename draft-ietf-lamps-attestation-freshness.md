@@ -479,7 +479,7 @@ id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 
 ## Generic Nonce Request Message Flow
 
-The client sends id-cmc-nonceReq structure to the server. Upon reciving and processing the request, 
+The client sends id-cmc-nonceReq structure to the server. Upon receiving and processing the request, 
 the server responds with id-cmc-nonceResp.
 
 Once this round-trip transaction is complete, the client will include the nonce in either a Simple or Full PKI Request.
