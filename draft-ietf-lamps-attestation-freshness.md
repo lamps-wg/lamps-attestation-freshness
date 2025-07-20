@@ -121,7 +121,7 @@ Message Format (CRMF) {{RFC4211}} but also supports PKCS#10 {{RFC2986}}.
 Enrollment over Secure Transport (EST) ({{RFC7030}}, {{RFC8295}}) is another certificate management
 protocol that provides a subset of CMP's features, primarily using PKCS#10 for CSRs.
 
-Certificate Management over CMS (CMC) {{RFC5272}} is a certificate management protocol
+Certificate Management over CMS (CMC) {{I-D.ietf-lamps-rfc5272bis}} is a certificate management protocol
 using the Cryptographic Message Syntax (CMS).
 
 When an end entity requests a certificate from a Certification Authority (CA), it may need to assert
