@@ -456,7 +456,7 @@ in a CBOR structure?
 CMC defines Simple and Full PKI Requests for the client to use to request a certificate.
 Full PKI Requests provide the client with more functionality through the use of Controls, 
 defined in Section 6 of {{I-D.ietf-lamps-rfc5272bis}}. Currently, the client sends an initial request 
-containing a certification request (CRMF, PKCS #10, or other). To allow the client to request a nonce 
+containing a certification request (CRMF, PKCS#10, or other). To allow the client to request a nonce 
 prior to sending a certification request, this section defines the nonceReq and nonceResp.
 
 Generally a Full PKI Request is encapsulated in a SignedData or AuthenticatedData with an 
