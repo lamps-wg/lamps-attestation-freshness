@@ -17,7 +17,7 @@ pi:
   inline: yes
   text-list-symbols: -o*+
   docmapping: yes
-title: Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP) and for Enrollment over Secure Transport (EST)
+title: Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP), for Enrollment over Secure Transport (EST), and for Certificate Management over CMS (CMC)
 abbrev: Freshness Nonces for Remote Attestation
 area: sec
 wg: LAMPS Working Group
@@ -26,6 +26,7 @@ keyword:
 - Certificate Signing Request
 - Certificate Management Protocol (CMP)
 - Enrollment over Secure Transport (EST)
+- Certificate Management over CMS (CMC)
 date: 2025
 github: "wg-lamps/lamps-attestation-freshness"
 stand_alone: yes
@@ -51,6 +52,7 @@ normative:
   RFC2119:
   I-D.ietf-lamps-csr-attestation:
   I-D.ietf-lamps-rfc4210bis:
+  I-D.ietf-lamps-rfc5272bis:
   RFC8295:
   RFC7030:
   RFC5280:
