@@ -46,7 +46,11 @@ author:
       country: Germany
       email: hendrik.brockhaus@siemens.com
       uri: https://www.siemens.com
-
+ -    ins: J. Mandel
+      name: Joe Mandel
+      org: AKAYLA, Inc.
+      abbrev: AKAYLA
+      email: joe@akayla.com
 
 normative:
   RFC2119:
