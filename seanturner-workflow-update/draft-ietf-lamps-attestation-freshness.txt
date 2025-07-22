@@ -5,7 +5,7 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 7 May 2025                                      3 November 2024
+Expires: 23 January 2026                                    22 July 2025
 
 
   Nonce-based Freshness for Remote Attestation in Certificate Signing
@@ -40,11 +40,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 May 2025.
+   This Internet-Draft will expire on 23 January 2026.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -107,10 +107,10 @@ Table of Contents
 
    For a Verifier or Relying Party to ensure the freshness of the
    Evidence, knowing the exact time of its production is crucial.
-   Current attestation technologies, like [TPM20] and
-   [I-D.tschofenig-rats-psa-token], often employ nonces to ensure the
-   freshness of Evidence.  Further details on ensuring Evidence
-   freshness can be found in Section 10 of [RFC9334].
+   Current attestation technologies, like [TPM20] and [RFC9783], often
+   employ nonces to ensure the freshness of Evidence.  Further details
+   on ensuring Evidence freshness can be found in Section 10 of
+   [RFC9334].
 
    Section 4 of [I-D.ietf-lamps-csr-attestation] provides examples where
    a CSR contains one or more Evidence statements.  For each Evidence
@@ -459,10 +459,9 @@ Table of Contents
    nonce length for the attestation technology.  Nonces of incorrect
    length will cause the remote attestation protocol to fail.
 
-   For instance, the PSA attestation token
-   [I-D.tschofenig-rats-psa-token] supports nonce lengths of 32, 48, and
-   64 bytes.  Other attestation technologies employ nonces of similar
-   lengths.
+   For instance, the PSA attestation token [RFC9783] supports nonce
+   lengths of 32, 48, and 64 bytes.  Other attestation technologies
+   employ nonces of similar lengths.
 
    If a specific length was requested, the RA/CA must provide a nonce of
    that size.  The end entity MUST use the received nonce if the remote
@@ -523,11 +522,11 @@ Table of Contents
    attestation protocol.  [RFC9334] defines the IETF remote attestation
    architecture and extensively discusses nonce-based freshness.
 
-   Section 8.4 of [I-D.ietf-rats-eat] specifies requirements for the
-   randomness and privacy of nonce generation when used with the Entity
-   Attestation Token (EAT).  These requirements, which are also adopted
-   by attestation technologies like the PSA attestation token
-   [I-D.tschofenig-rats-psa-token], provide general utility:
+   Section 8.4 of [RFC9711] specifies requirements for the randomness
+   and privacy of nonce generation when used with the Entity Attestation
+   Token (EAT).  These requirements, which are also adopted by
+   attestation technologies like the PSA attestation token [RFC9783],
+   provide general utility:
 
    *  The nonce MUST have at least 64 bits of entropy.
 
@@ -558,17 +557,17 @@ Table of Contents
               Ounsworth, M., Tschofenig, H., Birkholz, H., Wiseman, M.,
               and N. Smith, "Use of Remote Attestation with
               Certification Signing Requests", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-csr-attestation-14, 21
-              October 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-lamps-csr-attestation-14>.
+              Internet-Draft, draft-ietf-lamps-csr-attestation-20, 7
+              July 2025, <https://datatracker.ietf.org/doc/html/draft-
+              ietf-lamps-csr-attestation-20>.
 
    [I-D.ietf-lamps-rfc4210bis]
               Brockhaus, H., von Oheimb, D., Ounsworth, M., and J. Gray,
               "Internet X.509 Public Key Infrastructure -- Certificate
               Management Protocol (CMP)", Work in Progress, Internet-
-              Draft, draft-ietf-lamps-rfc4210bis-14, 9 October 2024,
+              Draft, draft-ietf-lamps-rfc4210bis-18, 30 January 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              rfc4210bis-14>.
+              rfc4210bis-18>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -621,21 +620,6 @@ Table of Contents
 
 9.2.  Informative References
 
-   [I-D.ietf-rats-eat]
-              Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
-              Wallace, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-31, 6
-              September 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-rats-eat-31>.
-
-   [I-D.tschofenig-rats-psa-token]
-              Tschofenig, H., Frost, S., Brossard, M., Shaw, A. L., and
-              T. Fossati, "Arm's Platform Security Architecture (PSA)
-              Attestation Token", Work in Progress, Internet-Draft,
-              draft-tschofenig-rats-psa-token-24, 23 September 2024,
-              <https://datatracker.ietf.org/doc/html/draft-tschofenig-
-              rats-psa-token-24>.
-
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
               DOI 10.17487/RFC2986, November 2000,
@@ -650,6 +634,16 @@ Table of Contents
               W. Pan, "Remote ATtestation procedureS (RATS)
               Architecture", RFC 9334, DOI 10.17487/RFC9334, January
               2023, <https://www.rfc-editor.org/rfc/rfc9334>.
+
+   [RFC9711]  Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
+              Wallace, "The Entity Attestation Token (EAT)", RFC 9711,
+              DOI 10.17487/RFC9711, April 2025,
+              <https://www.rfc-editor.org/rfc/rfc9711>.
+
+   [RFC9783]  Tschofenig, H., Frost, S., Brossard, M., Shaw, A., and T.
+              Fossati, "Arm's Platform Security Architecture (PSA)
+              Attestation Token", RFC 9783, DOI 10.17487/RFC9783, June
+              2025, <https://www.rfc-editor.org/rfc/rfc9783>.
 
    [TPM20]    Trusted Computing Group, "Trusted Platform Module Library
               Specification, Family 2.0, Level 00, Revision 01.59",
