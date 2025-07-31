@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-30T01:18:00.073418+00:00",
+  "timestamp": "2025-07-31T02:18:36.483058+00:00",
   "repo": "lamps-wg/lamps-attestation-freshness",
   "labels": [
     {
@@ -49,7 +49,24 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 6,
+      "id": "I_kwDOMJDuNc6-YVX1",
+      "title": "Support for CMC",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/issues/6",
+      "state": "OPEN",
+      "author": "mandelj7",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Sean and I are working on proposed text to add support for CMC. We should have it done soon. ",
+      "createdAt": "2025-07-01T23:08:55Z",
+      "updatedAt": "2025-07-01T23:08:55Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
@@ -257,6 +274,215 @@
           "body": "",
           "createdAt": "2024-11-03T21:32:11Z",
           "updatedAt": "2024-11-03T21:32:11Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOMJDuNc6fu-cI",
+      "title": "CMC Text",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/7",
+      "state": "OPEN",
+      "author": "mandelj7",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Added CMC section and added to the ASN.1 ",
+      "createdAt": "2025-07-20T12:56:44Z",
+      "updatedAt": "2025-07-22T09:34:43Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
+      "headRepository": "mandelj7/lamps-attestation-freshness",
+      "headRefName": "main",
+      "headRefOid": "748cf0f6d7f1a205811b762115ebaed289b7bb6b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMJDuNc61AInR",
+          "commit": {
+            "abbreviatedOid": "eba973b"
+          },
+          "author": "HBrock",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Thank you or the update. It looks good to me.",
+          "createdAt": "2025-07-21T06:20:52Z",
+          "updatedAt": "2025-07-21T06:20:52Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOMJDuNc61FHCy",
+          "commit": {
+            "abbreviatedOid": "eba973b"
+          },
+          "author": "hannestschofenig",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good. Thanks for the work.\r\n\r\nPlease add your name to the author list!",
+          "createdAt": "2025-07-21T13:02:15Z",
+          "updatedAt": "2025-07-21T13:02:15Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOMJDuNc61UrJl",
+          "commit": {
+            "abbreviatedOid": "748cf0f"
+          },
+          "author": "seanturner",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "A couple of tweaks to (I hope) get the ASN.1 right.",
+          "createdAt": "2025-07-22T09:29:53Z",
+          "updatedAt": "2025-07-22T09:34:43Z",
+          "comments": [
+            {
+              "originalPosition": 162,
+              "body": "```suggestion\r\nCMC-CONTROL\r\n```",
+              "createdAt": "2025-07-22T09:29:53Z",
+              "updatedAt": "2025-07-22T09:34:43Z"
+            },
+            {
+              "originalPosition": 181,
+              "body": "```suggestion\r\nid-cmc-nonceReq ::= { id-it TBD1 }\r\n\r\ncmc-nonceReq CMC-CONTROL ::=\r\n      { NonceRequest IDENTIFIED BY id-cmc-nonceReq }\r\n\r\nid-cmc-nonceResp ::= { id-it TBD2 }\r\n\r\ncmc-nonceResp CMC-CONTROL ::=\r\n      { NonceResponse IDENTIFIED BY id-cmc-nonceResp }\r\n\r\n```",
+              "createdAt": "2025-07-22T09:34:09Z",
+              "updatedAt": "2025-07-22T09:34:43Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOMJDuNc6gBH_j",
+      "title": "Use aasvg",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/8",
+      "state": "OPEN",
+      "author": "seanturner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Not sure this is really needed, but should we add \"aasvg\" to Figure 2?",
+      "createdAt": "2025-07-22T08:28:38Z",
+      "updatedAt": "2025-07-29T06:20:54Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
+      "headRepository": "lamps-wg/lamps-attestation-freshness",
+      "headRefName": "seanturner-aasvg",
+      "headRefOid": "23482011705c74b7c013ce8082cf063997d8672e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "seanturner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think you'll need to land #9 before this PR.",
+          "createdAt": "2025-07-22T09:35:36Z",
+          "updatedAt": "2025-07-22T09:35:36Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMJDuNc62unxw",
+          "commit": {
+            "abbreviatedOid": "2348201"
+          },
+          "author": "HBrock",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-29T06:20:54Z",
+          "updatedAt": "2025-07-29T06:20:54Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOMJDuNc6gBK1W",
+      "title": "Update workflow",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/9",
+      "state": "MERGED",
+      "author": "seanturner",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "make v4",
+      "createdAt": "2025-07-22T08:32:30Z",
+      "updatedAt": "2025-07-29T18:45:31Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
+      "headRepository": "lamps-wg/lamps-attestation-freshness",
+      "headRefName": "seanturner-workflow-update",
+      "headRefOid": "593a5cb092dbcdf67abd69fc9fd0c5453b52670a",
+      "closedAt": "2025-07-29T18:45:31Z",
+      "mergedAt": "2025-07-29T18:45:31Z",
+      "mergedBy": "seanturner",
+      "mergeCommit": {
+        "oid": "4dfccb6298d0d9d099ea7040859267db9b72f2c7"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMJDuNc62uoEk",
+          "commit": {
+            "abbreviatedOid": "593a5cb"
+          },
+          "author": "HBrock",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-29T06:21:18Z",
+          "updatedAt": "2025-07-29T06:21:18Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOMJDuNc6gCJ7U",
+      "title": "Update CODEOWNERS",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/10",
+      "state": "OPEN",
+      "author": "mandelj7",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-22T09:53:12Z",
+      "updatedAt": "2025-07-29T06:21:55Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
+      "headRepository": "mandelj7/lamps-attestation-freshness",
+      "headRefName": "patch-1",
+      "headRefOid": "2fc5c083e7301a8677487723654b26878e4f3123",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMJDuNc62uohG",
+          "commit": {
+            "abbreviatedOid": "2fc5c08"
+          },
+          "author": "HBrock",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-29T06:21:55Z",
+          "updatedAt": "2025-07-29T06:21:55Z",
           "comments": []
         }
       ]
