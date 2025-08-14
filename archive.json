@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-31T02:18:36.483058+00:00",
+  "timestamp": "2025-08-14T02:04:08.948968+00:00",
   "repo": "lamps-wg/lamps-attestation-freshness",
   "labels": [
     {
@@ -459,7 +459,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-07-22T09:53:12Z",
-      "updatedAt": "2025-07-29T06:21:55Z",
+      "updatedAt": "2025-08-13T19:35:43Z",
       "baseRepository": "lamps-wg/lamps-attestation-freshness",
       "baseRefName": "main",
       "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
@@ -470,7 +470,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "seanturner",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@hannestschofenig I think think you need to approve this.",
+          "createdAt": "2025-08-13T19:35:43Z",
+          "updatedAt": "2025-08-13T19:35:43Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOMJDuNc62uohG",
