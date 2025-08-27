@@ -288,7 +288,7 @@ It is expected that the respective messages are delivered in a timely manner.
 
 The interaction is illustrated in {{fig-cmp-msg}}.
 
-~~~
+~~~ aasvg
 End Entity                                          RA/CA
 ==========                                      =============
 
