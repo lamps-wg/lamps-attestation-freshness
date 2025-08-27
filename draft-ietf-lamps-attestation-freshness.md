@@ -642,7 +642,7 @@ EVIDENCE-STATEMENT, EvidenceStatementSet
 -- RFC Editor: The value for id-mod-pkix-attest-01 must be set as soon
 -- as it is assigned by I-D.ietf-lamps-csr-attestation
 
-id-cmc
+CMC-CONTROL
 FROM EnrollmentMessageSyntax-2025
    { iso(1) identified-organization(3) dod(6) internet(1)
    security(5) mechanisms(5) pkix(7) id-mod(0)
