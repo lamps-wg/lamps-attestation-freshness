@@ -678,13 +678,16 @@ FROM EnrollmentMessageSyntax-2025
     -- indicates which Verifier to request a nonce from
  }
 
-id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-it TBD1 }
+id-cmc-nonceReq ::= { id-it TBD1 }
 
-CmcNonceRequest ::= NonceRequest 
+cmc-nonceReq CMC-CONTROL ::=
+      { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
 
-id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
+id-cmc-nonceResp ::= { id-it TBD2 }
 
-CmcNonceResponse ::= NonceResponse
+cmc-nonceResp CMC-CONTROL ::=
+      { NonceResponse IDENTIFIED BY id-cmc-nonceResp }
+
 
 END
 
