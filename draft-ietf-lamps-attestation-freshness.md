@@ -470,14 +470,14 @@ in a CBOR structure?
 # Conveying a Nonce in CMC {#CMC}
 
 CMC defines Simple and Full PKI Requests for the client to use to request a certificate.
-Full PKI Requests provide the client with more functionality through the use of Controls, 
-defined in Section 6 of {{I-D.ietf-lamps-rfc5272bis}}. Currently, the client sends an initial request 
-containing a certification request (CRMF, PKCS#10, or other). To allow the client to request a nonce 
+Full PKI Requests provide the client with more functionality through the use of Controls,
+defined in Section 6 of {{I-D.ietf-lamps-rfc5272bis}}. Currently, the client sends an initial request
+containing a certification request (CRMF, PKCS#10, or other). To allow the client to request a nonce
 prior to sending a certification request, this section defines the nonceReq and nonceResp.
 
-Generally a Full PKI Request is encapsulated in a SignedData or AuthenticatedData with an 
-encapsulated content type of 'id-cct-PKIData'. To accommodate a generic request for a nonce, 
-the Client/Server SHOULD use the Data content type; id-data, to transmit the nonceReq and nonceResp controls. 
+Generally a Full PKI Request is encapsulated in a SignedData or AuthenticatedData with an
+encapsulated content type of 'id-cct-PKIData'. To accommodate a generic request for a nonce,
+the Client/Server SHOULD use the Data content type; id-data, to transmit the nonceReq and nonceResp controls.
 The syntax for the controls uses the same syntax as the CMP information types defined in {{CMP}}.
 
 The NonceRequest control is identified by:
@@ -493,7 +493,7 @@ id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 
 ## Generic Nonce Request Message Flow
 
-The client sends id-cmc-nonceReq structure to the server. Upon receiving and processing the request, 
+The client sends id-cmc-nonceReq structure to the server. Upon receiving and processing the request,
 the server responds with id-cmc-nonceResp.
 
 Once this round-trip transaction is complete, the client will include the nonce in either a Simple or Full PKI Request.
