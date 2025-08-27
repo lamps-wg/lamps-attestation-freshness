@@ -443,7 +443,7 @@ expiry time of the nonce encoded as an RFC 3339 timestamp string. The optional
 "type" and "hint" members MAY be copied from the request to aid correlation.
 
 Note: CMP encodes "expiry" as an INTEGER representing seconds of validity.
-EST encodes "expiry" as an absolute timestamp. Conversions are straightforward.
+EST encodes "expiry" as an absolute timestamp.
 
 Below is an example response:
 
