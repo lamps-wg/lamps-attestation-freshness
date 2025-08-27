@@ -324,7 +324,7 @@ Store certificate
 {: #fig-cmp-msg title="CMP Exchange with Nonce and Evidence."}
 
 If HTTP is used to transfer the NonceRequest and NonceResponse
-messages, the OPTIONAL <operation> path segment defined in
+messages, the OPTIONAL `<operation>` path segment defined in
 {{Section 3.6 of I-D.ietf-lamps-rfc4210bis}} MAY be used.
 
 ~~~
@@ -337,7 +337,7 @@ messages, the OPTIONAL <operation> path segment defined in
 ~~~
 
 If CoAP is used for transferring NonceRequest and NonceResponse messages,
-the OPTIONAL <operation> path segment defined in
+the OPTIONAL `<operation>` path segment defined in
 {{Section 2.1 of RFC9482}} MAY be used.
 
 ~~~
@@ -506,7 +506,7 @@ Client to Server:
        eContent
          controlSequence
            {101, id-cmc-senderNonce, 10001}
-           {102, id-cmc-nonceReq, <sequence of nonce request>}
+           {102, id-cmc-nonceReq, &lt;sequence of nonce request&gt;}
 ~~~
 
 Server to Client:
@@ -518,7 +518,7 @@ Server to Client:
          controlSequence
            {101, id-cmc-senderNonce, 10005}
            {102, id-cmc-recipientNonce, 10001}
-           {103, id-cmc-nonceResp, <sequence of nonce response>}
+           {103, id-cmc-nonceResp, &lt;sequence of nonce response&gt;}
 ~~~
 
 # Nonce Processing Guidelines
