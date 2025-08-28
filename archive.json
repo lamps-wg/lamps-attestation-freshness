@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-14T02:04:08.948968+00:00",
+  "timestamp": "2025-08-28T01:52:11.397005+00:00",
   "repo": "lamps-wg/lamps-attestation-freshness",
   "labels": [
     {
@@ -55,15 +55,15 @@
       "id": "I_kwDOMJDuNc6-YVX1",
       "title": "Support for CMC",
       "url": "https://github.com/lamps-wg/lamps-attestation-freshness/issues/6",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mandelj7",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Sean and I are working on proposed text to add support for CMC. We should have it done soon. ",
       "createdAt": "2025-07-01T23:08:55Z",
-      "updatedAt": "2025-07-01T23:08:55Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-27T11:20:28Z",
+      "closedAt": "2025-08-27T11:20:28Z",
       "comments": []
     }
   ],
@@ -283,24 +283,26 @@
       "id": "PR_kwDOMJDuNc6fu-cI",
       "title": "CMC Text",
       "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/7",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mandelj7",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Added CMC section and added to the ASN.1 ",
       "createdAt": "2025-07-20T12:56:44Z",
-      "updatedAt": "2025-07-22T09:34:43Z",
+      "updatedAt": "2025-08-27T11:19:38Z",
       "baseRepository": "lamps-wg/lamps-attestation-freshness",
       "baseRefName": "main",
       "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
       "headRepository": "mandelj7/lamps-attestation-freshness",
       "headRefName": "main",
-      "headRefOid": "748cf0f6d7f1a205811b762115ebaed289b7bb6b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "23296fdb8f7bf9df00a8ef29d7c709e867d3f22a",
+      "closedAt": "2025-08-27T11:19:38Z",
+      "mergedAt": "2025-08-27T11:19:38Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "f22f73144e34482cec2d7143642e818aeec9ac86"
+      },
       "comments": [],
       "reviews": [
         {
@@ -362,24 +364,26 @@
       "id": "PR_kwDOMJDuNc6gBH_j",
       "title": "Use aasvg",
       "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/8",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "seanturner",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Not sure this is really needed, but should we add \"aasvg\" to Figure 2?",
       "createdAt": "2025-07-22T08:28:38Z",
-      "updatedAt": "2025-07-29T06:20:54Z",
+      "updatedAt": "2025-08-27T11:20:06Z",
       "baseRepository": "lamps-wg/lamps-attestation-freshness",
       "baseRefName": "main",
       "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
       "headRepository": "lamps-wg/lamps-attestation-freshness",
       "headRefName": "seanturner-aasvg",
       "headRefOid": "23482011705c74b7c013ce8082cf063997d8672e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-08-27T11:20:01Z",
+      "mergedAt": "2025-08-27T11:20:01Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "d6271e5fae0c580eeff9a1bf1a14b59016358264"
+      },
       "comments": [
         {
           "author": "seanturner",
@@ -452,24 +456,26 @@
       "id": "PR_kwDOMJDuNc6gCJ7U",
       "title": "Update CODEOWNERS",
       "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/10",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mandelj7",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-07-22T09:53:12Z",
-      "updatedAt": "2025-08-13T19:35:43Z",
+      "updatedAt": "2025-08-27T11:20:16Z",
       "baseRepository": "lamps-wg/lamps-attestation-freshness",
       "baseRefName": "main",
       "baseRefOid": "563a0e3e2ca3e03c8bf390ab50086434fc148c9f",
       "headRepository": "mandelj7/lamps-attestation-freshness",
       "headRefName": "patch-1",
       "headRefOid": "2fc5c083e7301a8677487723654b26878e4f3123",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-08-27T11:20:16Z",
+      "mergedAt": "2025-08-27T11:20:16Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "0228624b2ec79c424288c0c209d4cf52e66d5d70"
+      },
       "comments": [
         {
           "author": "seanturner",
@@ -492,6 +498,55 @@
           "createdAt": "2025-07-29T06:21:55Z",
           "updatedAt": "2025-07-29T06:21:55Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOMJDuNc6lldMg",
+      "title": "Misc Updates",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/11",
+      "state": "MERGED",
+      "author": "hannestschofenig",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-08-27T11:47:58Z",
+      "updatedAt": "2025-08-27T14:14:49Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "0228624b2ec79c424288c0c209d4cf52e66d5d70",
+      "headRepository": "lamps-wg/lamps-attestation-freshness",
+      "headRefName": "hannestschofenig-patch-2",
+      "headRefOid": "f21684eff8b6570b639596d8ef25bf5da2fe96d7",
+      "closedAt": "2025-08-27T14:14:46Z",
+      "mergedAt": "2025-08-27T14:14:46Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "debb38fc707a57b45bf83d6864b214ca44bef2c3"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMJDuNc68UXug",
+          "commit": {
+            "abbreviatedOid": "61dfb57"
+          },
+          "author": "hannestschofenig",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-08-27T11:50:45Z",
+          "updatedAt": "2025-08-27T11:50:46Z",
+          "comments": [
+            {
+              "originalPosition": 178,
+              "body": "```suggestion\r\nEST encodes \"expiry\" as an absolute timestamp.\r\n```",
+              "createdAt": "2025-08-27T11:50:45Z",
+              "updatedAt": "2025-08-27T11:50:46Z"
+            }
+          ]
         }
       ]
     }
