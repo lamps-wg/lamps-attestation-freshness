@@ -296,25 +296,25 @@ The interaction is illustrated in {{fig-cmp-msg}}.
 End Entity                                          RA/CA
 ==========                                      =============
 
-            -->>--- id-it-NonceRequest --->>--
+            ------- id-it-NonceRequest ----->
                                                 Verify request
                                                 Generate nonce(s)*
                                                 Create response
-            --<<--- id-it-NonceResponse ---<<--
+            <------ id-it-NonceResponse -----
                     (nonce(s), expiry)
 
 Generate key pair
 Generate Evidence(s)*
 Generate certification
   request message
-            -->>--- certification request --->>--
+            ------- certification request --->
                 +Evidence(s) including nonce)
                                                Verify request
                                                Verify Evidence(s)*
                                                Check for replay*
                                                Issue certificate
                                                Create response
-            --<<--- certification response ---<<--
+            <------ certification response ---
 Handle response
 Store certificate
 
