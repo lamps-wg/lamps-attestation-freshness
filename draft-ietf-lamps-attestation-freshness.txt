@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 28 February 2026                                      J. Mandel
+Expires: 19 March 2026                                         J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                          27 August 2025
+                                                       15 September 2025
 
 
   Nonce-based Freshness for Remote Attestation in Certificate Signing
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 February 2026.
+   This Internet-Draft will expire on 19 March 2026.
 
 Copyright Notice
 
@@ -295,25 +295,25 @@ Table of Contents
    End Entity                                          RA/CA
    ==========                                      =============
 
-               -->>--- id-it-NonceRequest --->>--
+               ------- id-it-NonceRequest ----->
                                                    Verify request
                                                    Generate nonce(s)*
                                                    Create response
-               --<<--- id-it-NonceResponse ---<<--
+               <------ id-it-NonceResponse -----
                        (nonce(s), expiry)
 
    Generate key pair
    Generate Evidence(s)*
    Generate certification
      request message
-               -->>--- certification request --->>--
+               ------- certification request --->
                    +Evidence(s) including nonce)
                                                   Verify request
                                                   Verify Evidence(s)*
                                                   Check for replay*
                                                   Issue certificate
                                                   Create response
-               --<<--- certification response ---<<--
+               <------ certification response ---
    Handle response
    Store certificate
 
@@ -643,9 +643,9 @@ Table of Contents
    [I-D.ietf-lamps-rfc5272bis]
               Mandel, J. and S. Turner, "Certificate Management over CMS
               (CMC)", Work in Progress, Internet-Draft, draft-ietf-
-              lamps-rfc5272bis-06, 28 May 2025,
+              lamps-rfc5272bis-08, 29 August 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              rfc5272bis-06>.
+              rfc5272bis-08>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
