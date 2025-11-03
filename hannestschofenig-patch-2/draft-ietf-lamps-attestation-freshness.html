@@ -17,7 +17,7 @@ commonly achieves this using nonces.
 for inclusion in Evidence, leveraging the Certificate Management Protocol (CMP), Enrollment over
 Secure Transport (EST), and Certificate Management over CMS (CMC). 
     " name="description">
-<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Remote Attestation" name="keyword">
 <meta content="Certificate Signing Request" name="keyword">
 <meta content="Certificate Management Protocol (CMP)" name="keyword">
@@ -25,19 +25,18 @@ Secure Transport (EST), and Certificate Management over CMS (CMC).
 <meta content="Certificate Management over CMS (CMC)" name="keyword">
 <meta content="draft-ietf-lamps-attestation-freshness-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.0
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.3.8
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.4
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    requests 2.32.5
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-lamps-attestation-freshness.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1056,11 +1055,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Freshness Nonces for Remote Attestation</td>
-<td class="right">August 2025</td>
+<td class="right">November 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tschofenig, et al.</td>
-<td class="center">Expires 28 February 2026</td>
+<td class="center">Expires 7 May 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1073,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-attestation-freshness-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-08-27" class="published">27 August 2025</time>
+<time datetime="2025-11-03" class="published">3 November 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-02-28">28 February 2026</time></dd>
+<dd class="expires"><time datetime="2026-05-07">7 May 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1129,7 +1128,7 @@ Secure Transport (EST), and Certificate Management over CMS (CMC).<a href="#sect
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1257,7 +1256,7 @@ is encoded for inclusion in CRMF or PKCS#10, along with any necessary certificat
 production is crucial. Current attestation technologies, like <span>[<a href="#TPM20" class="cite xref">TPM20</a>]</span> and
 <span>[<a href="#RFC9783" class="cite xref">RFC9783</a>]</span>, often employ nonces to ensure the freshness of Evidence. Further
 details on ensuring Evidence freshness can be found in <span><a href="https://rfc-editor.org/rfc/rfc9334#section-10" class="relref">Section 10</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8"><span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-20#section-4" class="relref">Section 4</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> provides examples where a CSR contains one or more
+<p id="section-1-8"><span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-21#section-4" class="relref">Section 4</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> provides examples where a CSR contains one or more
 Evidence statements. For each Evidence statement the end entity may wish to request a separate nonce.<a href="#section-1-8" class="pilcrow">¶</a></p>
 <p id="section-1-9">Since an end entity requires one or more nonces from one or more Verifiers via the RA/CA, an additional
 roundtrip is necessary. However, a CSR is a one-shot message. Therefore, CMP, EST, and CMC enable the end
@@ -1432,16 +1431,20 @@ NonceRequest structures, at a maximum one per Evidence statement the end
 entity wishes to provide in a CSR. If a NonceRequest structure does neither
 contain a type nor a hint, the RA/CA MAY generate a nonce itself and provide
 it in the respective NonceResponse structure.
-If an RA/CA is not able to provide a requested nonce, it MUST provide an empty OCTET STRING in the respective NonceResponse structure.<a href="#section-3-5" class="pilcrow">¶</a></p>
+If an RA/CA is not able to provide a requested nonce, it MUST provide an empty
+OCTET STRING in the respective NonceResponse structure.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <p id="section-3-6">NonceRequest, NonceResponse, and EvidenceStatement structures can contain a type
 field and a hint field. In terms of type and hint content, the order in which the
 NonceRequest structures were sent in the request message MUST match the order of
 the NonceResponse structures in the response message and the EvidenceStatements in
 the CSR later. This matching ensures that the RA/CA can send each Evidence statement
 to the same Verifier that generated the corresponding nonce used by the Attester.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">When receiving nonces from the RA/CA in an id-it-nonceResponse message, the end entity MUST use them to request Evidence statements from the respective Attester, as optionally indicated by type and hint.
-If a nonce is provided in a NonceResponse structure without indicating any type or hint, it can be used for all Evidence statements requiring a nonce.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">An Evidence statement generated using a nonce provided with an expiry value will be accepted by the Verifier as valid until the respective expiry time has elapsed.
+<p id="section-3-7">When receiving nonces from the RA/CA in an id-it-nonceResponse message, the end entity
+MUST use them to request Evidence statements from the respective Attester, as optionally
+indicated by type and hint. If a nonce is provided in a NonceResponse structure without
+indicating any type or hint, it can be used for all Evidence statements requiring a nonce.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">An Evidence statement generated using a nonce provided with an expiry value will be
+accepted by the Verifier as valid until the respective expiry time has elapsed.
 It is expected that the respective messages are delivered in a timely manner.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <p id="section-3-9">The interaction is illustrated in <a href="#fig-cmp-msg" class="auto internal xref">Figure 2</a>.<a href="#section-3-9" class="pilcrow">¶</a></p>
 <span id="name-cmp-exchange-with-nonce-and"></span><div id="fig-cmp-msg">
@@ -1453,26 +1456,18 @@ It is expected that the respective messages are delivered in a timely manner.<a 
               <path d="M 8,50 L 80,50" fill="none" stroke="black"></path>
               <path d="M 392,46 L 488,46" fill="none" stroke="black"></path>
               <path d="M 392,50 L 488,50" fill="none" stroke="black"></path>
-              <path d="M 104,80 L 120,80" fill="none" stroke="black"></path>
-              <path d="M 136,80 L 152,80" fill="none" stroke="black"></path>
-              <path d="M 320,80 L 344,80" fill="none" stroke="black"></path>
-              <path d="M 128,144 L 152,144" fill="none" stroke="black"></path>
-              <path d="M 328,144 L 344,144" fill="none" stroke="black"></path>
-              <path d="M 360,144 L 376,144" fill="none" stroke="black"></path>
-              <path d="M 104,256 L 120,256" fill="none" stroke="black"></path>
-              <path d="M 136,256 L 152,256" fill="none" stroke="black"></path>
+              <path d="M 104,80 L 152,80" fill="none" stroke="black"></path>
+              <path d="M 320,80 L 360,80" fill="none" stroke="black"></path>
+              <path d="M 104,144 L 152,144" fill="none" stroke="black"></path>
+              <path d="M 328,144 L 360,144" fill="none" stroke="black"></path>
+              <path d="M 104,256 L 152,256" fill="none" stroke="black"></path>
               <path d="M 344,256 L 368,256" fill="none" stroke="black"></path>
-              <path d="M 128,368 L 152,368" fill="none" stroke="black"></path>
+              <path d="M 104,368 L 152,368" fill="none" stroke="black"></path>
               <path d="M 352,368 L 368,368" fill="none" stroke="black"></path>
-              <path d="M 384,368 L 400,368" fill="none" stroke="black"></path>
-              <polygon class="arrowhead" points="392,368 380,362.4 380,373.6" fill="black" transform="rotate(180,384,368)"></polygon>
               <polygon class="arrowhead" points="376,256 364,250.4 364,261.6" fill="black" transform="rotate(0,368,256)"></polygon>
-              <polygon class="arrowhead" points="368,144 356,138.4 356,149.6" fill="black" transform="rotate(180,360,144)"></polygon>
-              <polygon class="arrowhead" points="352,80 340,74.4 340,85.6" fill="black" transform="rotate(0,344,80)"></polygon>
-              <polygon class="arrowhead" points="136,368 124,362.4 124,373.6" fill="black" transform="rotate(180,128,368)"></polygon>
-              <polygon class="arrowhead" points="136,144 124,138.4 124,149.6" fill="black" transform="rotate(180,128,144)"></polygon>
-              <polygon class="arrowhead" points="128,256 116,250.4 116,261.6" fill="black" transform="rotate(0,120,256)"></polygon>
-              <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+              <polygon class="arrowhead" points="368,80 356,74.4 356,85.6" fill="black" transform="rotate(0,360,80)"></polygon>
+              <polygon class="arrowhead" points="112,368 100,362.4 100,373.6" fill="black" transform="rotate(180,104,368)"></polygon>
+              <polygon class="arrowhead" points="112,144 100,138.4 100,149.6" fill="black" transform="rotate(180,104,144)"></polygon>
               <circle cx="8" cy="432" r="6" class="closeddot" fill="black"></circle>
               <circle cx="168" cy="208" r="6" class="closeddot" fill="black"></circle>
               <circle cx="528" cy="112" r="6" class="closeddot" fill="black"></circle>
@@ -1481,18 +1476,14 @@ It is expected that the respective messages are delivered in a timely manner.<a 
                 <text x="16" y="36">End</text>
                 <text x="60" y="36">Entity</text>
                 <text x="440" y="36">RA/CA</text>
-                <text x="128" y="84">&gt;</text>
                 <text x="236" y="84">id-it-NonceRequest</text>
-                <text x="360" y="84">&gt;--</text>
                 <text x="412" y="100">Verify</text>
                 <text x="472" y="100">request</text>
                 <text x="420" y="116">Generate</text>
                 <text x="492" y="116">nonce(s)</text>
                 <text x="412" y="132">Create</text>
                 <text x="476" y="132">response</text>
-                <text x="112" y="148">--&lt;</text>
                 <text x="240" y="148">id-it-NonceResponse</text>
-                <text x="352" y="148">&lt;</text>
                 <text x="204" y="164">(nonce(s),</text>
                 <text x="280" y="164">expiry)</text>
                 <text x="36" y="196">Generate</text>
@@ -1504,10 +1495,8 @@ It is expected that the respective messages are delivered in a timely manner.<a 
                 <text x="128" y="228">certification</text>
                 <text x="48" y="244">request</text>
                 <text x="112" y="244">message</text>
-                <text x="128" y="260">&gt;</text>
                 <text x="216" y="260">certification</text>
                 <text x="304" y="260">request</text>
-                <text x="384" y="260">&gt;--</text>
                 <text x="180" y="276">+Evidence(s)</text>
                 <text x="272" y="276">including</text>
                 <text x="340" y="276">nonce)</text>
@@ -1522,10 +1511,8 @@ It is expected that the respective messages are delivered in a timely manner.<a 
                 <text x="472" y="340">certificate</text>
                 <text x="404" y="356">Create</text>
                 <text x="468" y="356">response</text>
-                <text x="112" y="372">--&lt;</text>
                 <text x="216" y="372">certification</text>
                 <text x="308" y="372">response</text>
-                <text x="376" y="372">&lt;</text>
                 <text x="28" y="388">Handle</text>
                 <text x="92" y="388">response</text>
                 <text x="24" y="404">Store</text>
@@ -1759,10 +1746,12 @@ The syntax for the controls uses the same syntax as the CMP information types de
 id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-it TBD1 }
 </pre><a href="#section-5-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5-5">The NonceResponse control is identified by:
-~~~
+<p id="section-5-5">The NonceResponse control is identified by:<a href="#section-5-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5-6">
+<pre>
 id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
-~~~<a href="#section-5-5" class="pilcrow">¶</a></p>
+</pre><a href="#section-5-6" class="pilcrow">¶</a>
+</div>
 <div id="generic-nonce-request-message-flow">
 <section id="section-5.1">
         <h3 id="name-generic-nonce-request-messa">
@@ -1771,18 +1760,21 @@ id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 <p id="section-5.1-1">The client sends id-cmc-nonceReq structure to the server. Upon receiving and processing the request,
 the server responds with id-cmc-nonceResp.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">Once this round-trip transaction is complete, the client will include the nonce in either a Simple or Full PKI Request.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.1-3">Client to Server:
-~~~
+<p id="section-5.1-3">Client to Server:<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-4">
+<pre>
    ContentInfo.contentType = id-Data
    ContentInfo.content
        eContentType = id-cct-PKIData
        eContent
          controlSequence
            {101, id-cmc-senderNonce, 10001}
-           {102, id-cmc-nonceReq, &lt;sequence of nonce request&gt;}
-~~~<a href="#section-5.1-3" class="pilcrow">¶</a></p>
-<p id="section-5.1-4">Server to Client:
-~~~
+           {102, id-cmc-nonceReq, &amp;lt;sequence of nonce request&amp;gt;}
+</pre><a href="#section-5.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-5.1-5">Server to Client:<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-6">
+<pre>
    ContentInfo.contentType = id-Data
    ContentInfo.content
        eContentType = id-cct-PKIData
@@ -1790,8 +1782,9 @@ the server responds with id-cmc-nonceResp.<a href="#section-5.1-1" class="pilcro
          controlSequence
            {101, id-cmc-senderNonce, 10005}
            {102, id-cmc-recipientNonce, 10001}
-           {103, id-cmc-nonceResp, &lt;sequence of nonce response&gt;}
-~~~<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+           {103, id-cmc-nonceResp, &amp;lt;sequence of nonce response&amp;gt;}
+</pre><a href="#section-5.1-6" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 </section>
@@ -1931,7 +1924,7 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-9-
 <dl class="references">
 <dt id="I-D.ietf-lamps-csr-attestation">[I-D.ietf-lamps-csr-attestation]</dt>
         <dd>
-<span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-20</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-20">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-20</a>&gt;</span>. </dd>
+<span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-21</span>, <time datetime="2025-10-05" class="refDate">5 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-21">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-21</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-rfc4210bis">[I-D.ietf-lamps-rfc4210bis]</dt>
         <dd>
@@ -1939,7 +1932,7 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-9-
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-rfc5272bis">[I-D.ietf-lamps-rfc5272bis]</dt>
         <dd>
-<span class="refAuthor">Mandel, J.</span> and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Certificate Management over CMS (CMC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc5272bis-06</span>, <time datetime="2025-05-28" class="refDate">28 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-06">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-06</a>&gt;</span>. </dd>
+<span class="refAuthor">Mandel, J.</span> and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Certificate Management over CMS (CMC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc5272bis-09</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-09">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-09</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
