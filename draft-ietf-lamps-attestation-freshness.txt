@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 19 March 2026                                         J. Mandel
+Expires: 7 May 2026                                            J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                       15 September 2025
+                                                         3 November 2025
 
 
   Nonce-based Freshness for Remote Attestation in Certificate Signing
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 March 2026.
+   This Internet-Draft will expire on 7 May 2026.
 
 Copyright Notice
 
@@ -487,8 +487,9 @@ Table of Contents
 
    id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-it TBD1 }
 
-   The NonceResponse control is identified by: ~~~ id-cmc-nonceResp
-   OBJECT IDENTIFIER ::= { id-it TBD2 } ~~~
+   The NonceResponse control is identified by:
+
+   id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 
 5.1.  Generic Nonce Request Message Flow
 
@@ -499,16 +500,26 @@ Table of Contents
    Once this round-trip transaction is complete, the client will include
    the nonce in either a Simple or Full PKI Request.
 
-   Client to Server: ~~~ ContentInfo.contentType = id-Data
-   ContentInfo.content eContentType = id-cct-PKIData eContent
-   controlSequence {101, id-cmc-senderNonce, 10001} {102, id-cmc-
-   nonceReq, <sequence of nonce request>} ~~~
+   Client to Server:
 
-   Server to Client: ~~~ ContentInfo.contentType = id-Data
-   ContentInfo.content eContentType = id-cct-PKIData eContent
-   controlSequence {101, id-cmc-senderNonce, 10005} {102, id-cmc-
-   recipientNonce, 10001} {103, id-cmc-nonceResp, <sequence of nonce
-   response>} ~~~
+      ContentInfo.contentType = id-Data
+      ContentInfo.content
+          eContentType = id-cct-PKIData
+          eContent
+            controlSequence
+              {101, id-cmc-senderNonce, 10001}
+              {102, id-cmc-nonceReq, &lt;sequence of nonce request&gt;}
+
+   Server to Client:
+
+     ContentInfo.contentType = id-Data
+     ContentInfo.content
+         eContentType = id-cct-PKIData
+         eContent
+           controlSequence
+             {101, id-cmc-senderNonce, 10005}
+             {102, id-cmc-recipientNonce, 10001}
+             {103, id-cmc-nonceResp, &lt;sequence of nonce response&gt;}
 
 6.  Nonce Processing Guidelines
 
@@ -628,9 +639,9 @@ Table of Contents
               Ounsworth, M., Tschofenig, H., Birkholz, H., Wiseman, M.,
               and N. Smith, "Use of Remote Attestation with
               Certification Signing Requests", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-csr-attestation-20, 7
-              July 2025, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-lamps-csr-attestation-20>.
+              Internet-Draft, draft-ietf-lamps-csr-attestation-21, 5
+              October 2025, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lamps-csr-attestation-21>.
 
    [I-D.ietf-lamps-rfc4210bis]
               Brockhaus, H., von Oheimb, D., Ounsworth, M., and J. Gray,
@@ -643,9 +654,9 @@ Table of Contents
    [I-D.ietf-lamps-rfc5272bis]
               Mandel, J. and S. Turner, "Certificate Management over CMS
               (CMC)", Work in Progress, Internet-Draft, draft-ietf-
-              lamps-rfc5272bis-08, 29 August 2025,
+              lamps-rfc5272bis-09, 20 October 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              rfc5272bis-08>.
+              rfc5272bis-09>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
