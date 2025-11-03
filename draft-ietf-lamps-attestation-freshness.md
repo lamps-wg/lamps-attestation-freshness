@@ -275,7 +275,8 @@ NonceRequest structures, at a maximum one per Evidence statement the end
 entity wishes to provide in a CSR. If a NonceRequest structure does neither
 contain a type nor a hint, the RA/CA MAY generate a nonce itself and provide
 it in the respective NonceResponse structure.
-If an RA/CA is not able to provide a requested nonce, it MUST provide an empty OCTET STRING in the respective NonceResponse structure.
+If an RA/CA is not able to provide a requested nonce, it MUST provide an empty
+OCTET STRING in the respective NonceResponse structure.
 
 NonceRequest, NonceResponse, and EvidenceStatement structures can contain a type
 field and a hint field. In terms of type and hint content, the order in which the
@@ -284,10 +285,13 @@ the NonceResponse structures in the response message and the EvidenceStatements 
 the CSR later. This matching ensures that the RA/CA can send each Evidence statement
 to the same Verifier that generated the corresponding nonce used by the Attester.
 
-When receiving nonces from the RA/CA in an id-it-nonceResponse message, the end entity MUST use them to request Evidence statements from the respective Attester, as optionally indicated by type and hint.
-If a nonce is provided in a NonceResponse structure without indicating any type or hint, it can be used for all Evidence statements requiring a nonce.
+When receiving nonces from the RA/CA in an id-it-nonceResponse message, the end entity
+MUST use them to request Evidence statements from the respective Attester, as optionally
+indicated by type and hint. If a nonce is provided in a NonceResponse structure without
+indicating any type or hint, it can be used for all Evidence statements requiring a nonce.
 
-An Evidence statement generated using a nonce provided with an expiry value will be accepted by the Verifier as valid until the respective expiry time has elapsed.
+An Evidence statement generated using a nonce provided with an expiry value will be
+accepted by the Verifier as valid until the respective expiry time has elapsed.
 It is expected that the respective messages are delivered in a timely manner.
 
 The interaction is illustrated in {{fig-cmp-msg}}.
@@ -370,6 +374,7 @@ The following operation is defined by this specification:
  | Retrieval of a nonce   | /nonce          | {{EST}}           |
  +------------------------+-----------------+-------------------+
 ~~~
+
 The operation path is appended to the path-prefix to form the URI
 used with HTTP GET or POST to perform the desired EST operation.
 An example of a valid URI absolute path for the "/nonce" operation
@@ -487,6 +492,7 @@ id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-it TBD1 }
 ~~~
 
 The NonceResponse control is identified by:
+
 ~~~
 id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 ~~~
@@ -499,6 +505,7 @@ the server responds with id-cmc-nonceResp.
 Once this round-trip transaction is complete, the client will include the nonce in either a Simple or Full PKI Request.
 
 Client to Server:
+
 ~~~
    ContentInfo.contentType = id-Data
    ContentInfo.content
@@ -510,6 +517,7 @@ Client to Server:
 ~~~
 
 Server to Client:
+
 ~~~
    ContentInfo.contentType = id-Data
    ContentInfo.content
