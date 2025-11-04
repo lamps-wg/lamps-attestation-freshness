@@ -62,7 +62,7 @@ normative:
   RFC5785:
   RFC7030:
   RFC7159:
-  RFC8295:
+  RFC8259:
   RFC8615:
   RFC9482:
   RFC9810:
