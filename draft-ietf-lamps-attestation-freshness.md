@@ -331,27 +331,17 @@ If HTTP is used to transfer the NonceRequest and NonceResponse
 messages, the OPTIONAL `<operation>` path segment defined in
 {{Section 3.6 of I-D.ietf-lamps-rfc4210bis}} MAY be used.
 
-~~~
- +------------------------+-----------------+-------------------+
- | Operation              |Operation path   | Details           |
- +========================+=================+===================+
- | Get Attestation        | getnonce        | {{CMP}}           |
- | Freshness Nonce        |                 |                   |
- +------------------------+-----------------+-------------------+
-~~~
+| Operation           | Operation Path | Details  |
+|:--------------------|:---------------|:----------|
+| Get Attestation Freshness Nonce | getnonce | {{CMP}} |
 
 If CoAP is used for transferring NonceRequest and NonceResponse messages,
 the OPTIONAL `<operation>` path segment defined in
 {{Section 2.1 of RFC9482}} MAY be used.
 
-~~~
- +------------------------+-----------------+-------------------+
- | Operation              |Operation path   | Details           |
- +========================+=================+===================+
- | Get Attestation        | nonce           | {{CMP}}           |
- | Freshness Nonce        |                 |                   |
- +------------------------+-----------------+-------------------+
-~~~
+| Operation           | Operation Path | Details  |
+|:--------------------|:---------------|:----------|
+| Get Attestation Freshness Nonce | nonce | {{CMP}} |
 
 # Conveying a Nonce in EST {#EST}
 
@@ -367,13 +357,9 @@ indicated by a path-suffix that specifies the intended operation.
 
 The following operation is defined by this specification:
 
-~~~
- +------------------------+-----------------+-------------------+
- | Operation              |Operation path   | Details           |
- +========================+=================+===================+
- | Retrieval of a nonce   | /nonce          | {{EST}}           |
- +------------------------+-----------------+-------------------+
-~~~
+| Operation           | Operation Path | Details  |
+|:--------------------|:---------------|:----------|
+| Retrieval of a nonce | /nonce | {{EST}} |
 
 The operation path is appended to the path-prefix to form the URI
 used with HTTP GET or POST to perform the desired EST operation.
@@ -576,17 +562,10 @@ on this process do not contain the nonce, as specified in
 This document adds new entries to the "CMP Well-Known URI Path Segments"
 registry defined in {{RFC8615}}.
 
-~~~
- +----------------+---------------------------+-----------------+
- | Path Segment   | Description               | Reference       |
- +================+===========================+=================+
- | getnonce       | Get Attestation Freshness | {{CMP}}         |
- |                | Nonce over HTTP           |                 |
- +----------------+---------------------------+-----------------+
- | nonce          | Get Attestation Freshness | {{CMP}}         |
- |                | Nonce over CoAP           |                 |
- +----------------+---------------------------+-----------------+
-~~~
+| Path Segment | Description | Reference |
+|:--------------|:-------------|:-----------|
+| getnonce | Get Attestation Freshness Nonce over HTTP | {{CMP}} |
+| nonce | Get Attestation Freshness Nonce over CoAP | {{CMP}} |
 
 [Open Issue: Register path segments for EST]
 
