@@ -49,15 +49,16 @@ author:
 
 normative:
   RFC2119:
-  I-D.ietf-lamps-csr-attestation:
-  I-D.ietf-lamps-rfc4210bis:
-  RFC8295:
-  RFC7030:
   RFC5280:
   RFC5785:
-  RFC8615:
+  RFC7030:
   RFC7159:
+  RFC8295:
+  RFC8615:
   RFC9482:
+  RFC9810:
+  RFC9811:
+  I-D.ietf-lamps-csr-attestation:
   X.680:
     target: https://www.itu.int/rec/T-REC.X.680
     title: >
@@ -110,7 +111,7 @@ Secure Transport (EST)
 The management of certificates, encompassing issuance, CA certificate provisioning, renewal, and
 revocation, has been streamlined through standardized protocols.
 
-The Certificate Management Protocol (CMP) {{I-D.ietf-lamps-rfc4210bis}} defines messages for
+The Certificate Management Protocol (CMP) {{RFC9810}} defines messages for
 X.509v3 certificate creation and management. CMP facilitates interactions between end entities
 and PKI management entities, such as Registration Authorities (RAs) and Certification Authorities
 (CAs). For Certificate Signing Requests (CSRs), CMP primarily utilizes the Certificate Request
@@ -205,7 +206,7 @@ request interchangeably.
 
 # Conveying a Nonce in CMP {#CMP}
 
-Section 5.3.19 of {{I-D.ietf-lamps-rfc4210bis}} defines the
+{{Section 5.3.19 of RFC9810}} defines the
 general request message (genm) and general response (genp).
 The NonceRequest payload of the genm message, sent by the end
 entity to request a nonce, optionally includes details on the
@@ -311,7 +312,7 @@ Store certificate
 
 If HTTP is used to transfer the NonceRequest and NonceResponse
 messages, the OPTIONAL \<operation> path segment defined in
-{{Section 3.6 of I-D.ietf-lamps-rfc4210bis}} MAY be used.
+{{Section 3.4 of RFC9811}} MAY be used.
 
 ~~~
  +------------------------+-----------------+-------------------+
@@ -567,9 +568,7 @@ id-it, InfoTypeAndValue{}
   FROM PKIXCMP-2023
     { iso(1) identified-organization(3) dod(6) internet(1)
       security(5) mechanisms(5) pkix(7) id-mod(0)
-      id-mod-cmp2023-02(TBD-PKIXCMP-23) }
--- RFC Editor: The value for id-mod-cmp2023-02 must be set as soon
--- as it is assigned by I-D.ietf-lamps-rfc4210bis
+      id-mod-cmp2023-02(116) }
 
 EVIDENCE-STATEMENT, EvidenceStatementSet
   FROM CSR-ATTESTATION-2023
