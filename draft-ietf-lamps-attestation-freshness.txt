@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 7 May 2026                                            J. Mandel
+Expires: 8 May 2026                                            J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                         3 November 2025
+                                                         4 November 2025
 
 
   Nonce-based Freshness for Remote Attestation in Certificate Signing
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 May 2026.
+   This Internet-Draft will expire on 8 May 2026.
 
 Copyright Notice
 
@@ -326,23 +326,25 @@ Table of Contents
    messages, the OPTIONAL <operation> path segment defined in
    Section 3.6 of [I-D.ietf-lamps-rfc4210bis] MAY be used.
 
-    +------------------------+-----------------+-------------------+
-    | Operation              |Operation path   | Details           |
-    +========================+=================+===================+
-    | Get Attestation        | getnonce        | {{CMP}}           |
-    | Freshness Nonce        |                 |                   |
-    +------------------------+-----------------+-------------------+
+     +=================================+================+===========+
+     | Operation                       | Operation Path | Details   |
+     +=================================+================+===========+
+     | Get Attestation Freshness Nonce | getnonce       | Section 3 |
+     +---------------------------------+----------------+-----------+
+
+                                 Table 1
 
    If CoAP is used for transferring NonceRequest and NonceResponse
    messages, the OPTIONAL <operation> path segment defined in
    Section 2.1 of [RFC9482] MAY be used.
 
-    +------------------------+-----------------+-------------------+
-    | Operation              |Operation path   | Details           |
-    +========================+=================+===================+
-    | Get Attestation        | nonce           | {{CMP}}           |
-    | Freshness Nonce        |                 |                   |
-    +------------------------+-----------------+-------------------+
+     +=================================+================+===========+
+     | Operation                       | Operation Path | Details   |
+     +=================================+================+===========+
+     | Get Attestation Freshness Nonce | nonce          | Section 3 |
+     +---------------------------------+----------------+-----------+
+
+                                 Table 2
 
 4.  Conveying a Nonce in EST
 
@@ -358,11 +360,13 @@ Table of Contents
 
    The following operation is defined by this specification:
 
-    +------------------------+-----------------+-------------------+
-    | Operation              |Operation path   | Details           |
-    +========================+=================+===================+
-    | Retrieval of a nonce   | /nonce          | {{EST}}           |
-    +------------------------+-----------------+-------------------+
+           +======================+================+===========+
+           | Operation            | Operation Path | Details   |
+           +======================+================+===========+
+           | Retrieval of a nonce | /nonce         | Section 4 |
+           +----------------------+----------------+-----------+
+
+                                  Table 3
 
    The operation path is appended to the path-prefix to form the URI
    used with HTTP GET or POST to perform the desired EST operation.  An
@@ -571,15 +575,17 @@ Table of Contents
    This document adds new entries to the "CMP Well-Known URI Path
    Segments" registry defined in [RFC8615].
 
-    +----------------+---------------------------+-----------------+
-    | Path Segment   | Description               | Reference       |
-    +================+===========================+=================+
-    | getnonce       | Get Attestation Freshness | {{CMP}}         |
-    |                | Nonce over HTTP           |                 |
-    +----------------+---------------------------+-----------------+
-    | nonce          | Get Attestation Freshness | {{CMP}}         |
-    |                | Nonce over CoAP           |                 |
-    +----------------+---------------------------+-----------------+
+         +==============+===========================+===========+
+         | Path Segment | Description               | Reference |
+         +==============+===========================+===========+
+         | getnonce     | Get Attestation Freshness | Section 3 |
+         |              | Nonce over HTTP           |           |
+         +--------------+---------------------------+-----------+
+         | nonce        | Get Attestation Freshness | Section 3 |
+         |              | Nonce over CoAP           |           |
+         +--------------+---------------------------+-----------+
+
+                                 Table 4
 
    [Open Issue: Register path segments for EST]
 
@@ -593,7 +599,7 @@ Table of Contents
               | TBDMOD  | id-mod-att-fresh-req | This-RFC   |
               +---------+----------------------+------------+
 
-                                  Table 1
+                                  Table 5
 
 8.  Security Considerations
 
