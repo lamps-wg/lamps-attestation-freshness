@@ -61,7 +61,6 @@ normative:
   RFC5280:
   RFC5785:
   RFC7030:
-  RFC7159:
   RFC8259:
   RFC8295:
   RFC8615:
