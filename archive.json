@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-28T01:52:11.397005+00:00",
+  "timestamp": "2025-11-04T01:56:47.675378+00:00",
   "repo": "lamps-wg/lamps-attestation-freshness",
   "labels": [
     {
@@ -549,6 +549,60 @@
           ]
         }
       ]
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOMJDuNc6xPxlr",
+      "title": "Update draft-ietf-lamps-attestation-freshness.md",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/12",
+      "state": "MERGED",
+      "author": "hannestschofenig",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-11-03T18:16:16Z",
+      "updatedAt": "2025-11-03T18:18:00Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "80381ecdf0807f266059ef305b80b3c866ae62bd",
+      "headRepository": "lamps-wg/lamps-attestation-freshness",
+      "headRefName": "hannestschofenig-patch-2",
+      "headRefOid": "e2f01aa7426b4d5a13c5c841b98a234140da352f",
+      "closedAt": "2025-11-03T18:17:57Z",
+      "mergedAt": "2025-11-03T18:17:57Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "ab6609cb4959f5358a9e7df46ff36842bfca5cbd"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOMJDuNc6xP2_z",
+      "title": "Fixing Tables",
+      "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/13",
+      "state": "OPEN",
+      "author": "hannestschofenig",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-11-03T18:24:14Z",
+      "updatedAt": "2025-11-03T18:24:15Z",
+      "baseRepository": "lamps-wg/lamps-attestation-freshness",
+      "baseRefName": "main",
+      "baseRefOid": "ab6609cb4959f5358a9e7df46ff36842bfca5cbd",
+      "headRepository": "lamps-wg/lamps-attestation-freshness",
+      "headRefName": "hannestschofenig-patch-2",
+      "headRefOid": "a05edfe4569a067b9f734192e608fbe602b1b350",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
