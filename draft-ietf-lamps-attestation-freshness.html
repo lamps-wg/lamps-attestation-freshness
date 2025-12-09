@@ -1055,11 +1055,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Freshness Nonces for Remote Attestation</td>
-<td class="right">November 2025</td>
+<td class="right">December 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tschofenig, et al.</td>
-<td class="center">Expires 8 May 2026</td>
+<td class="center">Expires 12 June 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-lamps-attestation-freshness-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-11-04" class="published">4 November 2025</time>
+<time datetime="2025-12-09" class="published">9 December 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-05-08">8 May 2026</time></dd>
+<dd class="expires"><time datetime="2026-06-12">12 June 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1128,7 @@ Secure Transport (EST), and Certificate Management over CMS (CMC).<a href="#sect
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 8 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1236,7 +1236,7 @@ Secure Transport (EST), and Certificate Management over CMS (CMC).<a href="#sect
       </h2>
 <p id="section-1-1">The management of certificates, encompassing issuance, CA certificate provisioning, renewal, and
 revocation, has been streamlined through standardized protocols.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The Certificate Management Protocol (CMP) <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> defines messages for
+<p id="section-1-2">The Certificate Management Protocol (CMP) <span>[<a href="#RFC9810" class="cite xref">RFC9810</a>]</span> defines messages for
 X.509v3 certificate creation and management. CMP facilitates interactions between end entities
 and PKI management entities, such as Registration Authorities (RAs) and Certification Authorities
 (CAs). For Certificate Signing Requests (CSRs), CMP primarily utilizes the Certificate Request
@@ -1377,7 +1377,7 @@ request interchangeably.<a href="#section-2-3" class="pilcrow">¶</a></p>
       <h2 id="name-conveying-a-nonce-in-cmp">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-conveying-a-nonce-in-cmp" class="section-name selfRef">Conveying a Nonce in CMP</a>
       </h2>
-<p id="section-3-1">Section 5.3.19 of <span>[<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> defines the
+<p id="section-3-1"><span><a href="https://rfc-editor.org/rfc/rfc9810#section-5.3.19" class="relref">Section 5.3.19</a> of [<a href="#RFC9810" class="cite xref">RFC9810</a>]</span> defines the
 general request message (genm) and general response (genp).
 The NonceRequest payload of the genm message, sent by the end
 entity to request a nonce, optionally includes details on the
@@ -1547,7 +1547,7 @@ It is expected that the respective messages are delivered in a timely manner.<a 
 </div>
 <p id="section-3-11">If HTTP is used to transfer the NonceRequest and NonceResponse
 messages, the OPTIONAL <code>&lt;operation&gt;</code> path segment defined in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc4210bis-18#section-3.6" class="relref">Section 3.6</a> of [<a href="#I-D.ietf-lamps-rfc4210bis" class="cite xref">I-D.ietf-lamps-rfc4210bis</a>]</span> MAY be used.<a href="#section-3-11" class="pilcrow">¶</a></p>
+<span><a href="https://rfc-editor.org/rfc/rfc9811#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC9811" class="cite xref">RFC9811</a>]</span> MAY be used.<a href="#section-3-11" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
         <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -1967,10 +1967,6 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-9-
         <dd>
 <span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-21</span>, <time datetime="2025-10-05" class="refDate">5 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-21">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-21</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-lamps-rfc4210bis">[I-D.ietf-lamps-rfc4210bis]</dt>
-        <dd>
-<span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, and <span class="refAuthor">J. Gray</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure -- Certificate Management Protocol (CMP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc4210bis-18</span>, <time datetime="2025-01-30" class="refDate">30 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc4210bis-18">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc4210bis-18</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="I-D.ietf-lamps-rfc5272bis">[I-D.ietf-lamps-rfc5272bis]</dt>
         <dd>
 <span class="refAuthor">Mandel, J.</span> and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Certificate Management over CMS (CMC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc5272bis-09</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-09">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-09</a>&gt;</span>. </dd>
@@ -2006,6 +2002,14 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-9-
 <dt id="RFC9482">[RFC9482]</dt>
         <dd>
 <span class="refAuthor">Sahni, M., Ed.</span> and <span class="refAuthor">S. Tripathi, Ed.</span>, <span class="refTitle">"Constrained Application Protocol (CoAP) Transfer for the Certificate Management Protocol"</span>, <span class="seriesInfo">RFC 9482</span>, <span class="seriesInfo">DOI 10.17487/RFC9482</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9482">https://www.rfc-editor.org/rfc/rfc9482</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9810">[RFC9810]</dt>
+        <dd>
+<span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, and <span class="refAuthor">J. Gray</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure -- Certificate Management Protocol (CMP)"</span>, <span class="seriesInfo">RFC 9810</span>, <span class="seriesInfo">DOI 10.17487/RFC9810</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9810">https://www.rfc-editor.org/rfc/rfc9810</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9811">[RFC9811]</dt>
+        <dd>
+<span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, and <span class="refAuthor">J. Gray</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure -- HTTP Transfer for the Certificate Management Protocol (CMP)"</span>, <span class="seriesInfo">RFC 9811</span>, <span class="seriesInfo">DOI 10.17487/RFC9811</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9811">https://www.rfc-editor.org/rfc/rfc9811</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X.680">[X.680]</dt>
         <dd>
@@ -2078,9 +2082,7 @@ id-it, InfoTypeAndValue{}
   FROM PKIXCMP-2023
     { iso(1) identified-organization(3) dod(6) internet(1)
       security(5) mechanisms(5) pkix(7) id-mod(0)
-      id-mod-cmp2023-02(TBD-PKIXCMP-23) }
--- RFC Editor: The value for id-mod-cmp2023-02 must be set as soon
--- as it is assigned by I-D.ietf-lamps-rfc4210bis
+      id-mod-cmp2023-02(116) }
 
 EVIDENCE-STATEMENT, EvidenceStatementSet
   FROM CSR-ATTESTATION-2023

@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 8 May 2026                                            J. Mandel
+Expires: 12 June 2026                                          J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                         4 November 2025
+                                                         9 December 2025
 
 
   Nonce-based Freshness for Remote Attestation in Certificate Signing
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 May 2026.
+   This Internet-Draft will expire on 12 June 2026.
 
 Copyright Notice
 
@@ -90,13 +90,13 @@ Table of Contents
    provisioning, renewal, and revocation, has been streamlined through
    standardized protocols.
 
-   The Certificate Management Protocol (CMP) [I-D.ietf-lamps-rfc4210bis]
-   defines messages for X.509v3 certificate creation and management.
-   CMP facilitates interactions between end entities and PKI management
-   entities, such as Registration Authorities (RAs) and Certification
-   Authorities (CAs).  For Certificate Signing Requests (CSRs), CMP
-   primarily utilizes the Certificate Request Message Format (CRMF)
-   [RFC4211] but also supports PKCS#10 [RFC2986].
+   The Certificate Management Protocol (CMP) [RFC9810] defines messages
+   for X.509v3 certificate creation and management.  CMP facilitates
+   interactions between end entities and PKI management entities, such
+   as Registration Authorities (RAs) and Certification Authorities
+   (CAs).  For Certificate Signing Requests (CSRs), CMP primarily
+   utilizes the Certificate Request Message Format (CRMF) [RFC4211] but
+   also supports PKCS#10 [RFC2986].
 
    Enrollment over Secure Transport (EST) ([RFC7030], [RFC8295]) is
    another certificate management protocol that provides a subset of
@@ -210,13 +210,12 @@ Table of Contents
 
 3.  Conveying a Nonce in CMP
 
-   Section 5.3.19 of [I-D.ietf-lamps-rfc4210bis] defines the general
-   request message (genm) and general response (genp).  The NonceRequest
-   payload of the genm message, sent by the end entity to request a
-   nonce, optionally includes details on the required length of the
-   nonce from the Attester.  The NonceResponse payload of the genp
-   message, sent by the CA/RA in response to the request, contains the
-   nonce itself.
+   Section 5.3.19 of [RFC9810] defines the general request message
+   (genm) and general response (genp).  The NonceRequest payload of the
+   genm message, sent by the end entity to request a nonce, optionally
+   includes details on the required length of the nonce from the
+   Attester.  The NonceResponse payload of the genp message, sent by the
+   CA/RA in response to the request, contains the nonce itself.
 
     GenMsg:    {id-it TBD1}, NonceRequestValue
     GenRep:    {id-it TBD2}, NonceResponseValue | < absent >
@@ -324,7 +323,7 @@ Table of Contents
 
    If HTTP is used to transfer the NonceRequest and NonceResponse
    messages, the OPTIONAL <operation> path segment defined in
-   Section 3.6 of [I-D.ietf-lamps-rfc4210bis] MAY be used.
+   Section 3.4 of [RFC9811] MAY be used.
 
      +=================================+================+===========+
      | Operation                       | Operation Path | Details   |
@@ -649,14 +648,6 @@ Table of Contents
               October 2025, <https://datatracker.ietf.org/doc/html/
               draft-ietf-lamps-csr-attestation-21>.
 
-   [I-D.ietf-lamps-rfc4210bis]
-              Brockhaus, H., von Oheimb, D., Ounsworth, M., and J. Gray,
-              "Internet X.509 Public Key Infrastructure -- Certificate
-              Management Protocol (CMP)", Work in Progress, Internet-
-              Draft, draft-ietf-lamps-rfc4210bis-18, 30 January 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              rfc4210bis-18>.
-
    [I-D.ietf-lamps-rfc5272bis]
               Mandel, J. and S. Turner, "Certificate Management over CMS
               (CMC)", Work in Progress, Internet-Draft, draft-ietf-
@@ -702,6 +693,18 @@ Table of Contents
               Application Protocol (CoAP) Transfer for the Certificate
               Management Protocol", RFC 9482, DOI 10.17487/RFC9482,
               November 2023, <https://www.rfc-editor.org/rfc/rfc9482>.
+
+   [RFC9810]  Brockhaus, H., von Oheimb, D., Ounsworth, M., and J. Gray,
+              "Internet X.509 Public Key Infrastructure -- Certificate
+              Management Protocol (CMP)", RFC 9810,
+              DOI 10.17487/RFC9810, July 2025,
+              <https://www.rfc-editor.org/rfc/rfc9810>.
+
+   [RFC9811]  Brockhaus, H., von Oheimb, D., Ounsworth, M., and J. Gray,
+              "Internet X.509 Public Key Infrastructure -- HTTP Transfer
+              for the Certificate Management Protocol (CMP)", RFC 9811,
+              DOI 10.17487/RFC9811, July 2025,
+              <https://www.rfc-editor.org/rfc/rfc9811>.
 
    [X.680]    ITU-T, "Information Technology - Abstract Syntax Notation
               One (ASN.1): Specification of basic notation", ITU-T
@@ -768,9 +771,7 @@ Appendix A.  ASN.1 Module
      FROM PKIXCMP-2023
        { iso(1) identified-organization(3) dod(6) internet(1)
          security(5) mechanisms(5) pkix(7) id-mod(0)
-         id-mod-cmp2023-02(TBD-PKIXCMP-23) }
-   -- RFC Editor: The value for id-mod-cmp2023-02 must be set as soon
-   -- as it is assigned by I-D.ietf-lamps-rfc4210bis
+         id-mod-cmp2023-02(116) }
 
    EVIDENCE-STATEMENT, EvidenceStatementSet
      FROM CSR-ATTESTATION-2023
