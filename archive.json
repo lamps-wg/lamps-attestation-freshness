@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-06T01:58:15.320432+00:00",
+  "timestamp": "2025-12-11T02:05:46.882488+00:00",
   "repo": "lamps-wg/lamps-attestation-freshness",
   "labels": [
     {
@@ -625,24 +625,26 @@
       "id": "PR_kwDOMJDuNc6xV-px",
       "title": "Updated reference to RFC9810 and RFC9811",
       "url": "https://github.com/lamps-wg/lamps-attestation-freshness/pull/14",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "HBrock",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-11-04T07:28:47Z",
-      "updatedAt": "2025-11-04T07:54:05Z",
+      "updatedAt": "2025-12-09T16:17:32Z",
       "baseRepository": "lamps-wg/lamps-attestation-freshness",
       "baseRefName": "main",
       "baseRefOid": "a4de11fa6553a63f127e7757ce93877ad5054744",
       "headRepository": "lamps-wg/lamps-attestation-freshness",
       "headRefName": "HBrock-refNewCmpRfc",
       "headRefOid": "d576a41722e4884fc5082b35c9c712246f39170d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-12-09T16:17:28Z",
+      "mergedAt": "2025-12-09T16:17:28Z",
+      "mergedBy": "hannestschofenig",
+      "mergeCommit": {
+        "oid": "5c0a6e63c6b693953e0580e8d3afeb0a7ad0bebe"
+      },
       "comments": [],
       "reviews": []
     }
