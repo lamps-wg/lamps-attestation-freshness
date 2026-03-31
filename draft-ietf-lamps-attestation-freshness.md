@@ -184,7 +184,7 @@ return the Attestation Result(s) to the Relying Party.
 The CA uses the Attestation Result(s) with the Appraisal Policy and other information to create the
 requested certificate. The certificate is returned to the End Entity in step (3).
 
-~~~ aasvg
+~~~
 Attester                 Relying Party            One or more
 (End Entity)             (RA/CA)                   Verifier
     |                         |                        |
@@ -245,7 +245,7 @@ required length of the nonce from the Attester. The NonceResponse
 payload of the genp message, sent by the CA/RA in response to the
 request, contains the nonce itself.
 
-~~~ aasvg
+~~~
  GenMsg:    {id-it TBD1}, NonceRequestValue
  GenRep:    {id-it TBD2}, NonceResponseValue | < absent >
 
@@ -274,7 +274,7 @@ request, contains the nonce itself.
     hint UTF8String OPTIONAL
     -- indicates which Verifier to request a nonce from
  }
-~~~ aasvg
+~~~
 
 The end entity may request one or more nonces for different Verifiers. The
 `ATTESTATION-STATEMENT` type is defined in
@@ -318,7 +318,7 @@ It is expected that the respective messages are delivered in a timely manner.
 
 The interaction is illustrated in {{fig-cmp-msg}}.
 
-~~~ aasvg
+~~~
 End Entity                                          RA/CA
 ==========                                      =============
 
