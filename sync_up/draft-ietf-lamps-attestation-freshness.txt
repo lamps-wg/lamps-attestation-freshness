@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 2 October 2025                                        J. Mandel
+Expires: 10 October 2025                                       J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                           31 March 2025
+                                                            8 April 2025
 
 
   Nonce-based Freshness for Remote Attestation in Certificate Signing
@@ -27,9 +27,9 @@ Abstract
    this using nonces.
 
    This document outlines the process through which nonces are supplied
-   to the end entity by an RA/CA for inclusion in fresh Evidence,
-   leveraging the Certificate Management Protocol (CMP), Enrollment over
-   Secure Transport (EST), and Certificate Management over CMS (CMC).
+   to the end entity by an RA/CA for inclusion in Evidence, leveraging
+   the Certificate Management Protocol (CMP), Enrollment over Secure
+   Transport (EST), and Certificate Management over CMS (CMC).
 
 Status of This Memo
 
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 October 2025.
+   This Internet-Draft will expire on 10 October 2025.
 
 Copyright Notice
 
