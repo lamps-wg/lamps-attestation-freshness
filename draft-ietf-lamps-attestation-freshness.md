@@ -112,7 +112,7 @@ that attestation data. Current attestation technology
 commonly achieves this using nonces.
 
 This document outlines the process through which nonces are supplied to the end entity by an RA/CA
-for inclusion in fresh Evidence, leveraging the Certificate Management Protocol (CMP), Enrollment
+for inclusion in Evidence, leveraging the Certificate Management Protocol (CMP), Enrollment
 over Secure Transport (EST), and Certificate Management over CMS (CMC).
 
 --- middle
