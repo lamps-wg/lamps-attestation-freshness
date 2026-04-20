@@ -72,6 +72,7 @@ normative:
   RFC6838:
   RFC8949:
   RFC9482:
+  RFC9811:
   X.680:
     target: https://www.itu.int/rec/T-REC.X.680
     title: >
@@ -145,10 +146,10 @@ security module or the protective capabilities provided by the hardware, as well
 platform itself.
 
 To include these claims in a CSR, {{I-D.ietf-lamps-csr-attestation}} defines
-AttestationStatement and AttestationBundle structures. These structures specify
-how attestation statements, including Evidence produced by an Attester, are
-encoded for inclusion in CRMF or PKCS#10, along with any necessary certificates
-for their validation.
+`AttestationStatement` and `AttestationBundle` structures. These structures
+specify how attestation statements, including Evidence produced by an Attester,
+are encoded for inclusion in CRMF or PKCS#10, along with any necessary
+certificates for their validation.
 
 This specification does not define freshness for all possible attestation
 statement types carried by {{I-D.ietf-lamps-csr-attestation}}. Its focus is
@@ -159,10 +160,18 @@ production is crucial. Current attestation technologies, like {{TPM20}} and
 {{RFC9783}}, often employ nonces to ensure the freshness of Evidence. Further
 details on ensuring Evidence freshness can be found in {{Section 10 of RFC9334}}.
 
-{{Section 3 of I-D.ietf-lamps-csr-attestation}} defines an AttestationBundle
-that can contain one or more AttestationStatement values. For each Evidence
-statement whose freshness is to be established using a nonce, the end entity
-may wish to request a separate nonce.
+In this document, the freshness of Evidence refers to the incorporation of the
+nonce into the claims carried by the Evidence so that the Verifier can determine
+that the Evidence was generated for the current appraisal transaction. It does
+not mean that all other claims in the Evidence are newly collected or updated
+for each exchange. For example, a measurement claim describing a second-stage
+bootloader would normally change only when that bootloader software is updated,
+not merely because a fresh nonce was requested.
+
+{{Section 3 of I-D.ietf-lamps-csr-attestation}} defines an
+`AttestationBundle` that can contain one or more `AttestationStatement` values.
+For each Evidence statement whose freshness is to be established using a nonce,
+the end entity may wish to request a separate nonce.
 
 Since an end entity requires one or more nonces via the RA/CA, an additional
 roundtrip is necessary. However, a CSR is a one-shot message. Therefore, CMP, EST, and CMC enable the end
@@ -170,7 +179,7 @@ entity to request information from the RA/CA before submitting a certification r
 
 Once a nonce is obtained, the end entity invokes the API on an Attester, providing the nonce as an
 input parameter. The Attester then returns Evidence, which is embedded into an
-AttestationStatement in the CSR and potentially, together with further
+`AttestationStatement` in the CSR and potentially, together with further
 attestation statements, submitted back to the RA/CA in a certification request
 message.
 
@@ -179,7 +188,7 @@ message.
 - One or more nonces are requested in step (0) and obtained in step (1) using the extension to CMP/EST/CMC defined
 in this document.
 - The CSR attribute or extension defined in {{I-D.ietf-lamps-csr-attestation}}
-conveys an AttestationBundle containing one or more attestation statements to
+conveys an `AttestationBundle` containing one or more attestation statements to
 the RA/CA in step (2).
 - One or more Verifiers process the received attestation statements that
 require appraisal and return the Attestation Result(s) to the Relying Party.
@@ -252,7 +261,7 @@ request interchangeably.
 
 # Conveying a Nonce in CMP {#CMP}
 
-Section 5.3.19 of {{RFC9810}} defines the
+{{Section 5.3.19 of RFC9810}} defines the
 general request message (genm) and general response (genp).
 The NonceRequest payload of the genm message, sent by the end
 entity to request a nonce, optionally includes details on the
@@ -287,7 +296,7 @@ request, contains the nonce itself.
 ~~~
 
 The end entity may request one or more nonces for different attestation
-statement types. The ATTESTATION-STATEMENT type is defined in
+statement types. The `ATTESTATION-STATEMENT` type is defined in
 {{I-D.ietf-lamps-csr-attestation}}. If a NonceRequest structure does not
 contain type, the RA/CA MAY generate a nonce itself and include it in the
 response.
@@ -311,11 +320,11 @@ configured length and provide it in the respective NonceResponse structure.
 If an RA/CA is not able to provide a requested nonce, it MUST provide an empty OCTET STRING in the respective NonceResponse structure.
 
 NonceRequest and NonceResponse structures can contain a type field. The
-AttestationStatement structures carried later in the CSR contain the
+`AttestationStatement` structures carried later in the CSR contain the
 corresponding type field. In terms of type content, the order in which the
 NonceRequest structures were sent in the request message MUST match the order
 of the NonceResponse structures in the response message and the
-AttestationStatement values in the CSR later. This matching ensures that the
+`AttestationStatement` values in the CSR later. This matching ensures that the
 RA/CA can associate each attestation statement with the corresponding nonce
 used by the Attester.
 
@@ -365,7 +374,7 @@ only for illustration.
 
 If HTTP is used to transfer the NonceRequest and NonceResponse
 messages, the OPTIONAL `<operation>` path segment defined in
-{{Section 3.6 of RFC9810}} MAY be used.
+{{Section 3.4 of RFC9811}} MAY be used.
 
 ~~~
  +------------------------+-----------------+-------------------+
@@ -446,10 +455,11 @@ The payload in a POST request MUST be of content-type
 "application/est-attestation-freshness+json" and MUST contain an array of JSON
 objects {{RFC8259}} with the optional members "len" and "type".
 
-- The optional "len" member indicates the length of the requested JSON nonce
-  string in bytes. If present, it MUST be between 8 and 88 inclusive, following
-  the JSON nonce size defined in {{Section 4.1 of RFC9711}}.
-- The optional "type" member contains an AttestationStatement OID (dotted-decimal string) as defined in {{I-D.ietf-lamps-csr-attestation}}.
+- The optional "len" member indicates the length of the requested nonce value
+  in bytes. If present, it MUST be between 8 and 64 inclusive.
+- The optional "type" member contains an `AttestationStatement` OID
+  (dotted-decimal string) as defined in
+  {{I-D.ietf-lamps-csr-attestation}}.
 
 The order of objects in the JSON array is significant and MUST be preserved by the server.
 The response array MUST contain the same number of elements in the same order so clients
@@ -519,14 +529,14 @@ determine whether the payload is a request or response.
 The CBOR request payload is a CBOR array of maps corresponding to the JSON
 request payload defined above. Map keys are text strings. The "len" member, if
 present, is an unsigned integer between 8 and 64 inclusive. The "type" member,
-if present, is a text string containing an AttestationStatement OID in
+if present, is a text string containing an `AttestationStatement` OID in
 dotted-decimal form.
 
 The CBOR response payload is a CBOR array of maps corresponding to the JSON
 response payload defined above. Map keys are text strings. The "nonce" member
 is a CBOR byte string between 8 and 64 bytes in length. The "expiry" member, if
 present, is a text string containing an RFC 3339 timestamp. The "type" member,
-if present, is a text string containing an AttestationStatement OID in
+if present, is a text string containing an `AttestationStatement` OID in
 dotted-decimal form.
 
 # Conveying a Nonce in CMC {#CMC}
@@ -623,7 +633,7 @@ While this specification does not address the semantics of the attestation API
 or the underlying software/hardware architecture, the API returns Evidence from
 the Attester in a format specific to the attestation technology used and
 specified by the type. The returned Evidence is encapsulated in an
-AttestationStatement within the AttestationBundle carried in the CSR, as
+`AttestationStatement` within the `AttestationBundle` carried in the CSR, as
 defined in {{I-D.ietf-lamps-csr-attestation}}. The software generating the CSR
 treats the attestation statement payload as an opaque blob and does not
 interpret its format. It's crucial to note that the nonce is included in the
