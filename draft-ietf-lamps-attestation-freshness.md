@@ -140,9 +140,9 @@ protocol that provides a subset of CMP's features, primarily using PKCS#10 for C
 Certificate Management over CMS (CMC) {{I-D.ietf-lamps-rfc5272bis}} is a certificate management protocol
 using the Cryptographic Message Syntax (CMS).
 
-When an end entity requests a certificate from a Certification Authority (CA), it may need to assert
+When an end entity requests a certificate from a CA, it may need to assert
 credible claims about the protections of the corresponding private key, such as the use of a hardware
-security module or the protective capabilities provided by the hardware, as well as claims about the
+security module, as well as claims about the
 platform itself.
 
 To include these claims in a CSR, {{I-D.ietf-lamps-csr-attestation}} defines
@@ -162,18 +162,21 @@ details on ensuring Evidence freshness can be found in {{Section 10 of RFC9334}}
 
 In this document, the freshness of Evidence refers to the incorporation of the
 nonce into the claims carried by the Evidence so that the Verifier can determine
-that the Evidence was generated for the current appraisal transaction. It does
-not mean that all other claims in the Evidence are newly collected or updated
+that the Evidence was generated for the current appraisal transaction. Including the
+nonce in the Evidence requires the Attester to generate a new digital signature using
+the Attestation Key. It does not mean that all other claims in the Evidence are newly collected or updated
 for each exchange. For example, a measurement claim describing a second-stage
 bootloader would normally change only when that bootloader software is updated,
-not merely because a fresh nonce was requested.
+not merely because a fresh nonce was requested. For more details about architectural
+options and the use of the Attestation Key, see {{RFC9334}}.
 
 {{Section 3 of I-D.ietf-lamps-csr-attestation}} defines an
 `AttestationBundle` that can contain one or more `AttestationStatement` values.
-For each Evidence statement whose freshness is to be established using a nonce,
-the end entity may wish to request a separate nonce.
+The AttestationStatement structure facilitates the representation of Evidence,
+Endorsements, and Attestation Results. For Evidence whose freshness is to be
+established, the end entity may wish to request a nonce.
 
-Since an end entity requires one or more nonces via the RA/CA, an additional
+Since an end entity requires a nonces via the RA/CA, an additional
 roundtrip is necessary. However, a CSR is a one-shot message. Therefore, CMP, EST, and CMC enable the end
 entity to request information from the RA/CA before submitting a certification request conveniently.
 
@@ -185,7 +188,7 @@ message.
 
 {{fig-arch}} illustrates this interaction:
 
-- One or more nonces are requested in step (0) and obtained in step (1) using the extension to CMP/EST/CMC defined
+- A nonce is requested in step (0) and obtained in step (1) using the extension to CMP/EST/CMC defined
 in this document.
 - The CSR attribute or extension defined in {{I-D.ietf-lamps-csr-attestation}}
 conveys an `AttestationBundle` containing one or more attestation statements to
@@ -201,8 +204,8 @@ creates the nonce and transmits it to the Verifier either before Evidence
 appraisal or together with the Evidence. Another option is that the Attestation
 Result exposes the nonce found in the Evidence as a claim; in this model, the
 Relying Party performs the freshness check. {{Section 3.1 of
-I-D.ietf-rats-ear}} describes this approach by allowing an EAR appraisal claim
-to carry the nonce extracted from Evidence.
+I-D.ietf-rats-ear}} describes this approach by allowing an EAT Attestation Result
+(EAR) appraisal claim to carry the nonce extracted from Evidence.
 
 The interaction between the Relying Party and the Verifier is out of scope for
 this document. It is shown for illustration only; other specifications define
@@ -218,20 +221,20 @@ Attester                 Relying Party            One or more
     |<----------------------->|                        |
     |                         |                        |
     |                         |                        |
-    |  Request Nonce(s)(0)    |                        |
+    |  Request Nonce (0)      |                        |
     |------------------------>|                        |
-    |                         |  Request Nonce(s)      |
+    |                         |  Request Nonce         |
     |                         |----------------------->|
-    |                         |  Nonce(s)              |
+    |                         |  Nonce                 |
     |                         |<-----------------------|
-    |  Nonce(s) (1)           |                        |
+    |  Nonce    (1)           |                        |
     |<------------------------|                        |
     |                         |                        |
     |  Attested CSR (2)       |                        |
     |------------------------>|                        |
     |                         |  Evidence(s)           |
     |                         |----------------------->|
-    |                         |  Attestation Result(s) |
+    |                         |  Attestation Result    |
     |                         |<-----------------------|
     |  Certificate (3)        |                        |
     |<------------------------|                        |
@@ -240,11 +243,10 @@ Attester                 Relying Party            One or more
 ~~~
 {: #fig-arch title="Architecture with Background Check Model."}
 
-The functionality described in this document is divided into three sections:
-
-- {{CMP}} describes how to convey the nonce using CMP.
-- {{EST}} describes the equivalent functionality for EST.
-- {{CMC}} describes the equivalent functionality for CMC.
+The functionality described in this document is organized into three sections:
+{{CMP}} explains how to convey the nonce using CMP, {{EST}} describes the
+equivalent mechanism for EST, and {{CMC}} covers the corresponding approach
+for CMC.
 
 # Terminology and Requirements Language
 
@@ -295,7 +297,7 @@ request, contains the nonce itself.
  }
 ~~~
 
-The end entity may request one or more nonces for different attestation
+The end entity may request nonces for different attestation
 statement types. The `ATTESTATION-STATEMENT` type is defined in
 {{I-D.ietf-lamps-csr-attestation}}. If a NonceRequest structure does not
 contain type, the RA/CA MAY generate a nonce itself and include it in the
@@ -308,8 +310,7 @@ between 8 and 64 inclusive. These bounds follow the CBOR nonce size defined in
 indicate that the RA/CA was unable to provide a requested nonce.
 
 The use of the general request/response message exchange introduces an additional
-round trip for transmitting nonce(s) from the CA/RA to the end entity (and
-subsequently to the Attester within the end entity).
+round trip for requesting and transmitting nonces from the CA/RA to the end entity.
 
 The end entity MUST construct an id-it-nonceRequest message to prompt
 the RA/CA to send one or more nonces in response. The message may contain one or more
@@ -317,7 +318,8 @@ NonceRequest structures, at a maximum one per attestation statement the end
 entity wishes to provide in a CSR. If a NonceRequest structure does neither
 contain a type nor a length, the RA/CA MAY generate a nonce using a locally
 configured length and provide it in the respective NonceResponse structure.
-If an RA/CA is not able to provide a requested nonce, it MUST provide an empty OCTET STRING in the respective NonceResponse structure.
+If an RA/CA is not able to provide a requested nonce, it MUST provide an empty
+OCTET STRING in the respective NonceResponse structure.
 
 NonceRequest and NonceResponse structures can contain a type field. The
 `AttestationStatement` structures carried later in the CSR contain the
@@ -345,10 +347,10 @@ End Entity                                          RA/CA
 
             ------- id-it-NonceRequest ----->
                                                 Verify request
-                                                Generate or obtain nonce(s)*
+                                                Generate or obtain nonce*
                                                 Create response
             <------ id-it-NonceResponse -----
-                    (nonce(s), expiry)
+                    (nonce, expiry)
 
 Generate key pair
 Generate Evidence(s)*
@@ -400,7 +402,7 @@ the OPTIONAL `<operation>` path segment defined in
 
 # Conveying a Nonce in EST {#EST}
 
-The EST client requests one or more nonces for its Attester from the EST server.
+The EST client requests a nonce for its Attester from the EST server.
 This function typically follows the request for CA certificates and
 precedes other EST operations.
 
@@ -473,7 +475,7 @@ GET /.well-known/est/nonce HTTP/1.1
 
 ### Example POST
 
-To retrieve one or more nonces while optionally specifying the length and/or type:
+This example shows how to retrieve a nonce and including the length and type:
 
 ~~~
 POST /.well-known/est/nonce HTTP/1.1
@@ -636,7 +638,7 @@ specified by the type. The returned Evidence is encapsulated in an
 `AttestationStatement` within the `AttestationBundle` carried in the CSR, as
 defined in {{I-D.ietf-lamps-csr-attestation}}. The software generating the CSR
 treats the attestation statement payload as an opaque blob and does not
-interpret its format. It's crucial to note that the nonce is included in the
+interpret its format. It is crucial to note that the nonce is included in the
 Evidence, either implicitly or explicitly, and MUST NOT be conveyed in CSR
 structures outside of the attestation payload.
 
@@ -843,7 +845,7 @@ assuming that the nonce does not require confidentiality protection while mainta
 the security properties of the remote attestation protocol. {{RFC9334}} defines the
 IETF remote attestation architecture and extensively discusses nonce-based freshness.
 
-Section 8.4 of {{RFC9711}} specifies requirements for the randomness and
+Section 8.4 of {{RFC9711}} specifies requirements for replay protection and
 privacy of nonce generation when used with the Entity Attestation Token (EAT). These
 requirements, which are also adopted by attestation technologies like the PSA attestation
 token {{RFC9783}}, provide general utility:
