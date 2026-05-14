@@ -477,23 +477,25 @@ only for illustration.
    messages, the OPTIONAL <operation> path segment defined in
    Section 3.4 of [RFC9811] MAY be used.
 
-    +------------------------+-----------------+-------------------+
-    | Operation              |Operation path   | Details           |
-    +========================+=================+===================+
-    | Get Attestation        | getnonce        | {{CMP}}           |
-    | Freshness Nonce        |                 |                   |
-    +------------------------+-----------------+-------------------+
+     +=================================+================+===========+
+     | Operation                       | Operation path | Details   |
+     +=================================+================+===========+
+     | Get Attestation Freshness Nonce | getnonce       | Section 3 |
+     +---------------------------------+----------------+-----------+
+
+                                 Table 1
 
    If CoAP is used for transferring NonceRequest and NonceResponse
    messages, the OPTIONAL <operation> path segment defined in
    Section 2.1 of [RFC9482] MAY be used.
 
-    +------------------------+-----------------+-------------------+
-    | Operation              |Operation path   | Details           |
-    +========================+=================+===================+
-    | Get Attestation        | nonce           | {{CMP}}           |
-    | Freshness Nonce        |                 |                   |
-    +------------------------+-----------------+-------------------+
+     +=================================+================+===========+
+     | Operation                       | Operation path | Details   |
+     +=================================+================+===========+
+     | Get Attestation Freshness Nonce | nonce          | Section 3 |
+     +---------------------------------+----------------+-----------+
+
+                                 Table 2
 
 4.  Conveying a Nonce in EST
 
@@ -509,11 +511,13 @@ only for illustration.
 
    The following operation is defined by this specification:
 
-    +------------------------+-----------------+-------------------+
-    | Operation              |Operation path   | Details           |
-    +========================+=================+===================+
-    | Retrieval of a nonce   | /nonce          | {{EST}}           |
-    +------------------------+-----------------+-------------------+
+           +======================+================+===========+
+           | Operation            | Operation path | Details   |
+           +======================+================+===========+
+           | Retrieval of a nonce | /nonce         | Section 4 |
+           +----------------------+----------------+-----------+
+
+                                  Table 3
 
    The operation path is appended to the path-prefix to form the URI
    used with HTTP GET or POST to perform the desired EST operation.  An
@@ -822,25 +826,29 @@ only for illustration.
    This document adds new entries to the "CMP Well-Known URI Path
    Segments" registry defined in [RFC8615].
 
-    +----------------+---------------------------+-----------------+
-    | Path Segment   | Description               | Reference       |
-    +================+===========================+=================+
-    | getnonce       | Get Attestation Freshness | {{CMP}}         |
-    |                | Nonce over HTTP           |                 |
-    +----------------+---------------------------+-----------------+
-    | nonce          | Get Attestation Freshness | {{CMP}}         |
-    |                | Nonce over CoAP           |                 |
-    +----------------+---------------------------+-----------------+
+         +==============+===========================+===========+
+         | Path Segment | Description               | Reference |
+         +==============+===========================+===========+
+         | getnonce     | Get Attestation Freshness | Section 3 |
+         |              | Nonce over HTTP           |           |
+         +--------------+---------------------------+-----------+
+         | nonce        | Get Attestation Freshness | Section 3 |
+         |              | Nonce over CoAP           |           |
+         +--------------+---------------------------+-----------+
+
+                                 Table 4
 
    This document defines the following additional EST operation path
    segment under the existing "/.well-known/est" URI path-prefix defined
    by [RFC7030]:
 
-    +------------------------+-----------------+-------------------+
-    | Operation              | Operation path  | Details           |
-    +========================+=================+===================+
-    | Retrieval of a nonce   | /nonce          | {{EST}}           |
-    +------------------------+-----------------+-------------------+
+           +======================+================+===========+
+           | Operation            | Operation path | Details   |
+           +======================+================+===========+
+           | Retrieval of a nonce | /nonce         | Section 4 |
+           +----------------------+----------------+-----------+
+
+                                  Table 5
 
    The "est" entry in the "Well-Known URIs" registry defined by
    [RFC8615] already exists.  This document does not request a new Well-
@@ -964,7 +972,7 @@ only for illustration.
               | TBDMOD  | id-mod-att-fresh-req | This-RFC   |
               +---------+----------------------+------------+
 
-                                  Table 1
+                                  Table 6
 
 9.  Security Considerations
 
