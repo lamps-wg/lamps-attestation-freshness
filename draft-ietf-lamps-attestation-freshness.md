@@ -713,7 +713,7 @@ Client to Server:
    ContentInfo.content
        controlSequence
            {101, id-cmc-senderNonce, 10001}
-           {102, id-cmc-nonceReq, &lt;nonce request&gt;}
+           {102, id-cmc-nonceReq, <nonce request>}
 ~~~
 
 Server to Client:
@@ -724,7 +724,7 @@ Server to Client:
        controlSequence
            {101, id-cmc-senderNonce, 10005}
            {102, id-cmc-recipientNonce, 10001}
-           {103, id-cmc-nonceResp, &lt;nonce response&gt;}
+           {103, id-cmc-nonceResp, <nonce response>}
 ~~~
 
 # Nonce Processing Guidelines
