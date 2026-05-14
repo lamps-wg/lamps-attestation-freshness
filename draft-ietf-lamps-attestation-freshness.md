@@ -250,7 +250,9 @@ Attester                 Relying Party
 
 Many devices follow a simple model with an end entity containing a single Attester and a single Verifier. {{fig-arch}} illustrates the exchange in such a deployment. The end entity requests a nonce from the RA/CA and, when obtained, asks the Attester to return Evidence, which includes this nonce.
 
-There are, however, cases where devices are more complex and contain multiple attesters. {{Section 3.3 of RFC9334}} refers to such devices as composite attesters. {{I-D.richardson-rats-composite-attesters}} provides additional detail on different variants and their properties. {{fig-composite}} is based on Figure 2 of {{I-D.richardson-rats-composite-attesters}} and adds the nonce exchanges. In this scenario, the certificate management client obtains a nonce using the protocol extensions described in this document from the RA/CA and passes this nonce to the Lead Attester, which fans it out to the attesters in the system. The term "Lead Attester" is introduced in {{RFC9334}}. Once each Attester returns the Evidence, it is bundled into a Conceptual Message Wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} and made available to the certificate management client to be relayed in a CSR to the RA/CA and subsequently presented to the Verifier. Each Evidence structure contains the same nonce.
+There are, however, cases where devices are more complex and contain multiple attesters. {{Section 3.3 of RFC9334}} refers to such devices as composite attesters. {{I-D.richardson-rats-composite-attesters}} provides additional detail on different variants and their properties. {{fig-composite}} is based on Figure 2 of {{I-D.richardson-rats-composite-attesters}} and adds the nonce exchanges. In this scenario, the certificate management client obtains a nonce using the protocol extensions described in this document from the RA/CA and passes this nonce to the Lead Attester, which distributes the freshness challenge to the attesters in the system. The term "Lead Attester" is introduced in {{RFC9334}}. Once each Attester returns the Evidence, it is bundled into a Conceptual Message Wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} and made available to the certificate management client to be relayed in a CSR to the RA/CA and subsequently presented to the Verifier.
+
+Some composite attester designs propagate the nonce unchanged to every Attester. Other designs can require one or more sub-attesters to receive a nonce derived from the received nonce, for example because the sub-attesters support different nonce sizes or nonce encodings. In such cases, the specification for the selected attestation statement type MAY define a deterministic transformation together with any verifier-visible metadata needed to reconstruct or validate that transformation. This document does not define such transformations or metadata.
 
 This document does not mandate a specific freshness mechanism or a specific implementation for distributing nonce or epoch values within a device running the certificate management client.
 
@@ -761,11 +763,17 @@ technologies employ nonces of similar lengths.
 
 If a specific length was requested, the RA/CA MUST provide a nonce of that size.
 The end entity MUST use the received nonce if the remote attestation supports
-the requested length.
+the requested length. If the selected attestation statement type defines a
+deterministic nonce transformation for use by a specific Attester or
+sub-attester, the end entity MUST apply only that transformation and only
+for the purpose defined by that specification.
 
 If attestation-type-specific response information is returned with the
 nonce, the end entity MUST process that information according to the
-selected type when invoking the attestation technology.
+selected type when invoking the attestation technology. Such information
+MAY include parameters or metadata needed to apply, identify, or validate
+a deterministic nonce transformation defined by the attestation statement
+type.
 
 While this specification does not address the semantics of the attestation API
 or the underlying software/hardware architecture, the API returns Evidence from
@@ -987,6 +995,14 @@ token {{RFC9783}}, provide general utility:
 Each attestation technology specification offers guidance on replay protection using nonces
 and other techniques. Specific recommendations are deferred to these individual specifications
 in this document.
+
+If an attestation technology or composite attester profile transforms a
+received nonce before embedding it in Evidence, that transformation MUST
+be deterministic, MUST preserve at least the minimum entropy required by
+the attestation technology, and MUST provide the Verifier with enough
+information to reconstruct or validate the transformed value when needed.
+Specifications defining such transformations SHOULD use well-analyzed
+cryptographic mechanisms for nonce expansion or size adjustment to ensure that the resulting entropy and security properties remain acceptable.
 
 If attestation-type-specific nonce exchange information is used, the
 corresponding specification MUST define the syntax and semantics of that
