@@ -181,7 +181,7 @@ The AttestationStatement structure facilitates the representation of Evidence,
 Endorsements, and Attestation Results. For Evidence whose freshness is to be
 established, the end entity may wish to request a nonce.
 
-Since an end entity requires a nonce via the RA/CA, an additional roundtrip is
+Since an end entity requires a nonce via the RA/CA, an additional round-trip is
 necessary. However, a CSR is a one-shot message. Therefore, CMP, EST, and CMC
 enable the end entity to request information from the RA/CA before submitting a
 certification request conveniently.
@@ -398,7 +398,7 @@ the end entity.
 
 The end entity MUST construct an id-it-nonceRequest message to prompt the RA/CA
 to send a nonce in response. Each message carries exactly one NonceRequest. If
-a NonceRequest does neither contain a type nor a length, the RA/CA MAY
+a NonceRequest contains neither a type nor a length, the RA/CA MAY
 generate a nonce using a locally configured length and provide it in the
 corresponding NonceResponse. If an RA/CA is not able to provide a requested
 nonce, it MUST provide an empty OCTET STRING in the NonceResponse.
@@ -442,11 +442,11 @@ The interaction is illustrated in {{fig-cmp-msg}}.
 End Entity                                         RA/CA
 ==========                                     =============
 
-            ------- id-it-NonceRequest ----->
+            ------- id-it-nonceRequest ----->
                                                Verify request
                                                Generate or obtain nonce*
                                                Create response
-            <------ id-it-NonceResponse -----
+            <------ id-it-nonceResponse -----
                     (nonce, expiry)
 
 Generate key pair
@@ -454,7 +454,7 @@ Generate Evidence(s)*
 Generate certification
   request message
             ------- certification request --->
-                +Evidence(s) including nonce)
+                +Evidence(s) including nonce
                                               Verify request
                                               Verify Evidence(s)*
                                               Check freshness/replay*
@@ -571,6 +571,7 @@ the selected type:
 ~~~
 POST /.well-known/est/nonce HTTP/1.1
 Content-Type: application/est-attestation-freshness+json
+
 {
   "len": 32,
   "type": "1.2.3.4.5",
@@ -593,10 +594,12 @@ present in both the request and response, the two values MUST match. The
 optional "respInfo" member contains
 attestation-type-specific nonce-response information. It MUST NOT be
 present unless "type" is present. Its JSON encoding is defined by the
-selected type. The "nonce" member MUST be a JSON string between 8 and 88
-bytes in length. It contains the base64url encoding, without padding
+selected type. The "nonce" member MUST be a JSON string containing the
+base64url encoding, without padding
 characters, of the nonce byte string, as specified in {{Section 5 of RFC4648}}.
-The decoded nonce value MUST be between 8 and 64 bytes in length.
+For nonce values between 8 and 64 bytes, this encoding is between 11 and 86
+characters in length. The decoded nonce value MUST be between 8 and 64 bytes in
+length.
 
 If the EST server receives an unknown type, malformed `reqInfo`, or
 `reqInfo` that is inconsistent with the selected type, it MUST respond
@@ -605,7 +608,7 @@ the response body. If the request is understood but the EST server is
 unable to provide a nonce matching the request, it MUST respond with
 HTTP status code 503 (Service Unavailable).
 
-Note: CMP encodes "expiry" as an INTEGER representing seconds of validity.
+CMP encodes "expiry" as an INTEGER representing seconds of validity.
 EST encodes "expiry" as an absolute timestamp.
 
 Below is an example response:
@@ -613,6 +616,7 @@ Below is an example response:
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/est-attestation-freshness+json
+
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": "2031-10-12T07:20:50.52Z",
@@ -693,34 +697,34 @@ id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 
 ## Generic Nonce Request Message Flow
 
-The client sends id-cmc-nonceReq structure to the server. Upon receiving and processing the request,
+The client sends an id-cmc-nonceReq structure to the server. Upon receiving and processing the request,
 the server responds with id-cmc-nonceResp.
 
-Once this round-trip transaction is complete, the client will include the nonce in either a Simple or Full PKI Request.
+Once this round-trip transaction is complete, the client uses the received
+nonce when obtaining Evidence from the Attester. That Evidence, which contains
+the nonce, is then conveyed in the subsequent Simple or Full PKI Request using
+the CSR attestation mechanisms defined in
+{{I-D.ietf-lamps-csr-attestation}}.
 
 Client to Server:
 
 ~~~
-   ContentInfo.contentType = id-Data
+   ContentInfo.contentType = id-data
    ContentInfo.content
-       eContentType = id-cct-PKIData
-       eContent
-         controlSequence
+       controlSequence
            {101, id-cmc-senderNonce, 10001}
-           {102, id-cmc-nonceReq, &lt;nonce request&gt;}
+           {102, id-cmc-nonceReq, <nonce request>}
 ~~~
 
 Server to Client:
 
 ~~~
-   ContentInfo.contentType = id-Data
+   ContentInfo.contentType = id-data
    ContentInfo.content
-       eContentType = id-cct-PKIData
-       eContent
-         controlSequence
+       controlSequence
            {101, id-cmc-senderNonce, 10005}
            {102, id-cmc-recipientNonce, 10001}
-           {103, id-cmc-nonceResp, &lt;nonce response&gt;}
+           {103, id-cmc-nonceResp, <nonce response>}
 ~~~
 
 # Nonce Processing Guidelines
@@ -747,7 +751,8 @@ remote attestation protocol to fail.
 
 Following {{Section 4.1 of RFC9711}}, nonce values conveyed as CBOR byte
 strings are between 8 and 64 bytes in length, and nonce values conveyed as
-JSON text strings are between 8 and 88 bytes in length. ASN.1 OCTET STRING
+JSON text strings are the unpadded base64url encoding of 8 to 64 nonce bytes
+and are therefore between 11 and 86 characters in length. ASN.1 OCTET STRING
 nonce values used by CMP and CMC follow the same 8 to 64 byte range as CBOR.
 
 For instance, the PSA attestation token {{RFC9783}}
@@ -756,8 +761,7 @@ technologies employ nonces of similar lengths.
 
 If a specific length was requested, the RA/CA MUST provide a nonce of that size.
 The end entity MUST use the received nonce if the remote attestation supports
-the requested length. If necessary, the end entity MAY adjust the length of the
-nonce by truncating or padding it accordingly.
+the requested length.
 
 If attestation-type-specific response information is returned with the
 nonce, the end entity MUST process that information according to the
@@ -1087,12 +1091,12 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
     -- contains type-specific nonce-response information
  }
 
-id-cmc-nonceReq ::= { id-it TBD1 }
+id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-it TBD1 }
 
 cmc-nonceReq CMC-CONTROL ::=
       { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
 
-id-cmc-nonceResp ::= { id-it TBD2 }
+id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
 
 cmc-nonceResp CMC-CONTROL ::=
       { NonceResponse IDENTIFIED BY id-cmc-nonceResp }
