@@ -1359,11 +1359,12 @@ Attester                 Relying Party
         </figcaption></figure>
 </div>
 <p id="section-1-18">Many devices follow a simple model with an end entity containing a single Attester and a single Verifier. <a href="#fig-arch" class="auto internal xref">Figure 1</a> illustrates the exchange in such a deployment. The end entity requests a nonce from the RA/CA and, when obtained, asks the Attester to return Evidence, which includes this nonce.<a href="#section-1-18" class="pilcrow">¶</a></p>
-<p id="section-1-19">There are, however, cases where devices are more complex and contain multiple attesters. <span><a href="https://rfc-editor.org/rfc/rfc9334#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> refers to such devices as composite attesters. <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span> provides additional detail on different variants and their properties. <a href="#fig-composite" class="auto internal xref">Figure 2</a> is based on Figure 2 of <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span> and adds the nonce exchanges. In this scenario, the certificate management client obtains a nonce using the protocol extensions described in this document from the RA/CA and passes this nonce to the Lead Attester, which fans it out to the attesters in the system. The term "Lead Attester" is introduced in <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>. Once each Attester returns the Evidence, it is bundled into a Conceptual Message Wrapper (CMW) <span>[<a href="#I-D.ietf-rats-msg-wrap" class="cite xref">I-D.ietf-rats-msg-wrap</a>]</span> and made available to the certificate management client to be relayed in a CSR to the RA/CA and subsequently presented to the Verifier. Each Evidence structure contains the same nonce.<a href="#section-1-19" class="pilcrow">¶</a></p>
-<p id="section-1-20">This document does not mandate a specific freshness mechanism or a specific implementation for distributing nonce or epoch values within a device running the certificate management client.<a href="#section-1-20" class="pilcrow">¶</a></p>
+<p id="section-1-19">There are, however, cases where devices are more complex and contain multiple attesters. <span><a href="https://rfc-editor.org/rfc/rfc9334#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> refers to such devices as composite attesters. <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span> provides additional detail on different variants and their properties. <a href="#fig-composite" class="auto internal xref">Figure 2</a> is based on Figure 2 of <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span> and adds the nonce exchanges. In this scenario, the certificate management client obtains a nonce using the protocol extensions described in this document from the RA/CA and passes this nonce to the Lead Attester, which distributes the freshness challenge to the attesters in the system. The term "Lead Attester" is introduced in <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>. Once each Attester returns the Evidence, it is bundled into a Conceptual Message Wrapper (CMW) <span>[<a href="#I-D.ietf-rats-msg-wrap" class="cite xref">I-D.ietf-rats-msg-wrap</a>]</span> and made available to the certificate management client to be relayed in a CSR to the RA/CA and subsequently presented to the Verifier.<a href="#section-1-19" class="pilcrow">¶</a></p>
+<p id="section-1-20">Some composite attester designs propagate the nonce unchanged to every Attester. Other designs can require one or more sub-attesters to receive a nonce derived from the received nonce, for example because the sub-attesters support different nonce sizes or nonce encodings. In such cases, the specification for the selected attestation statement type MAY define a deterministic transformation together with any verifier-visible metadata needed to reconstruct or validate that transformation. This document does not define such transformations or metadata.<a href="#section-1-20" class="pilcrow">¶</a></p>
+<p id="section-1-21">This document does not mandate a specific freshness mechanism or a specific implementation for distributing nonce or epoch values within a device running the certificate management client.<a href="#section-1-21" class="pilcrow">¶</a></p>
 <span id="name-class-1-composite-attester"></span><div id="fig-composite">
 <figure id="figure-2">
-        <div class="alignLeft art-text artwork" id="section-1-21.1">
+        <div class="alignLeft art-text artwork" id="section-1-22.1">
 <pre>
                        .---------.
                        | RA / CA |
@@ -1402,10 +1403,10 @@ Attester                 Relying Party
 <a href="#name-class-1-composite-attester" class="selfRef">Class 1 Composite Attester.</a>
         </figcaption></figure>
 </div>
-<p id="section-1-22">The functionality described in this document is organized into three sections:
+<p id="section-1-23">The functionality described in this document is organized into three sections:
 <a href="#CMP" class="auto internal xref">Section 3</a> explains how to convey the nonce using CMP, <a href="#EST" class="auto internal xref">Section 4</a> describes the
 equivalent mechanism for EST, and <a href="#CMC" class="auto internal xref">Section 5</a> covers the corresponding approach
-for CMC.<a href="#section-1-22" class="pilcrow">¶</a></p>
+for CMC.<a href="#section-1-23" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology-and-requirements-language">
@@ -1959,10 +1960,16 @@ supports nonce lengths of 32, 48, and 64 bytes. Other attestation
 technologies employ nonces of similar lengths.<a href="#section-6-4" class="pilcrow">¶</a></p>
 <p id="section-6-5">If a specific length was requested, the RA/CA MUST provide a nonce of that size.
 The end entity MUST use the received nonce if the remote attestation supports
-the requested length.<a href="#section-6-5" class="pilcrow">¶</a></p>
+the requested length. If the selected attestation statement type defines a
+deterministic nonce transformation for use by a specific Attester or
+sub-attester, the end entity MUST apply only that transformation and only
+for the purpose defined by that specification.<a href="#section-6-5" class="pilcrow">¶</a></p>
 <p id="section-6-6">If attestation-type-specific response information is returned with the
 nonce, the end entity MUST process that information according to the
-selected type when invoking the attestation technology.<a href="#section-6-6" class="pilcrow">¶</a></p>
+selected type when invoking the attestation technology. Such information
+MAY include parameters or metadata needed to apply, identify, or validate
+a deterministic nonce transformation defined by the attestation statement
+type.<a href="#section-6-6" class="pilcrow">¶</a></p>
 <p id="section-6-7">While this specification does not address the semantics of the attestation API
 or the underlying software/hardware architecture, the API returns Evidence from
 the Attester in a format specific to the attestation technology used and
@@ -2336,14 +2343,21 @@ salt from a genuinely random number generator or another reliable source of rand
 <p id="section-9-4">Each attestation technology specification offers guidance on replay protection using nonces
 and other techniques. Specific recommendations are deferred to these individual specifications
 in this document.<a href="#section-9-4" class="pilcrow">¶</a></p>
-<p id="section-9-5">If attestation-type-specific nonce exchange information is used, the
+<p id="section-9-5">If an attestation technology or composite attester profile transforms a
+received nonce before embedding it in Evidence, that transformation MUST
+be deterministic, MUST preserve at least the minimum entropy required by
+the attestation technology, and MUST provide the Verifier with enough
+information to reconstruct or validate the transformed value when needed.
+Specifications defining such transformations SHOULD use well-analyzed
+cryptographic mechanisms for nonce expansion or size adjustment to ensure that the resulting entropy and security properties remain acceptable.<a href="#section-9-5" class="pilcrow">¶</a></p>
+<p id="section-9-6">If attestation-type-specific nonce exchange information is used, the
 corresponding specification MUST define the syntax and semantics of that
 information, including any confidentiality requirements. Implementations
 SHOULD minimize the amount of such information returned by the RA/CA and
 SHOULD protect it using the message or transport security mechanisms of
 the enrollment protocol when confidentiality is required by deployment
-policy or by the attestation technology specification.<a href="#section-9-5" class="pilcrow">¶</a></p>
-<p id="section-9-6">Using nonces causes the Relying Party to create state for outstanding
+policy or by the attestation technology specification.<a href="#section-9-6" class="pilcrow">¶</a></p>
+<p id="section-9-7">Using nonces causes the Relying Party to create state for outstanding
 freshness challenges. This state increases the attack surface for denial-of-service
 attacks, for example by causing the Relying Party to allocate memory for many
 nonce requests that never result in corresponding Evidence. Relying Parties
@@ -2351,9 +2365,9 @@ SHOULD reduce this exposure by limiting nonce lifetimes, bounding the number of
 outstanding nonces, applying rate limits, associating nonce state with an
 authenticated or otherwise constrained requester where possible, and promptly
 discarding expired state. A future version of this specification could define
-a stateless cookie mechanism to reduce this state-management burden.<a href="#section-9-6" class="pilcrow">¶</a></p>
-<p id="section-9-7">Regarding the use of attestation statements in a CSR, the security considerations outlined in
-<span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> are pertinent to this specification.<a href="#section-9-7" class="pilcrow">¶</a></p>
+a stateless cookie mechanism to reduce this state-management burden.<a href="#section-9-7" class="pilcrow">¶</a></p>
+<p id="section-9-8">Regarding the use of attestation statements in a CSR, the security considerations outlined in
+<span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> are pertinent to this specification.<a href="#section-9-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="acknowledgments">
