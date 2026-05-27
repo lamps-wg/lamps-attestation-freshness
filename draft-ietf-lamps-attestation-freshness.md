@@ -318,7 +318,7 @@ Generate certification
                                            Create response
                                            Handle response
 
-                <-- certification response -- 
+                <-- certification response --
 
 Store certificate
 
