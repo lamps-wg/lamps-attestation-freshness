@@ -484,7 +484,7 @@ defined in {{Section 2.1 of RFC9482}} MAY be used for the nonce request message.
 If the RA/CA does not want to return a nonce, there are several ways to
 indicate this. Which variant fits depends on the circumstances.
 
-- Return a zero-length octet string in the NonceRequest structure.
+- Return a zero-length octet string in the NonceResponse structure.
 - Omit the NonceResponse structure in the genpMessage.
 - At the HTTP or COAP level, return an error like in {{RFC9811}} or
   {{RFC9482}}.
