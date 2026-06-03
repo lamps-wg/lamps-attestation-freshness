@@ -1020,7 +1020,7 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
  }
 
  id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
-    nonceReq ::= NonceRequest
+    nonceResp ::= NonceResponse
 
  id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
     nonceResp ::= NonceResponse
