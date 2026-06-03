@@ -648,7 +648,7 @@ Table of Contents
        { NonceResponse IDENTIFIED BY id-cmc-nonceResp }
    id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-cmc TBD5 }
 
-   The following example shows a the nonce request and nonce response
+   The following example shows the nonce request and nonce response
    message content:
 
    ContentInfo.contentType = id-data
