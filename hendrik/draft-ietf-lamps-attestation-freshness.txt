@@ -599,7 +599,7 @@ Table of Contents
 
 5.2.  EST over secure COAP
 
-   If the nonce request and nonce response message content is be
+   If the nonce request and nonce response message content is
    transmitted via secure CoAP, the specification in [RFC9148] applies.
    The message content is encoded in CBOR as described in Section 3.3.
 
