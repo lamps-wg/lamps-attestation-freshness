@@ -240,15 +240,16 @@ device with Attester       Relying Party                 Verifier
 
 The nonce request and nonce response messages allow the end entity to request
 only one nonce and one respInfo structure from the RA/CA. If the end entity
-wants to include multiple Evidence statements in a CSR, it should use the
+wants to include multiple Evidence statements in a CSR, it can use the
 composite Attester model described in {{Section 3.3 of RFC9334}} and
-{{I-D.richardson-rats-composite-attesters}} together with a Conceptual Message
-Wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} structure. The lead Attester should
-then pass the nonce to the sub-Attesters. Based on Figure 2 of
+{{I-D.richardson-rats-composite-attesters}}, i.e., together with a conceptual
+message wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} structure, as described in
+{{Section 4.3 of I-D.ietf-lamps-csr-attestation}}. The lead Attester
+should then pass the nonce to the sub-Attesters. Based on Figure 2 of
 {{I-D.richardson-rats-composite-attesters}}, {{fig-lead-Attester}} shows an
 example of how a nonce can be distributed among several Attesters in an end
 entity. If multiple respInfo structures are required, the reqInfo and respInfo
-structures should also use a Conceptual Message Wrapper (CMW).
+structures can also use a conceptual message wrapper (CMW).
 
 ~~~~ aasvg
                       .---------.
@@ -331,8 +332,8 @@ nonce response message content. CMP and CMC use ASN.1, while EST uses JSON and C
 
 This section defines nonce request and nonce response message content as ASN.1 types for use in
 CMP, see {{CMP}}, and CMC, see {{CMC}}. Nonce values conveyed as ASN.1 OCTET STRING values
-in CMP and CMC are between 8 and 64 bytes in length. A zero-length octet string
-indicates that the RA/CA does not wish to provide a nonce.
+in CMP and CMC are between 8 and 64 bytes in length. A zero-length octet string indicates
+  that the RA/CA doesis unable or not willing to deliver the requested nonce.
 
 ~~~~
 ATTESTATION-NONCE-REQUEST ::= TYPE-IDENTIFIER
@@ -380,15 +381,16 @@ for use in EST, see {{EST-https}}.
 
 The JSON structure has the following members:
 
-- The optional "len" and "expiry" members, if present, MUST be unsigned
+- The OPTIONAL "len" and "expiry" members, if present, MUST be unsigned
   integers.
 - The "nonce" member MUST be a JSON string containing the unpadded base64url
   encoding, as specified in {{Section 5 of RFC4648}}, of a nonce value between
   8 and 64 bytes in length. Such encodings are between 11 and 86 characters in
-  length.
-- The optional "type" member, if present, MUST be a text string containing the
+  length. A zero-length octet string indicates that the RA/CA doesis unable or
+  not willing to deliver the requested nonce.
+- The OPTIONAL "type" member, if present, MUST be a text string containing the
   object identifier as a dotted-decimal OID.
-- The optional "reqInfo" and "respInfo" members MUST only be included if the
+- The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
   corresponding "type" member contains an OID. Their contents are defined by
   that OID.
 
@@ -404,7 +406,7 @@ The JSON structure has the following members:
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": 600,
-  "type": "1.2.3.4.5",
+  "type": "1.2.3.4.6",
   "respInfo": { ... }
 }
 ~~~~
@@ -419,11 +421,12 @@ structure {{RFC8949}} for use in EST-coaps, see {{EST-coaps}}.
 The CBOR structure defined in CDDL {{RFC8610}} has the following members:
 
 - All map keys are text strings.
-- The optional "nonce" member contains the nonce values conveyed as CBOR byte
-  strings are between 8 and 64 bytes in length.
-- The optional dotted-decimal-oid "type" member denotes a text string containing
+- The "nonce" member contains the nonce values conveyed as CBOR byte
+  strings are between 8 and 64 bytes in length. A zero-length octet string indicates
+  that the RA/CA doesis unable or not willing to deliver the requested nonce.
+- The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
   an object identifier in dotted-decimal notation.
-- The optional "reqInfo" and "respInfo" members contain type-specific CBOR
+- The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
   values. They MUST only be included if the corresponding "type" member contains
   an OID. Their CBOR encoding is defined by that OID.
 
@@ -435,7 +438,7 @@ nonce-request = {
 }
 
 nonce-response = {
-    "nonce": nonce,
+    "nonce": h'' / nonce,
   ? "expiry": uint,
   ? "type": dotted-decimal-oid,
   ? "respInfo": any
@@ -574,7 +577,7 @@ Content-Type: application/est-attestation-freshness+json
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": 600,
-  "type": "1.2.3.4.5",
+  "type": "1.2.3.4.6",
   "respInfo": {
     "certificate-name": "aik-1"
   }
@@ -841,7 +844,7 @@ attestation technology in use, as specific nonce
 lengths may be required by the end entity. This specification assumes
 that the RA/CA possesses knowledge, either out-of-band or through the
 len field in the nonce request message, regarding the required nonce length for
-the attestation technology. Nonces of incorrect length will cause the
+the attestation technology. Nonces of incorrect length may cause the
 remote attestation protocol to fail.
 
 For instance, the PSA attestation token {{RFC9783}}
@@ -971,7 +974,7 @@ FROM EnrollmentMessageSyntax-2025
    security(5) mechanisms(5) pkix(7) id-mod(0)
    id-mod-enrollMsgSyntax-2025(TBDCMC) }
 -- RFC Editor: TBDCMC shall be TBD1 as defined by
--- Section 11 of draft-ietf-lamps-rfc5272bis
+--   Section 11 of draft-ietf-lamps-rfc5272bis
 
 ;
 
@@ -995,7 +998,7 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
     type   ATTESTATION-NONCE-REQUEST.&id(
               {AttestationNonceRequestSet}) OPTIONAL,
     -- identifies the nonce-request syntax for the selected
-    -- attestation statement type
+    --   attestation statement type
     reqInfo ATTESTATION-NONCE-REQUEST.&Type(
               {AttestationNonceRequestSet}{@type}) OPTIONAL
     -- contains type-specific nonce-request information
@@ -1006,21 +1009,21 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
     -- contains the nonce of length len
     expiry INTEGER OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
-    -- the nonce valid
+    --   the nonce valid
     type   ATTESTATION-NONCE-RESPONSE.&id(
               {AttestationNonceResponseSet}) OPTIONAL,
     -- identifies the nonce-response syntax for the selected
-    -- attestation statement type
+    --   attestation statement type
     respInfo ATTESTATION-NONCE-RESPONSE.&Type(
                {AttestationNonceResponseSet}{@type}) OPTIONAL
     -- contains type-specific nonce-response information
  }
 
- id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
-    nonceResp ::= NonceResponse
-
  id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
     nonceReq ::= NonceRequest
+
+ id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
+    nonceResp ::= NonceResponse
 
  cmc-nonceReq CMC-CONTROL ::=
      { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
