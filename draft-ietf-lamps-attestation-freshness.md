@@ -175,11 +175,11 @@ EST, or CMC to request a nonce from the RA/CA for a specific type of Evidence
 to be included in the CSR. The end entity sends a nonce request message with the
 following fields:
 
-- len: In this optional field, the end entity can specify the desired length of
+- len: In this OPTIONAL field, the end entity can specify the desired length of
   the requested nonce in bytes as a value between 8 and 64.
-- type: In this optional field, the end entity can specify the type of the
+- type: In this OPTIONAL field, the end entity can specify the type of the
   reqInfo structure.
-- reqInfo: If type is set, this optional field MUST contain the type-specific
+- reqInfo: If type is set, this OPTIONAL field MUST contain the type-specific
   content that the RA/CA requires to generate respInfo. If type is not set,
   reqInfo MUST also be omitted.
 
@@ -187,22 +187,19 @@ The RA/CA can return the requested nonce in a nonce response message together
 with information specific to the generation of the Evidence. The nonce response
 message has the following fields:
 
-- nonce: This field contains the nonce. The length of the nonce SHOULD be as
-  requested in the len field.
-- expiry: In this optional field, the RA/CA can specify the validity period of
+- nonce: This field contains the nonce. If a specific length was requested, the
+  RA/CA SHOULD provide a nonce of that size.
+- expiry: In this OPTIONAL field, the RA/CA can specify the validity period of
   the nonce in seconds as an integer value. The nonce can be used during this
   period; the response therefore needs to be conveyed promptly.
-- type: In this optional field, the RA/CA can specify the type of the respInfo
+- type: In this OPTIONAL field, the RA/CA can specify the type of the respInfo
   structure. The decision to populate the respInfo with a type
   field will depend on the specification associated with the OID listed in the
   type field of the nonce request message. If the type field is present in both the
   nonce request and the nonce response message content, the two values MUST match.
-
-- respInfo: If type is set, this optional field MUST contain the type-specific
+- respInfo: If type is set, this OPTIONAL field MUST contain the type-specific
   content requested by the end entity for generating the Evidence. If type is
   not set, respInfo MUST also be omitted.
-
-If a specific length was requested, the RA/CA MUST provide a nonce of that size.
 
 This document does not further specify the content of the reqInfo and respInfo
 structures; those structures must be defined elsewhere. Each definition must
@@ -288,7 +285,7 @@ structures should also use a Conceptual Message Wrapper (CMW).
 ~~~~
 {: #fig-lead-Attester title="Class 1 Composite Attester"}
 
-The interaction is illustrated in {{fig-msg}}.
+The interaction between the end entity and the RY/CA is illustrated in {{fig-msg}}.
 
 ~~~~ aasvg
 end entity                                      RA/CA
@@ -328,12 +325,12 @@ Store certificate
 {: #fig-msg title="Exchange with Nonce and Evidence."}
 
 The following sections define the generic data structures for nonce request and
-nonce response messages. CMP and CMC use ASN.1, while EST uses JSON and CBOR.
+nonce response message content. CMP and CMC use ASN.1, while EST uses JSON and CBOR.
 
 ## ASN.1 Representation {#ASN.1}
 
 This section defines nonce request and nonce response message content as ASN.1 types for use in
-CMP {{CMP}} and CMC {{CMC}}. Nonce values conveyed as ASN.1 OCTET STRING values
+CMP, see {{CMP}}, and CMC, see {{CMC}}. Nonce values conveyed as ASN.1 OCTET STRING values
 in CMP and CMC are between 8 and 64 bytes in length. A zero-length octet string
 indicates that the RA/CA does not wish to provide a nonce.
 
@@ -379,7 +376,7 @@ NonceResponse ::= SEQUENCE {
 ## JSON Representation {#JSON}
 
 This section defines nonce request and nonce response message content as JSON objects {{RFC8259}}
-for use in EST {{EST-https}}.
+for use in EST, see {{EST-https}}.
 
 The JSON structure has the following members:
 
@@ -416,8 +413,8 @@ The JSON structure has the following members:
 
 ## CBOR Representation {#CBOR}
 
-This section defines nonce request and nonce response message content as a CBOR structure {{RFC8949}} for use in
-EST-coaps {{EST-coaps}}.
+This section defines nonce request and nonce response message content as a CBOR
+structure {{RFC8949}} for use in EST-coaps, see {{EST-coaps}}.
 
 The CBOR structure defined in CDDL {{RFC8610}} has the following members:
 
@@ -452,8 +449,8 @@ dotted-decimal-oid = tstr
 
 # Use with CMP {#CMP}
 
-The nonce request and nonce response message content is conveyed as ASN.1, see {{ASN.1}},
-content in a CMP general message request (genm) {{Section 5.3.19 of RFC9810}}
+The nonce request and nonce response message content is conveyed as ASN.1 content,
+see {{ASN.1}}, in a general message (genm) {{Section 5.3.19 of RFC9810}}
 and general response (genp) {{Section 5.3.20 of RFC9810}}, respectively.
 
 ~~~~
@@ -481,11 +478,11 @@ defined in {{Section 2.1 of RFC9482}} MAY be used for the nonce request message.
 | --- | --- | --- |
 | Get Attestation Freshness Nonce | `nonce` | {{CMP}} |
 
-If the RA/CA does not want to return a nonce, there are several ways to
-indicate this. Which variant fits depends on the circumstances.
+If the RA/CA is unable or unwilling to deliver the requested nonce, there are
+several ways to indicate this. Which variant fits depends on the circumstances.
 
 - Return a zero-length octet string in the NonceResponse structure.
-- Omit the NonceResponse structure in the genpMessage.
+- Omit the NonceResponse structure in the genp Message.
 - At the HTTP or COAP level, return an error like in {{RFC9811}} or
   {{RFC9482}}.
 
@@ -512,11 +509,11 @@ uses either the GET or POST method:
 
 ## EST over HTTPS {#EST-https}
 
-If the nonce request and nonce response message content is transmitted over HTTPS,
+If the nonce request and nonce response message content is transferred over HTTPS,
 the specification in {{RFC7030}} applies.
 
 If the nonce request message was successful, the EST server MUST respond with an HTTP 200
-status code and the nonce response message content MUST be encoded as JSON object
+status code and the nonce response message content MUST be encoded as JSON object, see
 {{JSON}}. The EST server MUST NOT respond with an HTTP 200 status code if it
 does not return a nonce.
 
@@ -586,13 +583,13 @@ Content-Type: application/est-attestation-freshness+json
 
 ## EST over secure COAP {#EST-coaps}
 
-If the nonce request and nonce response message content is transmitted via
+If the nonce request and nonce response message content is transferred via
 secure CoAP, the specification in {{RFC9148}} applies. The message content
 is encoded in CBOR as described in {{CBOR}}.
 
 If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
-nonce response message content MUST be encoded as CBOR object {{CBOR}}. The EST
+nonce response message content MUST be encoded as CBOR object, see {{CBOR}}. The EST
 server MUST NOT respond with a code 2.05 or code 2.04 if it does not return
 a nonce.
 
@@ -660,8 +657,8 @@ Segments" registry defined in {{RFC8615}}:
 
 | Path Segment | Description | Reference |
 | --- | --- | --- |
-| `getnonce` | Get Attestation Freshness Nonce over HTTP | {{CMP}} |
-| `nonce` | Get Attestation Freshness Nonce over CoAP | {{CMP}} |
+| `getnonce` | Get Attestation Freshness Nonce over HTTP | This-RFC |
+| `nonce` | Get Attestation Freshness Nonce over CoAP | This-RFC |
 
 ### Information Type
 
