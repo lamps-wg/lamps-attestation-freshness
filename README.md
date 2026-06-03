@@ -1,6 +1,6 @@
 # Requesting a Freshness Nonce for Attestation Evidence in Certificate Signing Requests
 
-This is the working area for the IETF [LAMPS Working Group](https://datatracker.ietf.org/wg/lamps/documents/) Internet-Draft, "Nonce-based Freshness for Remote Attestation in Certificate Signing Requests (CSRs) for the Certification Management Protocol (CMP) and for Enrollment over Secure Transport (EST)".
+This is the working area for the IETF [LAMPS Working Group](https://datatracker.ietf.org/wg/lamps/documents/) Internet-Draft, "Requesting a Freshness Nonce for Attestation Evidence in Certificate Signing Requests".
 
 * [Editor's Copy](https://lamps-wg.github.io/lamps-attestation-freshness/#go.draft-ietf-lamps-attestation-freshness.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-lamps-attestation-freshness)
