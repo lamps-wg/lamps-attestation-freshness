@@ -586,7 +586,7 @@ Content-Type: application/est-attestation-freshness+json
 
 ## EST over secure COAP {#EST-coaps}
 
-If the nonce request and nonce response message content is be transmitted via
+If the nonce request and nonce response message content is transmitted via
 secure CoAP, the specification in {{RFC9148}} applies. The message content
 is encoded in CBOR as described in {{CBOR}}.
 
