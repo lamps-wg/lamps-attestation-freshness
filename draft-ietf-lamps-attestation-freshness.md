@@ -917,7 +917,7 @@ platform topology, certificate identifiers, or measurement selections.
 extensively discusses nonce-based freshness.
 
 Specific attestation technology specification such as {{RFC9711}} and
-{RFC9783}} offers guidance on replay protection using nonces. This
+{{RFC9783}} offers guidance on replay protection using nonces. This
 document defers specific recommendations to those specifications.
 
 If an attestation technology or Composite Attester profile transforms a
