@@ -632,7 +632,7 @@ cmc-nonceResp CMC-CONTROL ::=
 id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-cmc TBD5 }
 ~~~~
 
-The following example shows a the nonce request and nonce response message content:
+The following example shows the nonce request and nonce response message content:
 
 ~~~
 ContentInfo.contentType = id-data
