@@ -1194,7 +1194,7 @@ Appendix A.  ASN.1 Module
        nonceResp ::= NonceResponse
 
     id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
-       nonceResp ::= NonceResponse
+       nonceReq ::= NonceRequest
 
     cmc-nonceReq CMC-CONTROL ::=
         { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
