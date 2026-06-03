@@ -537,7 +537,7 @@ and the response.
 | --- | --- | --- |
 | NonceRequest | N/A (for GET) or<br/>application/est-attestation-freshness+json (for POST) | {{EST-https}} |
 | --- | --- | --- |
-| NonceResponse   | application/est-attestation- freshness+json | {{EST-https}} |
+| NonceResponse   | application/est-attestation-freshness+json | {{EST-https}} |
 
 The following example shows a nonce request - nonce response message exchange without
 transmitting optional parameter in the request:
