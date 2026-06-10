@@ -172,8 +172,9 @@ According to {{I-D.ietf-lamps-csr-attestation}}, a CSR can contain multiple
 AttestationStatements and multiple certificates for validating those
 AttestationStatements. This document describes how an end entity can use CMP,
 EST, or CMC to request a nonce from the RA/CA for a specific type of Evidence
-to be included in the CSR. The end entity sends a nonce request message with the
-following fields:
+to be included in the CSR.
+
+The end entity sends a nonce request message with the following fields:
 
 - len: In this OPTIONAL field, the end entity can specify the desired length of
   the requested nonce in bytes as a value between 8 and 64.
@@ -184,11 +185,14 @@ following fields:
   reqInfo MUST also be omitted.
 
 The RA/CA can return the requested nonce in a nonce response message together
-with information specific to the generation of the Evidence. The nonce response
-message has the following fields:
+with information specific to the generation of the Evidence.
 
-- nonce: This field contains the nonce. If a specific length was requested, the
-  RA/CA SHOULD provide a nonce of that size.
+The nonce response message has the following fields:
+
+- nonce: This field MUST contain the nonce if the RA/CA is able and willing to
+  provide it. If a specific length was requested, the RA/CA SHOULD provide a
+  nonce of that size. If the RA/CA doesn't need a freshness proof, the nonce
+  MUST be an empty or zero-length string.
 - expiry: In this OPTIONAL field, the RA/CA can specify the validity period of
   the nonce in seconds as an integer value. The nonce can be used during this
   period; the response therefore needs to be conveyed promptly.
@@ -330,8 +334,8 @@ nonce response message content. CMP and CMC use ASN.1, while EST uses JSON and C
 
 This section defines nonce request and nonce response message content as ASN.1 types for use in
 CMP, see {{CMP}}, and CMC, see {{CMC}}. Nonce values conveyed as ASN.1 OCTET STRING values
-in CMP and CMC are between 8 and 64 bytes in length. A zero-length octet string indicates
-  that the RA/CA doesis unable or not willing to deliver the requested nonce.
+in CMP and CMC are between 8 and 64 bytes in length. A zero-length OCTET STRING indicates
+that the RA/CA does not require proof of freshness for the upcoming certificate request.
 
 ~~~~
 ATTESTATION-NONCE-REQUEST ::= TYPE-IDENTIFIER
@@ -359,6 +363,8 @@ NonceRequest ::= SEQUENCE {
 NonceResponse ::= SEQUENCE {
    nonce OCTET STRING (SIZE(0 | 8..64)),
    -- Contains the nonce of length len
+   -- A zero-length OCTET String indicate that no freshness
+   -- proof is required
    expiry INTEGER OPTIONAL,
    -- Indicates how long in seconds the nonce issuer
    --   considers the nonce valid
@@ -374,18 +380,17 @@ NonceResponse ::= SEQUENCE {
 
 ## JSON Representation {#JSON}
 
-This section defines nonce request and nonce response message content as JSON objects {{RFC8259}}
-for use in EST, see {{EST-https}}.
+This section defines nonce request and nonce response message content as a CBOR
+structure {{RFC8949}} for use in EST-coaps, see {{EST-coaps}}. A zero-length byte
+string indicates that the RA/CA does not require proof of freshness for the
+upcoming certificate request.
 
 The JSON structure has the following members:
 
 - The OPTIONAL "len" and "expiry" members, if present, MUST be unsigned
   integers.
-- The "nonce" member MUST be a JSON string containing the unpadded base64url
-  encoding, as specified in {{Section 5 of RFC4648}}, of a nonce value between
-  8 and 64 bytes in length. Such encodings are between 11 and 86 characters in
-  length. A zero-length octet string indicates that the RA/CA doesis unable or
-  not willing to deliver the requested nonce.
+- The "nonce" member MUST be a CBOR byte string containing either an zero-length
+  byte string, or a nonce value between 8 and 64 bytes in length.
 - The OPTIONAL "type" member, if present, MUST be a text string containing the
   object identifier as a dotted-decimal OID.
 - The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
@@ -456,7 +461,7 @@ and general response (genp) {{Section 5.3.20 of RFC9810}}, respectively.
 
 ~~~~
 GenMsg:    {id-it TBD1}, NonceRequest
-GenRep:    {id-it TBD2}, NonceResponse | < absent >
+GenRep:    {id-it TBD2}, NonceResponse
 
 id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
 nonceRequestMessage ::= NonceRequest
@@ -479,16 +484,13 @@ defined in {{Section 2.1 of RFC9482}} MAY be used for the nonce request message.
 | --- | --- | --- |
 | Get Attestation Freshness Nonce | `nonce` | {{CMP}} |
 
-If the RA/CA is unable or unwilling to deliver the requested nonce, there are
-several ways to indicate this. Which variant fits depends on the circumstances.
+In the event of a possible error or if the RA/CA is unable or unwilling to deliver the
+requested nonce, CMP offers several ways to indicate this. Which variant fits depends
+on the circumstances.
 
-- Return a zero-length octet string in the NonceResponse structure.
-- Omit the NonceResponse structure in the genp Message.
-- At the HTTP or COAP level, return an error like in {{RFC9811}} or
-  {{RFC9482}}.
-
-Which variant is appropriate depends on the circumstances of the error
-occurred. More details can be found in {{Section 3.6 and Section 6 of RFC9483}}.
+- Respond an error message containing the PKIFailureInfo bit as defined by {{RFC9483}}.
+- If HTTP or COAP is used for transferring the general message, return an status code
+  on transfer level as described in {{RFC9811}} or {{RFC9482}}.
 
 # Use with EST {#EST}
 
@@ -515,9 +517,7 @@ the specification in {{RFC7030}} applies.
 
 If the nonce request message was successful, the EST server MUST respond with an HTTP 200
 status code and the nonce response message content MUST be encoded as JSON object, see
-{{JSON}}. The EST server MUST NOT respond with an HTTP 200 status code if it
-does not return a nonce.
-
+{{JSON}}. The HTTP 200 status code MUST also be used if the nonce is an empty string.
 
 In the event of a possible error, the EST server MUST respond with an HTTP
 status code 400 (Bad Request) and MUST omit the nonce response message content. If the
@@ -590,9 +590,9 @@ is encoded in CBOR as described in {{CBOR}}.
 
 If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
-nonce response message content MUST be encoded as CBOR object, see {{CBOR}}. The EST
-server MUST NOT respond with a code 2.05 or code 2.04 if it does not return
-a nonce.
+nonce response message content MUST be encoded as CBOR object, see {{CBOR}}. 
+The code 2.05 or code 2.04 MUST also be used if the nonce is an zero-length
+byte string.
 
 In the event of a possible error, the EST server MUST respond with a code
 4.00 (Bad Request) and MUST omit the nonce response message content. If the
@@ -1000,6 +1000,8 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
  NonceResponse ::= SEQUENCE {
     nonce  OCTET STRING (SIZE(0 | 8..64)),
     -- contains the nonce of length len
+    -- a zero-length OCTET String indicate that no freshness
+    --   proof is required
     expiry INTEGER OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
     --   the nonce valid
