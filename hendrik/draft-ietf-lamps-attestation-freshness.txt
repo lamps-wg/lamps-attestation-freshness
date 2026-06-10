@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 5 December 2026                                       J. Mandel
+Expires: 12 December 2026                                      J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                             3 June 2026
+                                                            10 June 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 December 2026.
+   This Internet-Draft will expire on 12 December 2026.
 
 Copyright Notice
 
@@ -178,11 +178,8 @@ Table of Contents
       conveyed promptly.
 
    *  type: In this OPTIONAL field, the RA/CA can specify the type of
-      the respInfo structure.  The decision to populate the respInfo
-      with a type field will depend on the specification associated with
-      the OID listed in the type field of the nonce request message.  If
-      the type field is present in both the nonce request and the nonce
-      response message content, the two values MUST match.
+      the respInfo structure.  The type in the nonce response message is
+      defined by the type in the nonce request message.
 
    *  respInfo: If type is set, this OPTIONAL field MUST contain the
       type-specific content requested by the end entity for generating
@@ -913,11 +910,6 @@ Table of Contents
    historical state, configuration state, or measurement results, is
    defined by the attestation technology, the appraisal policy, and the
    Verifier or Relying Party processing rules.
-
-   The processing of CSRs containing attestation statements is detailed
-   in [I-D.ietf-lamps-csr-attestation].  Importantly, certificates
-   issued based on this process do not contain the nonce, as specified
-   in [I-D.ietf-lamps-csr-attestation].
 
    Using nonces causes the Relying Party to create state for outstanding
    freshness challenges.  This state increases the attack surface for
