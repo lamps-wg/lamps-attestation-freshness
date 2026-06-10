@@ -590,7 +590,7 @@ is encoded in CBOR as described in {{CBOR}}.
 
 If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
-nonce response message content MUST be encoded as CBOR object, see {{CBOR}}. 
+nonce response message content MUST be encoded as CBOR object, see {{CBOR}}.
 The code 2.05 or code 2.04 MUST also be used if the nonce is an zero-length
 byte string.
 
