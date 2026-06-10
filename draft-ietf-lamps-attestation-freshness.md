@@ -193,10 +193,8 @@ message has the following fields:
   the nonce in seconds as an integer value. The nonce can be used during this
   period; the response therefore needs to be conveyed promptly.
 - type: In this OPTIONAL field, the RA/CA can specify the type of the respInfo
-  structure. The decision to populate the respInfo with a type
-  field will depend on the specification associated with the OID listed in the
-  type field of the nonce request message. If the type field is present in both the
-  nonce request and the nonce response message content, the two values MUST match.
+  structure. The type in the nonce response message is defined by the type in
+  the nonce request message.
 - respInfo: If type is set, this OPTIONAL field MUST contain the type-specific
   content requested by the end entity for generating the Evidence. If type is
   not set, respInfo MUST also be omitted.
@@ -882,11 +880,6 @@ contained in the Evidence. The interpretation of any other claim, including
 whether it represents current state, historical state, configuration state, or
 measurement results, is defined by the attestation technology, the appraisal
 policy, and the Verifier or Relying Party processing rules.
-
-The processing of CSRs containing attestation statements is detailed in
-{{I-D.ietf-lamps-csr-attestation}}. Importantly, certificates issued based on
-this process do not contain the nonce, as specified in
-{{I-D.ietf-lamps-csr-attestation}}.
 
 Using nonces causes the Relying Party to create state for outstanding
 freshness challenges. This state increases the attack surface for denial-of-service
