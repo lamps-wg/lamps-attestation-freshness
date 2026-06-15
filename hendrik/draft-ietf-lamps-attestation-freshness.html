@@ -1384,8 +1384,12 @@ structures; those structures must be defined elsewhere. Each definition must
 assign an object identifier and specify the exact content of the corresponding
 field. The message structure and the reqInfo or respInfo structures can use
 different encodings. For example, an ASN.1 message can contain reqInfo or
-respInfo encoded as JSON, if necessary.
-reqInfo may be used to provide the required information to the Relying Party to route the nonce request to the appropriate Verifier when multiple verifiers are supported. respInfo may be used to convey Generic Information Elements (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-17#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-reference-interaction-models" class="cite xref">I-D.ietf-rats-reference-interaction-models</a>]</span>) such as Attesting Environment IDs and Claim Selection.<a href="#section-3-7" class="pilcrow">¶</a></p>
+respInfo encoded as JSON, if necessary. The reqInfo structure may be used to
+provide the required information to the Relying Party to route the nonce request
+to the appropriate Verifier when multiple verifiers are supported. The respInfo
+structure may be used to convey Generic Information Elements
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-17#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-reference-interaction-models" class="cite xref">I-D.ietf-rats-reference-interaction-models</a>]</span>) such as Attesting
+Environment IDs and Claim Selection.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">The generic message flow between the end entity and the RA/CA is shown in
 <a href="#fig-msgFlow" class="auto internal xref">Figure 1</a>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <span id="name-message-flow-in-background-"></span><div id="fig-msgFlow">
