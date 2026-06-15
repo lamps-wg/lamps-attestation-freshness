@@ -209,6 +209,7 @@ assign an object identifier and specify the exact content of the corresponding
 field. The message structure and the reqInfo or respInfo structures can use
 different encodings. For example, an ASN.1 message can contain reqInfo or
 respInfo encoded as JSON, if necessary.
+reqInfo may be used to provide the required information to the Relying Party to route the nonce request to the appropriate Verifier when multiple verifiers are supported. respInfo may be used to convey Generic Information Elements ({{Section 6 of I-D.ietf-rats-reference-interaction-models}}) such as Attesting Environment IDs and Claim Selection.
 
 The generic message flow between the end entity and the RA/CA is shown in
 {{fig-msgFlow}}.
