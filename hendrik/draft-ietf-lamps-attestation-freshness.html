@@ -1746,9 +1746,7 @@ NonceResponse ::= SEQUENCE {
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-json-representation" class="section-name selfRef">JSON Representation</a>
         </h3>
 <p id="section-3.2-1">This section defines nonce request and nonce response message content as a CBOR
-structure <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for use in EST-coaps, see <a href="#EST-coaps" class="auto internal xref">Section 5.2</a>. A zero-length byte
-string indicates that the RA/CA does not require proof of freshness for the
-upcoming certificate request.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+structure <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for use in EST-coaps, see <a href="#EST-coaps" class="auto internal xref">Section 5.2</a>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">The JSON structure has the following members:<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.2-3.1">
@@ -1756,8 +1754,10 @@ upcoming certificate request.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 integers.<a href="#section-3.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-3.2">
-            <p id="section-3.2-3.2.1">The "nonce" member MUST be a CBOR byte string containing either an zero-length
-byte string, or a nonce value between 8 and 64 bytes in length.<a href="#section-3.2-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.2-3.2.1">The "nonce" member MUST either contain a zero-length string or the nonce
+values conveyed as JSON string containing the unpadded base64url encoding,
+as specified in <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>, of the nonce value between 8 and 64
+bytes in length. Such encodings are between 11 and 86 characters in length.<a href="#section-3.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-3.3">
             <p id="section-3.2-3.3.1">The OPTIONAL "type" member, if present, MUST be a text string containing the
@@ -1807,9 +1807,8 @@ structure <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for us
             <p id="section-3.3-3.1.1">All map keys are text strings.<a href="#section-3.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-3.2">
-            <p id="section-3.3-3.2.1">The "nonce" member contains the nonce values conveyed as CBOR byte
-strings are between 8 and 64 bytes in length. A zero-length octet string indicates
-that the RA/CA doesis unable or not willing to deliver the requested nonce.<a href="#section-3.3-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-3.2.1">The "nonce" member MUST either contain a zero-length octet string or the nonce
+values conveyed as CBOR byte strings are between 8 and 64 bytes in length.<a href="#section-3.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-3.3">
             <p id="section-3.3-3.3.1">The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing

@@ -377,17 +377,17 @@ Table of Contents
 
    This section defines nonce request and nonce response message content
    as a CBOR structure [RFC8949] for use in EST-coaps, see Section 5.2.
-   A zero-length byte string indicates that the RA/CA does not require
-   proof of freshness for the upcoming certificate request.
 
    The JSON structure has the following members:
 
    *  The OPTIONAL "len" and "expiry" members, if present, MUST be
       unsigned integers.
 
-   *  The "nonce" member MUST be a CBOR byte string containing either an
-      zero-length byte string, or a nonce value between 8 and 64 bytes
-      in length.
+   *  The "nonce" member MUST either contain a zero-length string or the
+      nonce values conveyed as JSON string containing the unpadded
+      base64url encoding, as specified in Section 5 of [RFC4648], of the
+      nonce value between 8 and 64 bytes in length.  Such encodings are
+      between 11 and 86 characters in length.
 
    *  The OPTIONAL "type" member, if present, MUST be a text string
       containing the object identifier as a dotted-decimal OID.
@@ -423,10 +423,9 @@ Table of Contents
 
    *  All map keys are text strings.
 
-   *  The "nonce" member contains the nonce values conveyed as CBOR byte
-      strings are between 8 and 64 bytes in length.  A zero-length octet
-      string indicates that the RA/CA doesis unable or not willing to
-      deliver the requested nonce.
+   *  The "nonce" member MUST either contain a zero-length octet string
+      or the nonce values conveyed as CBOR byte strings are between 8
+      and 64 bytes in length.
 
    *  The OPTIONAL dotted-decimal-oid "type" member denotes a text
       string containing an object identifier in dotted-decimal notation.
