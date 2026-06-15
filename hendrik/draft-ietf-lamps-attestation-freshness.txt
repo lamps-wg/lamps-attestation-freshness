@@ -465,10 +465,10 @@ Table of Contents
    GenRep:    {id-it TBD2}, NonceResponse
 
    id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
-   nonceRequestValue ::= NonceRequest
+   NonceRequestValue ::= NonceRequest
 
    id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
-   nonceResponseValue ::= NonceResponse
+   NonceResponseValue ::= NonceResponse
 
    When CMP is transferred over HTTP, the OPTIONAL <operation> path
    segment defined in Section 3.4 of [RFC9811] MAY be used for the nonce
@@ -1206,10 +1206,10 @@ Appendix A.  ASN.1 Module
     }
 
     id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
-       nonceRequestValue ::= NonceRequest
+       NonceRequestValue ::= NonceRequest
 
     id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
-       nonceResponseValue ::= NonceResponse
+       NonceResponseValue ::= NonceResponse
 
     cmc-nonceReq CMC-CONTROL ::=
         { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
