@@ -1064,7 +1064,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tschofenig, et al.</td>
-<td class="center">Expires 12 December 2026</td>
+<td class="center">Expires 17 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1077,12 +1077,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lamps-attestation-freshness-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-10" class="published">10 June 2026</time>
+<time datetime="2026-06-15" class="published">15 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-12">12 December 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-17">17 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1138,7 +1138,7 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1384,7 +1384,8 @@ structures; those structures must be defined elsewhere. Each definition must
 assign an object identifier and specify the exact content of the corresponding
 field. The message structure and the reqInfo or respInfo structures can use
 different encodings. For example, an ASN.1 message can contain reqInfo or
-respInfo encoded as JSON, if necessary.<a href="#section-3-7" class="pilcrow">¶</a></p>
+respInfo encoded as JSON, if necessary.
+reqInfo may be used to provide the required information to the Relying Party to route the nonce request to the appropriate Verifier when multiple verifiers are supported. respInfo may be used to convey Generic Information Elements (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-17#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-reference-interaction-models" class="cite xref">I-D.ietf-rats-reference-interaction-models</a>]</span>) such as Attesting Environment IDs and Claim Selection.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">The generic message flow between the end entity and the RA/CA is shown in
 <a href="#fig-msgFlow" class="auto internal xref">Figure 1</a>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <span id="name-message-flow-in-background-"></span><div id="fig-msgFlow">
@@ -2737,6 +2738,10 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-10
 <dt id="I-D.ietf-rats-msg-wrap">[I-D.ietf-rats-msg-wrap]</dt>
         <dd>
 <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Smith, N.</span>, <span class="refAuthor">Fossati, T.</span>, <span class="refAuthor">Tschofenig, H.</span>, and <span class="refAuthor">D. Glaze</span>, <span class="refTitle">"RATS Conceptual Messages Wrapper (CMW)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-msg-wrap-23</span>, <time datetime="2025-12-11" class="refDate">11 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-msg-wrap-23">https://datatracker.ietf.org/doc/html/draft-ietf-rats-msg-wrap-23</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-rats-reference-interaction-models">[I-D.ietf-rats-reference-interaction-models]</dt>
+        <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Eckel, M.</span>, <span class="refAuthor">Pan, W.</span>, and <span class="refAuthor">E. Voit</span>, <span class="refTitle">"Reference Interaction Models for Remote Attestation Procedures"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-reference-interaction-models-17</span>, <time datetime="2026-04-02" class="refDate">2 April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-17">https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-17</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.richardson-rats-composite-attesters">[I-D.richardson-rats-composite-attesters]</dt>
         <dd>

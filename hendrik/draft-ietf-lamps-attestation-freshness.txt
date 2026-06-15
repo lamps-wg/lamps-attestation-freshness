@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 12 December 2026                                      J. Mandel
+Expires: 17 December 2026                                      J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                            10 June 2026
+                                                            15 June 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 December 2026.
+   This Internet-Draft will expire on 17 December 2026.
 
 Copyright Notice
 
@@ -197,7 +197,12 @@ Table of Contents
    exact content of the corresponding field.  The message structure and
    the reqInfo or respInfo structures can use different encodings.  For
    example, an ASN.1 message can contain reqInfo or respInfo encoded as
-   JSON, if necessary.
+   JSON, if necessary. reqInfo may be used to provide the required
+   information to the Relying Party to route the nonce request to the
+   appropriate Verifier when multiple verifiers are supported. respInfo
+   may be used to convey Generic Information Elements (Section 6 of
+   [I-D.ietf-rats-reference-interaction-models]) such as Attesting
+   Environment IDs and Claim Selection.
 
    The generic message flow between the end entity and the RA/CA is
    shown in Figure 1.
@@ -1076,6 +1081,14 @@ Table of Contents
               in Progress, Internet-Draft, draft-ietf-rats-msg-wrap-23,
               11 December 2025, <https://datatracker.ietf.org/doc/html/
               draft-ietf-rats-msg-wrap-23>.
+
+   [I-D.ietf-rats-reference-interaction-models]
+              Birkholz, H., Eckel, M., Pan, W., and E. Voit, "Reference
+              Interaction Models for Remote Attestation Procedures",
+              Work in Progress, Internet-Draft, draft-ietf-rats-
+              reference-interaction-models-17, 2 April 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
+              reference-interaction-models-17>.
 
    [I-D.richardson-rats-composite-attesters]
               Richardson, M., Birkholz, H., Deshpande, Y., and T.
