@@ -101,6 +101,7 @@ normative:
 informative:
   I-D.ietf-rats-msg-wrap:
   I-D.richardson-rats-composite-attesters:
+  I-D.ietf-rats-reference-interaction-models:
   RFC2986:
   RFC4211:
   RFC9334:
