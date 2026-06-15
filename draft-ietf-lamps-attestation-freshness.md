@@ -395,9 +395,9 @@ The JSON structure has the following members:
 - The OPTIONAL "len" and "expiry" members, if present, MUST be unsigned
   integers.
 - The "nonce" member MUST either contain a zero-length string or the nonce
-  values conveyed as JSON string containing the unpadded base64url encoding,
-  as specified in {{Section 5 of RFC4648}}, of the nonce value between 8 and 64
-  bytes in length. Such encodings are between 11 and 86 characters in length.
+  values between 8 and 64 bytes in length conveyed as JSON string containing
+  the unpadded base64url encoding, as specified in {{Section 5 of RFC4648}}.
+  Such encodings are between 11 and 86 characters in length.
 - The OPTIONAL "type" member, if present, MUST be a text string containing the
   object identifier as a dotted-decimal OID.
 - The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
@@ -432,7 +432,7 @@ The CBOR structure defined in CDDL {{RFC8610}} has the following members:
 
 - All map keys are text strings.
 - The "nonce" member MUST either contain a zero-length octet string or the nonce
-  values conveyed as CBOR byte strings are between 8 and 64 bytes in length.
+  values between 8 and 64 bytes in length conveyed as CBOR byte string.
 - The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
   an object identifier in dotted-decimal notation.
 - The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
