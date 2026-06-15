@@ -469,10 +469,10 @@ GenMsg:    {id-it TBD1}, NonceRequest
 GenRep:    {id-it TBD2}, NonceResponse
 
 id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
-nonceRequestMessage ::= NonceRequest
+nonceRequestValue ::= NonceRequest
 
 id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
-nonceResponseMessage ::= NonceResponse
+nonceResponseValue ::= NonceResponse
 ~~~~
 
 When CMP is transferred over HTTP, the OPTIONAL `<operation>` path segment
@@ -1020,10 +1020,10 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
  }
 
  id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
-    nonceReq ::= NonceRequest
+    nonceRequestValue ::= NonceRequest
 
  id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
-    nonceResp ::= NonceResponse
+    nonceResponseValue ::= NonceResponse
 
  cmc-nonceReq CMC-CONTROL ::=
      { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
