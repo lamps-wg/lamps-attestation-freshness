@@ -1756,9 +1756,9 @@ integers.<a href="#section-3.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-3.2">
             <p id="section-3.2-3.2.1">The "nonce" member MUST either contain a zero-length string or the nonce
-values conveyed as JSON string containing the unpadded base64url encoding,
-as specified in <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>, of the nonce value between 8 and 64
-bytes in length. Such encodings are between 11 and 86 characters in length.<a href="#section-3.2-3.2.1" class="pilcrow">¶</a></p>
+values between 8 and 64 bytes in length conveyed as JSON string containing
+the unpadded base64url encoding, as specified in <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>.
+Such encodings are between 11 and 86 characters in length.<a href="#section-3.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-3.3">
             <p id="section-3.2-3.3.1">The OPTIONAL "type" member, if present, MUST be a text string containing the
@@ -1809,7 +1809,7 @@ structure <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for us
 </li>
           <li class="normal" id="section-3.3-3.2">
             <p id="section-3.3-3.2.1">The "nonce" member MUST either contain a zero-length octet string or the nonce
-values conveyed as CBOR byte strings are between 8 and 64 bytes in length.<a href="#section-3.3-3.2.1" class="pilcrow">¶</a></p>
+values between 8 and 64 bytes in length conveyed as CBOR byte string.<a href="#section-3.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-3.3">
             <p id="section-3.3-3.3.1">The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing

@@ -386,10 +386,10 @@ Table of Contents
       unsigned integers.
 
    *  The "nonce" member MUST either contain a zero-length string or the
-      nonce values conveyed as JSON string containing the unpadded
-      base64url encoding, as specified in Section 5 of [RFC4648], of the
-      nonce value between 8 and 64 bytes in length.  Such encodings are
-      between 11 and 86 characters in length.
+      nonce values between 8 and 64 bytes in length conveyed as JSON
+      string containing the unpadded base64url encoding, as specified in
+      Section 5 of [RFC4648].  Such encodings are between 11 and 86
+      characters in length.
 
    *  The OPTIONAL "type" member, if present, MUST be a text string
       containing the object identifier as a dotted-decimal OID.
@@ -426,8 +426,8 @@ Table of Contents
    *  All map keys are text strings.
 
    *  The "nonce" member MUST either contain a zero-length octet string
-      or the nonce values conveyed as CBOR byte strings are between 8
-      and 64 bytes in length.
+      or the nonce values between 8 and 64 bytes in length conveyed as
+      CBOR byte string.
 
    *  The OPTIONAL dotted-decimal-oid "type" member denotes a text
       string containing an object identifier in dotted-decimal notation.
