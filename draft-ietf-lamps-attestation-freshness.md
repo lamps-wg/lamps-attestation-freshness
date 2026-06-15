@@ -207,7 +207,7 @@ The nonce response message has the following fields:
 This document does not further specify the content of the reqInfo and respInfo
 structures; those structures must be defined elsewhere. Each definition must
 assign an object identifier and specify the exact content of the corresponding
-field. The definition of the reqInfo structure must also specify the type of the
+field. The definition of the reqInfo structure must also specify the type of the expacted
 respInfo structure. The message structure and the reqInfo or respInfo structures
 can use different encodings. For example, an ASN.1 message can contain reqInfo or
 respInfo encoded as JSON, if necessary. The reqInfo structure may be used to
