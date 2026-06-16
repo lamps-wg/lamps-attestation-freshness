@@ -17,7 +17,8 @@ pi:
   inline: yes
   text-list-symbols: -o*+
   docmapping: yes
-title: Freshness for Remote Attestation in Certificate Management Protocols
+title: Requesting a Freshness Nonce for Attestation Evidence in Certificate Signing Requests
+abbrev: Freshness for Evidence in CSRs
 area: sec
 wg: LAMPS Working Group
 keyword:
@@ -33,6 +34,10 @@ author:
  -    ins: H. Tschofenig
       name: Hannes Tschofenig
       org: Siemens
+      abbrev: Siemens
+      street: Werner-von-Siemens-Strasse 1
+      code: '80333'
+      city: Munich
       country: Germany
       email: hannes.tschofenig@gmx.net
  -    ins: H. Brockhaus
@@ -60,13 +65,11 @@ normative:
   I-D.ietf-lamps-csr-attestation:
   I-D.ietf-lamps-rfc5272bis:
   RFC9810:
-  RFC8295:
   RFC7030:
   RFC7252:
   RFC9148:
-  RFC5280:
-  RFC5785:
   RFC8615:
+  RFC8610:
   RFC8259:
   RFC4648:
   RFC6838:
@@ -96,205 +99,63 @@ normative:
     seriesinfo:
       ITU-T Recommendation X.690
 informative:
-  I-D.ietf-rats-ear:
   I-D.ietf-rats-msg-wrap:
   I-D.richardson-rats-composite-attesters:
-  I-D.deshpande-rats-multi-verifier:
-  I-D.ietf-rats-epoch-markers:
+  I-D.ietf-rats-reference-interaction-models:
   RFC2986:
   RFC4211:
   RFC9334:
-  RFC9684:
+  RFC9483:
   RFC9783:
   RFC9711:
-  TPM20:
-     author:
-        org: Trusted Computing Group
-     title: Trusted Platform Module Library Specification, Family 2.0, Level 00, Revision 01.59
-     target: https://trustedcomputinggroup.org/resource/tpm-library-specification/
-     date: November 2019
 
 --- abstract
 
 When an end entity includes attestation statements in a Certificate Signing
-Request (CSR), this document is specifically concerned with establishing the
-freshness of Evidence statements among that attestation data. Current
-attestation technology commonly achieves this using nonces.
+Request (CSR), the freshness of the conveyed Evidence often needs to be
+established. A common mechanism is a nonce that is obtained from a Relying
+Party or Verifier and included by the Attester in the Evidence.
 
-This document outlines the process through which a nonce is supplied to the
-end entity by an RA/CA for inclusion in Evidence, leveraging the Certificate
-Management Protocol (CMP), Enrollment over Secure Transport (EST), and
-Certificate Management over CMS (CMC).
+This document specifies how an end entity requests such an attestation
+freshness nonce from an RA/CA when using certificate lifecycle management protocols.
+It defines message formats and protocol bindings for the conveyance of nonce
+request and response messages in the Certificate Management Protocol (CMP),
+Enrollment over Secure Transport (EST), and Certificate Management over CMS
+(CMC), including optional type-specific information needed to produce fresh
+Evidence for inclusion in a CSR.
 
 --- middle
 
-#  Introduction
 
-The management of certificates, encompassing issuance, CA certificate provisioning, renewal, and
-revocation, has been streamlined through standardized protocols.
+# Introduction {#Introduction}
 
-The Certificate Management Protocol (CMP) {{RFC9810}} defines messages for
-X.509v3 certificate creation and management. CMP facilitates interactions between end entities
-and PKI management entities, such as Registration Authorities (RAs) and Certification Authorities
-(CAs). For Certificate Signing Requests (CSRs), CMP primarily utilizes the Certificate Request
-Message Format (CRMF) {{RFC4211}} but also supports PKCS#10 {{RFC2986}}.
+{{I-D.ietf-lamps-csr-attestation}} specifies how Attestation Evidence, as
+defined in the RATS Architecture {{RFC9334}}, can be conveyed in a Certificate
+Signing Request (CSR) using PKCS#10 {{RFC2986}} or CRMF {{RFC4211}}. The RATS
+Architecture calls for establishing the freshness of Evidence, see
+{{Section 10 of RFC9334}}. A common method for establishing freshness is the
+use of nonces. Such nonces must be provided by the Relying Party or Verifier
+and included in the Evidence by the Attester.
 
-Enrollment over Secure Transport (EST) ({{RFC7030}}, {{RFC8295}}) is another certificate management
-protocol that provides a subset of CMP's features, primarily using PKCS#10 for CSRs.
+When the CSR is conveyed using a certificate lifecycle management protocol, such
+as CMP {{RFC9810}}, EST {{RFC7030}}, or CMC {{I-D.ietf-lamps-rfc5272bis}}, the
+end entity can request the required nonce from the RA/CA in a prior message
+exchange and pass it to the Attester to produce fresh Evidence.
 
-Certificate Management over CMS (CMC) {{I-D.ietf-lamps-rfc5272bis}} is a certificate management protocol
-using the Cryptographic Message Syntax (CMS).
+This document describes how an end entity can request a nonce from an RA/CA
+using CMP, EST, and CMC.
 
-When an end entity requests a certificate from a CA, it may need to assert
-credible claims about the protections of the corresponding private key, such as the use of a hardware
-security module, as well as claims about the
-platform itself.
+The following topics are out of scope for this document and either covered
+in other specifications or are implementation or deployment details:
 
-To include these claims in a CSR, {{I-D.ietf-lamps-csr-attestation}} defines
-`AttestationStatement` and `AttestationBundle` structures. These structures
-specify how attestation statements, including Evidence produced by an Attester,
-are encoded for inclusion in CRMF or PKCS#10, along with any necessary
-certificates for their validation.
+- whether a CSR requires one or more nonces,
+- how the end entity forwards the nonce to the Attester,
+- whether the RA/CA or the Verifier generates the nonce and how those entities
+communicate with each other, and
+- other methods for establishing freshness.
 
-This specification does not define freshness for all possible attestation
-statement types carried by {{I-D.ietf-lamps-csr-attestation}}. Its focus is
-specifically the freshness of Evidence generated by an Attester.
-
-For a Verifier or Relying Party to ensure the freshness of the Evidence, knowing the exact time of its
-production is crucial. Current attestation technologies, like {{TPM20}} and
-{{RFC9783}}, often employ nonces to ensure the freshness of Evidence. Further
-details on ensuring Evidence freshness can be found in {{Section 10 of RFC9334}}.
-
-In this document, the freshness of Evidence refers to the incorporation of the
-nonce into the claims carried by the Evidence so that the Verifier can determine
-that the Evidence was generated for the current appraisal transaction. Including the
-nonce in the Evidence requires the Attester to generate a new digital signature using
-the Attestation Key. It does not mean that all other claims in the Evidence are newly collected or updated
-for each exchange. For example, a measurement claim describing a second-stage
-bootloader would normally change only when that bootloader software is updated,
-not merely because a fresh nonce was requested. For more details about architectural
-options and the use of the Attestation Key, see {{RFC9334}}.
-
-{{Section 3 of I-D.ietf-lamps-csr-attestation}} defines an
-`AttestationBundle` that can contain one or more `AttestationStatement` values.
-The AttestationStatement structure facilitates the representation of Evidence,
-Endorsements, and Attestation Results. For Evidence whose freshness is to be
-established, the end entity may wish to request a nonce.
-
-Since an end entity requires a nonce via the RA/CA, an additional round-trip is
-necessary. However, a CSR is a one-shot message. Therefore, CMP, EST, and CMC
-enable the end entity to request information from the RA/CA before submitting a
-certification request conveniently.
-
-Once a nonce is obtained, the certificate management client on the end entity invokes an API to interact with the Attester, providing the nonce as an
-input parameter. The Attester then returns Evidence, which is embedded into an
-`AttestationStatement` in the CSR and potentially, together with further
-attestation statements, submitted back to the RA/CA in a certification request
-message.
-
-{{fig-arch}} illustrates this interaction:
-
-- A nonce is requested in step (0) and obtained in step (1) using the extension to CMP/EST/CMC defined
-in this document.
-- The CSR attribute or extension defined in {{I-D.ietf-lamps-csr-attestation}}
-conveys an `AttestationBundle` containing one or more attestation statements to
-the RA/CA in step (2).
-- One or more Verifiers process the received attestation statements that
-require appraisal and return the Attestation Result(s) to the Relying Party.
-The CA uses the Attestation Result(s) with the Appraisal Policy and other information to create the
-requested certificate. The certificate is returned to the end entity in step (3).
-
-The RA/CA acts as the Relying Party in this document. Whether the nonce is generated by the RA/CA or by a Verifier is a decision outside the scope of this document and different deployment models are possible. When nonces are used, one deployment option is that the Relying Party
-creates the nonce and transmits it to the Verifier either before Evidence
-appraisal or together with the Evidence. Another option is that the Attestation
-Result exposes the nonce found in the Evidence as a claim; in this model, the
-Relying Party performs the freshness check. {{Section 3.1 of
-I-D.ietf-rats-ear}} describes this approach by allowing an EAT Attestation Result
-(EAR) appraisal claim to carry the nonce extracted from Evidence. The most appropriate deployment might be influenced by the complexity of the Verifier infrastructure, see {{I-D.deshpande-rats-multi-verifier}}.
-
-The interaction between the Relying Party and the Verifier is out of scope for
-this document. It is shown for illustration only; other specifications define
-that interaction.
-
-~~~
-Attester                 Relying Party
-(End Entity)             (RA/CA)                   Verifier
-    |                         |                        |
-    |  Certificate            |                        |
-    |  Management             |                        |
-    |  Protocol               |                        |
-    |<----------------------->|                        |
-    |                         |                        |
-    |                         |                        |
-    |  Request Nonce (0)      |                        |
-    |------------------------>|                        |
-    |                         |  Request Nonce         |
-    |                         |----------------------->|
-    |                         |  Nonce                 |
-    |                         |<-----------------------|
-    |  Nonce    (1)           |                        |
-    |<------------------------|                        |
-    |                         |                        |
-    |  Attested CSR (2)       |                        |
-    |------------------------>|                        |
-    |                         |  Evidence(s)           |
-    |                         |----------------------->|
-    |                         |  Attestation Result    |
-    |                         |<-----------------------|
-    |  Certificate (3)        |                        |
-    |<------------------------|                        |
-    |                         |                        |
-    |                         |                        |
-~~~
-{: #fig-arch title="Architecture with Background Check Model."}
-
-Many devices follow a simple model with an end entity containing a single Attester and a single Verifier. {{fig-arch}} illustrates the exchange in such a deployment. The end entity requests a nonce from the RA/CA and, when obtained, asks the Attester to return Evidence, which includes this nonce.
-
-There are, however, cases where devices are more complex and contain multiple attesters. {{Section 3.3 of RFC9334}} refers to such devices as composite attesters. {{I-D.richardson-rats-composite-attesters}} provides additional detail on different variants and their properties. {{fig-composite}} is based on Figure 2 of {{I-D.richardson-rats-composite-attesters}} and adds the nonce exchanges. In this scenario, the certificate management client obtains a nonce using the protocol extensions described in this document from the RA/CA and passes this nonce to the Lead Attester, which distributes the freshness challenge to the attesters in the system. The term "Lead Attester" is introduced in {{RFC9334}}. Once each Attester returns the Evidence, it is bundled into a Conceptual Message Wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} and made available to the certificate management client to be relayed in a CSR to the RA/CA and subsequently presented to the Verifier.
-
-Some composite attester designs propagate the nonce unchanged to every Attester. Other designs can require one or more sub-attesters to receive a nonce derived from the received nonce, for example because the sub-attesters support different nonce sizes or nonce encodings. In such cases, the specification for the selected attestation statement type MAY define a deterministic transformation together with any verifier-visible metadata needed to reconstruct or validate that transformation. This document does not define such transformations or metadata.
-
-This document does not mandate a specific freshness mechanism or a specific implementation for distributing nonce or epoch values within a device running the certificate management client.
-
-~~~
-                       .---------.
-                       | RA / CA |
-                       '---------'
-                          |  ^
-                     Nonce|  |CSR
-                          |  |
-                          |  |
-                          |  |
-.-------------------------v--|-----------------------------------------.
-|             .-----------------------------.                          |
-|             |Certificate Management Client|                          |
-|             '-----------------------------'                          |
-|                         |  ^                                         |
-|                         |  |                                         |
-|  .----------------------|--|--------.                                |
-|  | .----------.         |  | Evidence-Collection CMW                 |
-|  | | Target A |        N|  | 1: CMW(Evidence(Attester A)             |
-|  | | Environ  |        o|  | 2:     Evidence(Attester B)             |
-|  | '----------'        n|  | 3:     Evidence(Attester C))            |
-|  |       |             c|  |        |                                |
-|  |       |Collect      e|  |        |  Nonce      .--------------.   |
-|  |       |Claims        |  |        |------------>| Attester B   |   |
-|  |       |              v  |        |<------------|              |   |
-|  |       |          .-------------. |  Evidence B '--------------'   |
-|  |       |          | Attesting   | |                                |
-|  |       '--------->| Environment | |  Nonce      .--------------.   |
-|  |                  '-------------' |------------>| Attester C   |   |
-|  |        Attester A                |<------------|              |   |
-|  '-----------Lead Attester----------'  Evidence C '--------------'   |
-|                                                                      |
-.-------------------------------End Entity-----------------------------.
-~~~
-{: #fig-composite title="Class 1 Composite Attester."}
-
-The functionality described in this document is organized into three sections:
-{{CMP}} explains how to convey the nonce using CMP, {{EST}} describes the
-equivalent mechanism for EST, and {{CMC}} covers the corresponding approach
-for CMC.
+In this context, the end entity is a device that contains one or more Attesters,
+and the RA/CA acts as a Relying Party that communicates with one or more Verifiers.
 
 # Terminology and Requirements Language
 
@@ -302,273 +163,404 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119 {{RFC2119}}.
 
-The terms Attester, Relying Party, Verifier and Evidence are defined
-in {{RFC9334}}. The terms end entity, certification authority (CA),
-and registration authority (RA) are defined in {{RFC5280}}.
+This document uses RATS and PKIX terminology as described in
+{{Section 3 of I-D.ietf-lamps-csr-attestation}}. It also uses terminology from
+the applicable certificate lifecycle management protocols: CMP, EST, and CMC.
 
-We use the terms Certificate Signing Request (CSR) and certification
-request interchangeably.
+# Architecture and Message Formats {#Architecture}
 
-# Conveying a Nonce in CMP {#CMP}
+According to {{I-D.ietf-lamps-csr-attestation}}, a CSR can contain multiple
+AttestationStatements and multiple certificates for validating those
+AttestationStatements. This document describes how an end entity can use CMP,
+EST, or CMC to request a nonce from the RA/CA for a specific type of Evidence
+to be included in the CSR.
 
-{{Section 5.3.19 of RFC9810}} defines the
-general request message (genm) and general response (genp).
-The NonceRequest payload of the genm message, sent by the end
-entity to request a nonce, optionally includes details on the
-required length of the nonce from the Attester and attestation-type-
-specific request information. The NonceResponse payload of the genp
-message, sent by the CA/RA in response to the request, contains the
-nonce itself and can optionally include attestation-type-specific
-response information.
+The end entity sends a nonce request message with the following fields:
 
-~~~
- GenMsg:    {id-it TBD1}, NonceRequest
- GenRep:    {id-it TBD2}, NonceResponse | < absent >
+- len: In this OPTIONAL field, the end entity can specify the desired length of
+  the requested nonce in bytes as a value between 8 and 64.
+- type: In this OPTIONAL field, the end entity can specify the type of the
+  reqInfo structure.
+- reqInfo: If type is set, this OPTIONAL field MUST contain the type-specific
+  content that the RA/CA requires to generate respInfo. If type is not set,
+  reqInfo MUST also be omitted.
 
- ATTESTATION-NONCE-REQUEST ::= TYPE-IDENTIFIER
- AttestationNonceRequestSet ATTESTATION-NONCE-REQUEST ::= {
-    ... -- None defined in this document --
- }
+The RA/CA can return the requested nonce in a nonce response message together
+with information specific to the generation of the Evidence.
 
- ATTESTATION-NONCE-RESPONSE ::= TYPE-IDENTIFIER
- AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
-    ... -- None defined in this document --
- }
+The nonce response message has the following fields:
 
- id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
- NonceRequest ::= SEQUENCE {
-    len INTEGER (8..64) OPTIONAL,
-    -- indicates the required length of the requested nonce
-    type ATTESTATION-NONCE-REQUEST.&id(
-       {AttestationNonceRequestSet}) OPTIONAL,
-    -- identifies the nonce-request syntax for the selected
-    -- attestation statement type
-    reqInfo ATTESTATION-NONCE-REQUEST.&Type(
-       {AttestationNonceRequestSet}{@type}) OPTIONAL
-    -- contains type-specific nonce-request information
- }
+- nonce: This field MUST contain the nonce if the RA/CA is able and willing to
+  provide it. If a specific length was requested, the RA/CA SHOULD provide a
+  nonce of that size. If the RA/CA doesn't need a freshness proof, the nonce
+  MUST be an empty or zero-length string.
+- expiry: In this OPTIONAL field, the RA/CA can specify the validity period of
+  the nonce in seconds as an integer value. The nonce can be used during this
+  period; the response therefore needs to be conveyed promptly.
+- type: In this OPTIONAL field, the RA/CA can specify the type of the respInfo
+  structure. The type in the nonce response message is defined by the type in
+  the nonce request message.
+- respInfo: If type is set, this OPTIONAL field MUST contain the type-specific
+  content requested by the end entity for generating the Evidence. If type is
+  not set, respInfo MUST also be omitted.
 
- id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
- NonceResponse ::= SEQUENCE {
-    nonce OCTET STRING (SIZE(0 | 8..64)),
-    -- contains the nonce of length len
-    expiry INTEGER OPTIONAL,
-    -- indicates how long in seconds the nonce issuer considers
-    -- the nonce valid
-    type ATTESTATION-NONCE-RESPONSE.&id(
-       {AttestationNonceResponseSet}) OPTIONAL,
-    -- identifies the nonce-response syntax for the selected
-    -- attestation statement type
-    respInfo ATTESTATION-NONCE-RESPONSE.&Type(
-       {AttestationNonceResponseSet}{@type}) OPTIONAL
-    -- contains type-specific nonce-response information
- }
-~~~
+This document does not further specify the content of the reqInfo and respInfo
+structures; those structures must be defined elsewhere. Each definition must
+assign an object identifier and specify the exact content of the corresponding
+field. The definition of the reqInfo structure must also specify the type of the expacted
+respInfo structure. The message structure and the reqInfo or respInfo structures
+can use different encodings. For example, an ASN.1 message can contain reqInfo or
+respInfo encoded as JSON, if necessary. The reqInfo structure may be used to
+provide the required information to the Relying Party to route the nonce request
+to the appropriate Verifier when multiple verifiers are supported. The respInfo
+structure may be used to convey Generic Information Elements
+({{Section 6 of I-D.ietf-rats-reference-interaction-models}}) such as Attesting
+Environment IDs and Claim Selection.
 
-The
-`AttestationNonceRequestSet` and `AttestationNonceResponseSet` object
-sets associate request and response syntax with a selected attestation
-statement type. Implementations that support attestation-type-specific
-nonce exchange data populate these object sets with objects that use the
-same OIDs as the corresponding `AttestationStatement` types. If a
-NonceRequest does not contain type, the RA/CA MAY generate a nonce
-itself and include it in the response.
+The generic message flow between the end entity and the RA/CA is shown in
+{{fig-msgFlow}}.
 
-The len field, when present, indicates the requested nonce length in octets.
-For CMP and CMC, which convey the nonce as an ASN.1 OCTET STRING, len MUST be
-between 8 and 64 inclusive. These bounds follow the CBOR nonce size defined in
-{{Section 4.1 of RFC9711}}. A NonceResponse uses an empty OCTET STRING only to
-indicate that the RA/CA was unable to provide a requested nonce.
+~~~~ aasvg
+end entity                    RA/CA
+device with Attester       Relying Party                 Verifier
+    |                           |                            |
+    |  certificate lifecycle    |                            |
+    |    management protocol    |                            |
+    |<------------------------->|                            |
+    |  request nonce            |                            |
+    |-------------------------->|                            |
+    |                           |  request nonce (optional)  |
+    |                           |--------------------------->|
+    |                           |  nonce                     |
+    |                           |<---------------------------|
+    |  nonce                    |                            |
+    |<--------------------------|                            |
+    |  attested CSR             |                            |
+    |-------------------------->|                            |
+    |                           |  Evidence                  |
+    |                           |--------------------------->|
+    |                           |  Attestation Result        |
+    |                           |<---------------------------|
+    |  certificate              |                            |
+    |<--------------------------|                            |
+    |                           |                            |
+~~~~
+{: #fig-msgFlow title="Message Flow in Background Check Model"}
 
-The `reqInfo` field in a NonceRequest and the `respInfo` field in a
-NonceResponse are optional open types that are interpreted according to
-the selected type. `reqInfo` MUST NOT be present unless type is
-present. `respInfo` MUST NOT be present unless type is present. If the
-selected type does not define request or response information for the
-nonce exchange, the corresponding field MUST be omitted.
+The nonce request and nonce response messages allow the end entity to request
+only one nonce and one respInfo structure from the RA/CA. If the end entity
+wants to include multiple Evidence statements in a CSR, it can use the
+composite Attester model described in {{Section 3.3 of RFC9334}} and
+{{I-D.richardson-rats-composite-attesters}}, i.e., together with a conceptual
+message wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} structure, as described in
+{{Section 4.3 of I-D.ietf-lamps-csr-attestation}}. The lead Attester
+should then pass the nonce to the sub-Attesters. Based on Figure 2 of
+{{I-D.richardson-rats-composite-attesters}}, {{fig-lead-Attester}} shows an
+example of how a nonce can be distributed among several Attesters in an end
+entity. If multiple respInfo structures are required, the reqInfo and respInfo
+structures can also use a conceptual message wrapper (CMW).
 
-Any specification that defines attestation-type-specific nonce exchange
-information for use with EST or CoAP transport MUST define the JSON and
-CBOR representations of the corresponding `reqInfo` and `respInfo`
-values in addition to the ASN.1 syntax used by CMP and CMC. These
-representations MUST preserve the same semantics as the ASN.1-based
-exchange.
+~~~~ aasvg
+                      .---------.
+                      | RA / CA |
+                      '---------'
+                         |   ^
+                    nonce|   |CSR
+                         |   |
+                         |   |
+                         |   |
+.------------------------v---|------------------------------------.
+|            .-----------------------------.                      |
+|            |certificate management client|                      |
+|            '-----------------------------'                      |
+|                        |   ^                                    |
+|                        |   |                                    |
+| .----------------------|---|-------.                            |
+| | .-------------.      |   | Evidence-collection CMW            |
+| | | target A    |     n|   | 1: CMW(Evidence(Attester A)        |
+| | | environment |     o|   | 2:     Evidence(Attester B)        |
+| | '-------------'     n|   | 3:     Evidence(Attester C))       |
+| |       |             c|   |       |                            |
+| |       |collect      e|   |       |  nonce      .------------. |
+| |       |Claims        |   |       |------------>| Attester B | |
+| |       |              v   |       |<------------|            | |
+| |       |          .-------------. |  Evidence B '------------' |
+| |       |          | attesting   | |                            |
+| |       '--------->| environment | |  nonce      .------------. |
+| |                  '-------------' |------------>| Attester C | |
+| |        Attester A                |<------------|            | |
+| '-----------lead Attester----------'  Evidence C '------------' |
+|                                                                 |
+'------------------------------end entity-------------------------'
+~~~~
+{: #fig-lead-Attester title="Class 1 Composite Attester"}
 
-The use of the general request/response message exchange introduces an
-additional round trip for requesting and transmitting a nonce from the CA/RA to
-the end entity.
+The interaction between the end entity and the RY/CA is illustrated in {{fig-msg}}.
 
-The end entity MUST construct an id-it-nonceRequest message to prompt the RA/CA
-to send a nonce in response. Each message carries exactly one NonceRequest. If
-a NonceRequest contains neither a type nor a length, the RA/CA MAY
-generate a nonce using a locally configured length and provide it in the
-corresponding NonceResponse. If an RA/CA is not able to provide a requested
-nonce, it MUST provide an empty OCTET STRING in the NonceResponse.
+~~~~ aasvg
+end entity                                      RA/CA
+==========                                  =============
 
-NonceRequest and NonceResponse can contain a type field. If present, the type
-value in the NonceResponse MUST match the type value in the NonceRequest.
-Implementations that define type-specific nonce exchange data for a given
-attestation statement type MUST use the same OID in the corresponding
-request and response objects. The `AttestationStatement` carried later in the
-CSR contains the corresponding type field. This matching ensures that the
-RA/CA can associate the attestation statement with the corresponding nonce
-used by the Attester. If `reqInfo` or `respInfo` is present, its syntax and
-semantics are defined by the selected type. The response MAY return
-type-specific information derived from the request or from the selected
-attestation instance. For example, a TPM-specific type could carry the PCR
-selection and certificate-name values used for a challenge-response exchange
-such as the TPM procedures described in {{RFC9684}}.
+                 ------ nonce request ----->
 
-If a request contains an unknown type, malformed type-specific
-information, or type-specific information that is inconsistent with the
-selected type, the server MUST reject the request using the error
-mechanism of the underlying protocol and MUST NOT provide a nonce in
-response. If the request is understood but the RA/CA is temporarily or
-permanently unable to provide a nonce matching the request, CMP and CMC
-MUST return a NonceResponse containing an empty OCTET STRING.
+                                           Verify request
+                                           Generate or obtain nonce*
+                                           Create response
 
-When receiving a nonce from the RA/CA in an id-it-nonceResponse message, the
-end entity MUST use it to request fresh attestation information, typically
-Evidence from the respective Attester, as optionally indicated by the nonce
-exchange type. If `respInfo` is present, the end entity MUST apply it
-according to the selected type when requesting fresh attestation
-information. If a nonce is provided in a NonceResponse without indicating any
-type, it can be used for any attestation statement requiring a nonce.
-
-An attestation statement generated using a nonce provided with an expiry value will be considered fresh by the Relying Party or Verifier until the respective expiry time has elapsed.
-It is expected that the respective messages are delivered in a timely manner.
-
-The interaction is illustrated in {{fig-cmp-msg}}.
-
-~~~
-End Entity                                         RA/CA
-==========                                     =============
-
-            ------- id-it-nonceRequest ----->
-                                               Verify request
-                                               Generate or obtain nonce*
-                                               Create response
-            <------ id-it-nonceResponse -----
-                    (nonce, expiry)
+                 <---- nonce Response ------
+                       (nonce, expiry)
 
 Generate key pair
 Generate Evidence(s)*
 Generate certification
   request message
-            ------- certification request --->
+
+                 -- certification request -->
                 +Evidence(s) including nonce
-                                              Verify request
-                                              Verify Evidence(s)*
-                                              Check freshness/replay*
-                                              Issue certificate
-                                              Create response
-            <------ certification response ---
-Handle response
+
+                                           Verify request
+                                           Verify Evidence(s)*
+                                           Check freshness/replay*
+                                           Issue certificate
+                                           Create response
+                                           Handle response
+
+                <-- certification response --
+
 Store certificate
 
-*: These steps can require interactions with the Attester
-(on the EE side) and with the Verifier (on the RA/CA side).
-The Relying Party-to-Verifier interaction is out of scope and shown
-only for illustration.
-~~~
-{: #fig-cmp-msg title="CMP Exchange with Nonce and Evidence."}
+*: These steps can require interactions with the Attester(on the
+   end entity side) and with the Verifier (on the RA/CA side).
+~~~~
+{: #fig-msg title="Exchange with Nonce and Evidence."}
 
-If HTTP is used to transfer the NonceRequest and NonceResponse
-messages, the OPTIONAL `<operation>` path segment defined in
-{{Section 3.4 of RFC9811}} MAY be used.
+The following sections define the generic data structures for nonce request and
+nonce response message content. CMP and CMC use ASN.1, while EST uses JSON and CBOR.
+
+## ASN.1 Representation {#ASN.1}
+
+This section defines nonce request and nonce response message content as ASN.1 types for use in
+CMP, see {{CMP}}, and CMC, see {{CMC}}. Nonce values conveyed as ASN.1 OCTET STRING values
+in CMP and CMC are between 8 and 64 bytes in length. A zero-length OCTET STRING indicates
+that the RA/CA does not require proof of freshness for the upcoming certificate request.
+
+~~~~
+ATTESTATION-NONCE-REQUEST ::= TYPE-IDENTIFIER
+AttestationNonceRequestSet ATTESTATION-NONCE-REQUEST ::= {
+   ... -- None defined in this document --
+}
+
+ATTESTATION-NONCE-RESPONSE ::= TYPE-IDENTIFIER
+AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
+   ... -- None defined in this document --
+}
+
+NonceRequest ::= SEQUENCE {
+   len INTEGER (8..64) OPTIONAL,
+   -- Indicates the required length of the requested nonce
+   type ATTESTATION-NONCE-REQUEST.&id(
+      {AttestationNonceRequestSet}) OPTIONAL,
+   -- Identifies the nonce-request syntax for the
+   --   selected Attestation statement type
+   reqInfo ATTESTATION-NONCE-REQUEST.&Type(
+      {AttestationNonceRequestSet}{@type}) OPTIONAL
+   -- Contains type-specific nonce-request information
+}
+
+NonceResponse ::= SEQUENCE {
+   nonce OCTET STRING (SIZE(0 | 8..64)),
+   -- Contains the nonce of length len
+   -- A zero-length OCTET String indicate that no freshness
+   -- proof is required
+   expiry INTEGER OPTIONAL,
+   -- Indicates how long in seconds the nonce issuer
+   --   considers the nonce valid
+   type ATTESTATION-NONCE-RESPONSE.&id(
+      {AttestationNonceResponseSet}) OPTIONAL,
+   -- Identifies the nonce-response syntax for the
+   --   selected Attestation statement type
+   respInfo ATTESTATION-NONCE-RESPONSE.&Type(
+      {AttestationNonceResponseSet}{@type}) OPTIONAL
+   -- Contains type-specific nonce-response information
+}
+~~~~
+
+## JSON Representation {#JSON}
+
+This section defines nonce request and nonce response message content as a JSON
+structure {{RFC8259}} for use in EST, see {{EST-https}}.
+
+The JSON structure has the following members:
+
+- The OPTIONAL "len" and "expiry" members, if present, MUST be unsigned
+  integers.
+- The "nonce" member MUST either contain a zero-length string or the nonce
+  values between 8 and 64 bytes in length conveyed as JSON string containing
+  the unpadded base64url encoding, as specified in {{Section 5 of RFC4648}}.
+  Such encodings are between 11 and 86 characters in length.
+- The OPTIONAL "type" member, if present, MUST be a text string containing the
+  object identifier as a dotted-decimal OID.
+- The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
+  corresponding "type" member contains an OID. Their contents are defined by
+  that OID.
+
+{{fig-example-json}} shows an example:
+
+~~~~
+{
+  "len": 32,
+  "type": "1.2.3.4.5",
+  "reqInfo": { ... }
+}
+
+{
+  "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
+  "expiry": 600,
+  "type": "1.2.3.4.6",
+  "respInfo": { ... }
+}
+~~~~
+{: #fig-example-json title="Nonce Request and Nonce Response Examples (JSON)"}
+
+
+## CBOR Representation {#CBOR}
+
+This section defines nonce request and nonce response message content as a CBOR
+structure {{RFC8949}} for use in EST-coaps, see {{EST-coaps}}.
+
+The CBOR structure defined in CDDL {{RFC8610}} has the following members:
+
+- All map keys are text strings.
+- The "nonce" member MUST either contain a zero-length octet string or the nonce
+  values between 8 and 64 bytes in length conveyed as CBOR byte string.
+- The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
+  an object identifier in dotted-decimal notation.
+- The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
+  values. They MUST only be included if the corresponding "type" member contains
+  an OID. Their CBOR encoding is defined by that OID.
+
+~~~~ cddl
+nonce-request = {
+  ? "len": nonce-length,
+  ? "type": dotted-decimal-oid,
+  ? "reqInfo": any
+}
+
+nonce-response = {
+    "nonce": h'' / nonce,
+  ? "expiry": uint,
+  ? "type": dotted-decimal-oid,
+  ? "respInfo": any
+}
+
+nonce-length = 8..64
+nonce = bstr .size (8..64)
+dotted-decimal-oid = tstr
+~~~~
+
+
+# Use with CMP {#CMP}
+
+The nonce request and nonce response message content is conveyed as ASN.1 content,
+see {{ASN.1}}, in a general message (genm) {{Section 5.3.19 of RFC9810}}
+and general response (genp) {{Section 5.3.20 of RFC9810}}, respectively.
+
+~~~~
+GenMsg:    {id-it TBD1}, NonceRequest
+GenRep:    {id-it TBD2}, NonceResponse
+
+id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
+NonceRequestValue ::= NonceRequest
+
+id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
+NonceResponseValue ::= NonceResponse
+~~~~
+
+When CMP is transferred over HTTP, the OPTIONAL `<operation>` path segment
+defined in {{Section 3.4 of RFC9811}} MAY be used for the nonce request message.
 
 | Operation | Operation path | Details |
 | --- | --- | --- |
 | Get Attestation Freshness Nonce | `getnonce` | {{CMP}} |
 
-If CoAP is used for transferring NonceRequest and NonceResponse messages,
-the OPTIONAL `<operation>` path segment defined in
-{{Section 2.1 of RFC9482}} MAY be used.
+When CMP is transferred over CoAP, the OPTIONAL `<operation>` path segment
+defined in {{Section 2.1 of RFC9482}} MAY be used for the nonce request message.
 
 | Operation | Operation path | Details |
 | --- | --- | --- |
 | Get Attestation Freshness Nonce | `nonce` | {{CMP}} |
 
-# Conveying a Nonce in EST {#EST}
+In the event of a possible error or if the RA/CA is unable or unwilling to deliver the
+requested nonce, CMP offers several ways to indicate this. Which variant fits depends
+on the circumstances.
 
-The EST client requests a nonce for its Attester from the EST server.
-This function typically follows the request for CA certificates and
-precedes other EST operations.
+- Respond an error message containing the PKIFailureInfo bit as defined by {{RFC9483}}.
+- If HTTP or COAP is used for transferring the general message, return an status code
+  on transfer level as described in {{RFC9811}} or {{RFC9482}}.
 
-The EST server MUST support the path-prefix of "/.well-known/" as
-defined in {{RFC5785}} and the registered name of "est".
-Therefore, a valid EST server URI path begins with
-"https://www.example.com/.well-known/est". Each EST operation is
-indicated by a path-suffix that specifies the intended operation.
+# Use with EST {#EST}
 
-The following operation is defined by this specification:
+The nonce request and nonce response message content is conveyed as JSON, see
+{{JSON}}, or CBOR, see {{CBOR}}, content between end entity (EST client) and
+RA/CA (EST server). A compliant EST server MUST provide an EST endpoint with
+the path-segment /nonce for this operation.
 
 | Operation | Operation path | Details |
 | --- | --- | --- |
-| Retrieval of a nonce | `/nonce` | {{EST}} |
+| Request of a nonce | `/nonce` | {{EST}} |
 
-The operation path is appended to the path-prefix to form the URI
-used with HTTP GET or POST to perform the desired EST operation.
-An example of a valid URI absolute path for the "/nonce" operation
-is "/.well-known/est/nonce".
+Depending on whether additional parameters are to be transferred, the client
+uses either the GET or POST method:
 
-## Request Methods
+- The GET method MUST be used if no optional content is to be transferred
+- The POST method MUST be used if nonce request message content encoded in JSON
+  or CBOR is to be transferred.
 
-An EST client uses either a GET or a POST method, depending on
-whether additional parameters need to be conveyed:
+## EST over HTTPS {#EST-https}
 
-- A GET request MUST be used when the EST client does not want to
-convey extra parameters.
-- A POST request MUST be used when parameters, such as nonce length
-or the nonce exchange type, are included in the request.
+If the nonce request and nonce response message content is transferred over HTTPS,
+the specification in {{RFC7030}} applies.
 
-~~~
- +------------------+------------------------------+---------------+
- | Message type     | Media type(s)                | Reference     |
- | (per operation)  |                              |               |
- +==================+==============================+===============+
- | Nonce Request    | N/A (for GET) or             | This section  |
- |                  | application/est-attestation- |               |
- |                  | freshness+json (for POST)    |               |
- +==================+==============================+===============+
- | Nonce Response   | application/est-attestation- | This section  |
- |                  | freshness+json               |               |
- |                  |                              |               |
- +==================+==============================+===============+
-~~~
+If the nonce request message was successful, the EST server MUST respond with an HTTP 200
+status code and the nonce response message content MUST be encoded as JSON object, see
+{{JSON}}. The HTTP 200 status code MUST also be used if the nonce is an empty string.
 
-## Request Payload (POST)
+In the event of a possible error, the EST server MUST respond with an HTTP
+status code 400 (Bad Request) and MUST omit the nonce response message content. If the
+nonce request message has been made correctly, but the EST server is unable or unwilling
+to deliver the requested nonce, it MUST respond with an HTTP 503 (Service
+Unavailable).
 
-The payload in a POST request MUST be of content-type
-"application/est-attestation-freshness+json" and MUST contain a JSON object
-{{RFC8259}} with the optional members "len", "type", and "reqInfo".
+The EST server MAY request HTTP-based client authentication as described in
+{{Section 3.2.3 of RFC7030}}.
 
-- The optional "len" member indicates the length of the requested nonce value
-  in bytes. If present, it MUST be between 8 and 64 inclusive.
-- The optional "type" member contains the dotted-decimal OID of the
-  selected nonce-request type. Specifications defining nonce-request
-  types use the same OID as the corresponding `AttestationStatement`
-  type.
-- The optional "reqInfo" member contains attestation-type-specific
-  nonce-request information. It MUST NOT be present unless "type" is
-  present. Its JSON encoding is defined by the selected type.
+The following media types MUST be used as the content-type of the POST request
+and the response.
 
-Any specification defining a type-specific `reqInfo` or `respInfo`
-value for use with this media type MUST define the JSON representation
-for those values.
+| Message type<br/>(per operation) | Media type(s) | Reference |
+| --- | --- | --- |
+| NonceRequest | N/A (for GET) or<br/>application/est-attestation-freshness+json (for POST) | {{EST-https}} |
+| --- | --- | --- |
+| NonceResponse   | application/est-attestation-freshness+json | {{EST-https}} |
 
-### Example GET
+The following example shows a nonce request - nonce response message exchange without
+transmitting optional parameter in the request:
+
 
 ~~~
 GET /.well-known/est/nonce HTTP/1.1
+
+HTTP/1.1 200 OK
+Content-Type: application/est-attestation-freshness+json
+
+{
+  "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
+  "expiry": 600
+}
 ~~~
 
-### Example POST
-
-This example shows how to retrieve a nonce while including the length,
-type, and attestation-type-specific request information. The structure of
-`reqInfo` in this example is illustrative and would need to be defined by
-the selected type:
+The following example shows a nonce request - nonce response message exchange
+transmitting optional parameter in the request:
 
 ~~~
 POST /.well-known/est/nonce HTTP/1.1
@@ -582,262 +574,116 @@ Content-Type: application/est-attestation-freshness+json
     "certificate-name": ["aik-1"]
   }
 }
-~~~
 
-## Server Response
-
-If successful, the EST server MUST respond with an HTTP 200 status code and a
-content-type of "application/est-attestation-freshness+json", containing an
-JSON object {{RFC8259}} with the "nonce" member. The "expiry" member
-is optional and indicates the absolute expiry time of the nonce encoded as an
-RFC 3339 timestamp string. The optional "type" member identifies the selected
-nonce-response type and MAY be copied from the request to aid correlation. If
-present in both the request and response, the two values MUST match. The
-optional "respInfo" member contains
-attestation-type-specific nonce-response information. It MUST NOT be
-present unless "type" is present. Its JSON encoding is defined by the
-selected type. The "nonce" member MUST be a JSON string containing the
-base64url encoding, without padding
-characters, of the nonce byte string, as specified in {{Section 5 of RFC4648}}.
-For nonce values between 8 and 64 bytes, this encoding is between 11 and 86
-characters in length. The decoded nonce value MUST be between 8 and 64 bytes in
-length.
-
-If the EST server receives an unknown type, malformed `reqInfo`, or
-`reqInfo` that is inconsistent with the selected type, it MUST respond
-with HTTP status code 400 (Bad Request) and MUST NOT include a nonce in
-the response body. If the request is understood but the EST server is
-unable to provide a nonce matching the request, it MUST respond with
-HTTP status code 503 (Service Unavailable).
-
-CMP encodes "expiry" as an INTEGER representing seconds of validity.
-EST encodes "expiry" as an absolute timestamp.
-
-Below is an example response:
-
-~~~
 HTTP/1.1 200 OK
 Content-Type: application/est-attestation-freshness+json
 
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
-  "expiry": "2031-10-12T07:20:50.52Z",
-  "type": "1.2.3.4.5",
+  "expiry": 600,
+  "type": "1.2.3.4.6",
   "respInfo": {
     "certificate-name": "aik-1"
   }
 }
 ~~~
 
-The EST server MAY request HTTP-based client authentication, as
-explained in Section 3.2.3 of {{RFC7030}}.
+## EST over secure COAP {#EST-coaps}
 
-When EST is transported over CoAP, request and response payloads for the
-"/nonce" operation MAY be encoded in CBOR {{RFC8949}}. The media type
-"application/est-attestation-freshness+cbor" is used for both nonce requests
-and nonce responses. The CoAP Content-Format registered in {{iana}} is used in
-the CoAP Content-Format and Accept Options, following the EST-coaps payload
-format conventions specified in {{RFC9148}}. The CoAP method and response code
-determine whether the payload is a request or response.
+If the nonce request and nonce response message content is transferred via
+secure CoAP, the specification in {{RFC9148}} applies. The message content
+is encoded in CBOR as described in {{CBOR}}.
 
-The CBOR request payload is a CBOR map corresponding to the JSON request
-payload defined above. Map keys are text strings. The "len" member, if
-present, is an unsigned integer between 8 and 64 inclusive. The "type" member,
-if present, is a text string containing the dotted-decimal OID of the
-selected nonce-request type. The optional "reqInfo" member contains
-attestation-type-specific nonce-request information and MUST NOT be
-present unless "type" is present. Its CBOR encoding is defined by the
-selected type.
+If the nonce request was successful, the EST server MUST respond to a GET
+request with a code 2.05 and to a POST request with code 2.04 and the
+nonce response message content MUST be encoded as CBOR object, see {{CBOR}}.
+The code 2.05 or code 2.04 MUST also be used if the nonce is an zero-length
+byte string.
 
-Any specification defining a type-specific `reqInfo` or `respInfo`
-value for use with this media type MUST define the CBOR representation
-for those values.
+In the event of a possible error, the EST server MUST respond with a code
+4.00 (Bad Request) and MUST omit the nonce response message content. If the
+nonce request has been made correctly, but the EST server is unable or
+unwilling to deliver the requested nonce, it MUST respond with a code 5.03
+(Service Unavailable).
 
-The CBOR response payload is a CBOR map corresponding to the JSON response
-payload defined above. Map keys are text strings. The "nonce" member
-is a CBOR byte string between 8 and 64 bytes in length. The "expiry" member, if
-present, is a text string containing an RFC 3339 timestamp. The "type" member,
-if present, is a text string containing the dotted-decimal OID of the
-selected nonce-response type. The optional "respInfo" member contains
-attestation-type-specific nonce-response information and MUST NOT be
-present unless "type" is present. Its CBOR encoding is defined by the
-selected type.
+The following media type MUST be used for nonce request and nonce response message
+content according to {{RFC9148}} for CoAP Content Format and Accept option as the
+content-type.
 
-If CoAP is used and the server receives an unknown type, malformed
-`reqInfo`, or `reqInfo` that is inconsistent with the selected type, it
-MUST respond with code 4.00 (Bad Request) and MUST NOT return a nonce.
-If the request is understood but the server is unable to provide a nonce
-matching the request, it MUST respond with code 5.03 (Service
-Unavailable).
+| Message type<br/>(per operation) | Media type | Reference |
+| --- | --- | --- |
+| nonce request<br/>nonce response message content | application/est-attestation-freshness+cbor | {{EST-coaps}} |
 
-# Conveying a Nonce in CMC {#CMC}
 
-CMC defines Simple and Full PKI Requests for the client to use to request a certificate.
-Full PKI Requests provide the client with more functionality through the use of Controls,
-defined in Section 6 of {{I-D.ietf-lamps-rfc5272bis}}. Currently, the client sends an initial request
-containing a certification request (CRMF, PKCS#10, or other). To allow the client to request a nonce
-prior to sending a certification request, this section defines the nonceReq and nonceResp.
+# Use with CMC {#CMC}
 
-Generally a Full PKI Request is encapsulated in a SignedData or AuthenticatedData with an
-encapsulated content type of 'id-cct-PKIData'. To accommodate a generic request for a nonce,
-the Client/Server SHOULD use the Data content type; id-data, to transmit the nonceReq and nonceResp controls.
-The syntax for the controls uses the same syntax as the CMP information types defined in {{CMP}}.
-The request validation and nonce-availability behavior therefore follows
-the CMP rules defined in {{CMP}}.
+The nonce request and nonce response message content is conveyed as ASN.1,
+see {{ASN.1}}, as CMC Controls in a Full PKI Requests, see
+{{Section 6 of I-D.ietf-lamps-csr-attestation}}. The received nonce can be
+used for a CSR to be transferred in a Simple or Full PKI request.
 
-The NonceRequest control is identified by:
+
+To transfer the controls, the content type id-data SHOULD be used.
+
+
+~~~~
+cmc-nonceReq CMC-CONTROL ::=
+    { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
+id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-cmc TBD4 }
+
+cmc-nonceResp CMC-CONTROL ::=
+    { NonceResponse IDENTIFIED BY id-cmc-nonceResp }
+id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-cmc TBD5 }
+~~~~
+
+The following example shows the nonce request and nonce response message content:
 
 ~~~
-id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-it TBD1 }
+ContentInfo.contentType = id-data
+ContentInfo.content
+   controlSequence
+      {101, id-cmc-senderNonce, 10001}
+      {102, id-cmc-nonceReq, <NonceRequest>}
+
+ContentInfo.contentType = id-data
+ContentInfo.content
+   controlSequence
+      {101, id-cmc-senderNonce, 10005}
+      {102, id-cmc-recipientNonce, 10001}
+      {103, id-cmc-nonceResp, <NonceResponse>}
 ~~~
-
-The NonceResponse control is identified by:
-
-~~~
-id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
-~~~
-
-## Generic Nonce Request Message Flow
-
-The client sends an id-cmc-nonceReq structure to the server. Upon receiving and processing the request,
-the server responds with id-cmc-nonceResp.
-
-Once this round-trip transaction is complete, the client uses the received
-nonce when obtaining Evidence from the Attester. That Evidence, which contains
-the nonce, is then conveyed in the subsequent Simple or Full PKI Request using
-the CSR attestation mechanisms defined in
-{{I-D.ietf-lamps-csr-attestation}}.
-
-Client to Server:
-
-~~~
-   ContentInfo.contentType = id-data
-   ContentInfo.content
-       controlSequence
-           {101, id-cmc-senderNonce, 10001}
-           {102, id-cmc-nonceReq, <nonce request>}
-~~~
-
-Server to Client:
-
-~~~
-   ContentInfo.contentType = id-data
-   ContentInfo.content
-       controlSequence
-           {101, id-cmc-senderNonce, 10005}
-           {102, id-cmc-recipientNonce, 10001}
-           {103, id-cmc-nonceResp, <nonce response>}
-~~~
-
-# Nonce Processing Guidelines
-
-When the RA/CA is requested to provide a nonce to an
-end entity, it can generate the nonce locally or obtain it through an
-interaction with the Verifier.
-According to the IETF RATS architecture {{RFC9334}}, the Verifier is
-responsible for validating Evidence about an Attester and generating
-Attestation Results for use by a Relying Party. A Verifier can also act as
-the source of the nonce to prevent replay attacks, but this is not required
-by this specification.
-
-The nonce value MUST contain a random byte sequence with at least 64 bits of entropy.
-The RA/CA MUST ensure that a nonce it generates is unique and MUST NOT be
-reused. If the RA/CA obtains a nonce from another component, it MUST ensure
-that the component provides the same uniqueness and non-reuse properties.
-The length of the nonce depends on the remote attestation technology in use, as specific nonce
-lengths may be required by the end entity. This specification assumes
-that the RA/CA possesses knowledge, either out-of-band or through the
-len field in the NonceRequest, regarding the required nonce length for
-the attestation technology. Nonces of incorrect length will cause the
-remote attestation protocol to fail.
-
-Following {{Section 4.1 of RFC9711}}, nonce values conveyed as CBOR byte
-strings are between 8 and 64 bytes in length, and nonce values conveyed as
-JSON text strings are the unpadded base64url encoding of 8 to 64 nonce bytes
-and are therefore between 11 and 86 characters in length. ASN.1 OCTET STRING
-nonce values used by CMP and CMC follow the same 8 to 64 byte range as CBOR.
-
-For instance, the PSA attestation token {{RFC9783}}
-supports nonce lengths of 32, 48, and 64 bytes. Other attestation
-technologies employ nonces of similar lengths.
-
-If a specific length was requested, the RA/CA MUST provide a nonce of that size.
-The end entity MUST use the received nonce if the remote attestation supports
-the requested length. If the selected attestation statement type defines a
-deterministic nonce transformation for use by a specific Attester or
-sub-attester, the end entity MUST apply only that transformation and only
-for the purpose defined by that specification.
-
-If attestation-type-specific response information is returned with the
-nonce, the end entity MUST process that information according to the
-selected type when invoking the attestation technology. Such information
-MAY include parameters or metadata needed to apply, identify, or validate
-a deterministic nonce transformation defined by the attestation statement
-type.
-
-While this specification does not address the semantics of the attestation API
-or the underlying software/hardware architecture, the API returns Evidence from
-the Attester in a format specific to the attestation technology used and
-associated with the selected nonce exchange type. The returned Evidence is encapsulated in an
-`AttestationStatement` within the `AttestationBundle` carried in the CSR, as
-defined in {{I-D.ietf-lamps-csr-attestation}}. The software generating the CSR
-treats the attestation statement payload as an opaque blob and does not
-interpret its format. It is crucial to note that the nonce is included in the
-Evidence, either implicitly or explicitly, and MUST NOT be conveyed in CSR
-structures outside of the attestation payload.
-
-The freshness established by the nonce applies to the Evidence statement as
-bound to the nonce or freshness claim used by the attestation technology. This
-specification does not assign independent freshness semantics to other claims
-contained in the Evidence. The interpretation of any other claim, including
-whether it represents current state, historical state, configuration state, or
-measurement results, is defined by the attestation technology, the appraisal
-policy, and the Verifier or Relying Party processing rules.
-
-The processing of CSRs containing attestation statements is detailed in
-{{I-D.ietf-lamps-csr-attestation}}. Importantly, certificates issued based on
-this process do not contain the nonce, as specified in
-{{I-D.ietf-lamps-csr-attestation}}.
-
-# Use of Epoch Markers
-
-Epoch Markers, as defined in {{I-D.ietf-rats-epoch-markers}}, provide another
-mechanism for establishing freshness in remote attestation. An Epoch Marker can
-be used as the value of a nonce or challenge field when the attestation
-technology treats that field as an opaque byte string and the size constraints
-of that field are met. In such deployments, the Relying Party or Verifier is
-responsible for validating the Epoch Marker and for applying the replay and
-freshness rules associated with the selected Epoch Marker type.
-
-This document specifies the transport of a nonce in certificate management
-protocols. Defining a general freshness-token abstraction that supports Epoch
-Markers as a separate token type is out of scope for this version of the
-specification.
 
 #  IANA Considerations {#iana}
 
-This document adds new entries to the "CMP Well-Known URI Path Segments"
-registry defined in {{RFC8615}}.
+## CMP
+
+### Well-Known URI Path Segment
+
+IANA is requested to add the following entry to the "CMP Well-Known URI Path
+Segments" registry defined in {{RFC8615}}:
 
 | Path Segment | Description | Reference |
 | --- | --- | --- |
-| `getnonce` | Get Attestation Freshness Nonce over HTTP | {{CMP}} |
-| `nonce` | Get Attestation Freshness Nonce over CoAP | {{CMP}} |
+| `getnonce` | Get Attestation Freshness Nonce over HTTP | This-RFC |
+| `nonce` | Get Attestation Freshness Nonce over CoAP | This-RFC |
 
-This document defines the following additional EST operation path segment
-under the existing "/.well-known/est" URI path-prefix defined by {{RFC7030}}:
+### Information Type
 
-| Operation | Operation path | Details |
+IANA is requested to register the following object identifier in the
+"SMI Security for PKIX CMP Information Types" registry
+(1.3.6.1.5.5.7.4):
+
+| Decimal | Description | Reference |
 | --- | --- | --- |
-| Retrieval of a nonce | `/nonce` | {{EST}} |
+| TBD1 | id-it-nonceRequest | This-RFC |
+| TBD2 | id-it-nonceResponse | This-RFC |
 
-The "est" entry in the "Well-Known URIs" registry defined by {{RFC8615}}
-already exists. This document does not request a new Well-Known URI
-registration. IANA is requested only to update the reference for the existing
-"est" entry to include this RFC.
+## EST
 
 IANA is requested to register the following media types in the "Media Types"
 registry {{RFC6838}}:
+
+### JSON Media Type
 
 Type name:
 : application
@@ -894,6 +740,8 @@ Author:
 Change controller:
 : IETF
 
+### CBOR Media Type
+
 Type name:
 : application
 
@@ -949,68 +797,95 @@ Author:
 Change controller:
 : IETF
 
+### CoAP Content-Format
+
 IANA is requested to register the following Content-Format in the "CoAP
 Content-Formats" subregistry within the "CoRE Parameters" registry
 {{RFC7252}}. This registration uses the IETF Review or IESG Approval range
 defined for that registry.
 
-~~~ ascii-art
- +-----------------------------------------+-------+-----------+
- | Media Type                              | ID    | Reference |
- +=========================================+=======+===========+
- | application/est-attestation-            | TBD3  | This-RFC  |
- | freshness+cbor                          |       |           |
- +-----------------------------------------+-------+-----------+
-~~~
+| Media Type | ID | Reference |
+| --- | --- | --- |
+| application/est-attestation-freshness+cbor | TBD3 | This-RFC |
 
-IANA is also requested to register the following ASN.1 {{X.680}}
-module OID in the "SMI Security for PKIX Module Identifier" registry
-(1.3.6.1.5.5.7.0). This OID is defined in {{asn1}}.
 
-| Decimal | Description           | References |
-|:--------|:----------------------|:-----------|
-| TBDMOD  | id-mod-att-fresh-req  | This-RFC   |
+## CMC
 
-#  Security Considerations {#sec-cons}
+### Control
 
-This specification details the process of obtaining a nonce via CMP, EST,
-and CMC. The nonce itself does not generally require confidentiality
-protection while maintaining the security properties of the remote
-attestation protocol. However, optional attestation-type-specific
-request or response information conveyed together with the nonce MAY
-reveal privacy-sensitive or deployment-sensitive information, such as
-platform topology, certificate identifiers, or measurement selections.
-{{RFC9334}} defines the IETF remote attestation architecture and
-extensively discusses nonce-based freshness.
+IANA is requested to register the following object identifier in the
+"SMI Security for PKIX CMC Controls" registry (1.3.6.1.5.5.7.7):
 
-Section 8.4 of {{RFC9711}} specifies requirements for replay protection and
-privacy of nonce generation when used with the Entity Attestation Token (EAT). These
-requirements, which are also adopted by attestation technologies like the PSA attestation
-token {{RFC9783}}, provide general utility:
+| Decimal | Description | Reference |
+| --- | --- | --- |
+| TBD4 | id-cmc-nonceReq | This-RFC |
+| TBD5 | id-cmc-nonceResp | This-RFC |
 
-- The nonce MUST have at least 64 bits of entropy.
-- To prevent disclosure of privacy-sensitive information, it should be derived using a
-  salt from a genuinely random number generator or another reliable source of randomness.
+## ASN.1 Module
 
-Each attestation technology specification offers guidance on replay protection using nonces
-and other techniques. Specific recommendations are deferred to these individual specifications
-in this document.
+IANA is requested to register the following ASN.1 {{X.680}} module OID in the
+"SMI Security for PKIX Module Identifier" registry (1.3.6.1.5.5.7.0). This
+OID is defined in {{asn1}}.
 
-If an attestation technology or composite attester profile transforms a
-received nonce before embedding it in Evidence, that transformation MUST
-be deterministic, MUST preserve at least the minimum entropy required by
-the attestation technology, and MUST provide the Verifier with enough
-information to reconstruct or validate the transformed value when needed.
-Specifications defining such transformations SHOULD use well-analyzed
-cryptographic mechanisms for nonce expansion or size adjustment to ensure that the resulting entropy and security properties remain acceptable.
+| Decimal | Description | References |
+| --- | --- | --- |
+| TBDMOD | id-mod-att-fresh-req | This-RFC |
 
-If attestation-type-specific nonce exchange information is used, the
-corresponding specification MUST define the syntax and semantics of that
-information, including any confidentiality requirements. Implementations
-SHOULD minimize the amount of such information returned by the RA/CA and
-SHOULD protect it using the message or transport security mechanisms of
-the enrollment protocol when confidentiality is required by deployment
-policy or by the attestation technology specification.
+# Operational Considerations {#operations}
+
+When the RA/CA is requested to provide a nonce to an end entity, it
+can generate the nonce locally or obtain it through an interaction
+with the Verifier. According to the IETF RATS architecture {{RFC9334}},
+the Verifier is responsible for validating Evidence about an Attester
+and generating Attestation Results for use by a Relying Party.
+
+The nonce value MUST contain a random byte sequence with at least 64 bits
+of entropy. The RA/CA MUST ensure that a nonce it generates is unique and
+MUST NOT be reused. If the RA/CA obtains a nonce from the Verifier, it
+MUST ensure that the Verifier utilizes the same policy for uniqueness and
+non-reuse properties. The length of the nonce depends on the remote
+attestation technology in use, as specific nonce
+lengths may be required by the end entity. This specification assumes
+that the RA/CA possesses knowledge, either out-of-band or through the
+len field in the nonce request message, regarding the required nonce length for
+the attestation technology. Nonces of incorrect length may cause the
+remote attestation protocol to fail.
+
+For instance, the PSA attestation token {{RFC9783}}
+supports nonce lengths of 32, 48, and 64 bytes. Other attestation
+technologies employ nonces of similar lengths.
+
+The end entity MUST use the received nonce if the remote attestation
+technology used supports the requested length. If the selected attestation
+statement type defines a deterministic nonce transformation for use by a
+specific Attester or sub-Attester, the end entity MUST apply only that
+transformation and only for the purpose defined by that specification.
+
+If attestation-type-specific response information is returned with the
+nonce, the end entity MUST process that information according to the
+selected type when invoking the attestation technology. Such information
+MAY include parameters or metadata needed to apply, identify, or validate
+a deterministic nonce transformation defined by the attestation statement
+type.
+
+While this specification does not address the semantics of the attestation API
+or the underlying software/hardware architecture, the API returns Evidence from
+the Attester in a format specific to the attestation technology used and
+identified by the `AttestationStatement` type. The returned Evidence is encapsulated
+in the `AttestationStatement` within the `AttestationBundle` carried in the CSR, as
+defined in {{I-D.ietf-lamps-csr-attestation}}. The software generating the CSR
+treats the attestation statement payload as an opaque blob and does not
+interpret its format. It is crucial to note that the nonce is included in the
+Evidence, either implicitly or explicitly, and MUST NOT be conveyed in CSR
+structures outside of the attestation payload.
+
+The freshness established by the nonce applies to the Evidence as
+bound to the nonce used by the attestation technology. This
+specification does not assign independent freshness semantics to other claims
+contained in the Evidence. The interpretation of any other claim, including
+whether it represents current state, historical state, configuration state, or
+measurement results, is defined by the attestation technology, the appraisal
+policy, and the Verifier or Relying Party processing rules.
 
 Using nonces causes the Relying Party to create state for outstanding
 freshness challenges. This state increases the attack surface for denial-of-service
@@ -1019,11 +894,47 @@ nonce requests that never result in corresponding Evidence. Relying Parties
 SHOULD reduce this exposure by limiting nonce lifetimes, bounding the number of
 outstanding nonces, applying rate limits, associating nonce state with an
 authenticated or otherwise constrained requester where possible, and promptly
-discarding expired state. A future version of this specification could define
-a stateless cookie mechanism to reduce this state-management burden.
+discarding expired state. The use of a stateless cookie mechanism to reduce this
+state-management burden is also possible but not further detailed in this
+specification.
 
-Regarding the use of attestation statements in a CSR, the security considerations outlined in
-{{I-D.ietf-lamps-csr-attestation}} are pertinent to this specification.
+#  Security Considerations {#sec-cons}
+
+This specification details the process of obtaining a nonce via CMP, EST,
+and CMC. Therefore, the security considerations of these protocols apply. Regarding
+the use of attestation statements in a CSR, the security considerations
+outlined in {{I-D.ietf-lamps-csr-attestation}} are pertinent to this
+specification.
+
+The nonce itself does not generally require confidentiality
+protection while maintaining the security properties of the remote
+attestation protocol. However, optional attestation-type-specific
+request or response information conveyed together with the nonce MAY
+reveal privacy-sensitive or deployment-sensitive information, such as
+platform topology, certificate identifiers, or measurement selections.
+{{RFC9334}} defines the IETF remote attestation architecture and
+extensively discusses nonce-based freshness.
+
+Specific attestation technology specification such as {{RFC9711}} and
+{{RFC9783}} offers guidance on replay protection using nonces. This
+document defers specific recommendations to those specifications.
+
+If an attestation technology or Composite Attester profile transforms a
+received nonce before embedding it in Evidence, that transformation MUST
+be deterministic, MUST preserve at least the minimum entropy required by
+the attestation technology, and MUST provide the Verifier with enough
+information to reconstruct or validate the transformed value when needed.
+Specifications defining such transformations SHOULD use well-analyzed
+cryptographic mechanisms for nonce expansion or size adjustment to ensure
+that the resulting entropy and security properties remain acceptable.
+
+If attestation-type-specific nonce exchange information is used, the
+corresponding specification MUST define the syntax and semantics of that
+information, including any confidentiality requirements. Implementations
+SHOULD minimize the amount of such information returned by the RA/CA and
+SHOULD protect it using the message or transport security mechanisms of
+the enrollment protocol when confidentiality is required by deployment
+policy or by the attestation technology specification.
 
 # Acknowledgments
 
@@ -1056,15 +967,17 @@ id-it, InfoTypeAndValue{}
       security(5) mechanisms(5) pkix(7) id-mod(0)
       id-mod-cmp2023-02(116) }
 
-CMC-CONTROL
+id-cmc, CMC-CONTROL
 FROM EnrollmentMessageSyntax-2025
    { iso(1) identified-organization(3) dod(6) internet(1)
    security(5) mechanisms(5) pkix(7) id-mod(0)
-   id-mod-enrollMsgSyntax-2025(TBD1) }
+   id-mod-enrollMsgSyntax-2025(TBDCMC) }
+-- RFC Editor: TBDCMC shall be TBD1 as defined by
+--   Section 11 of draft-ietf-lamps-rfc5272bis
 
 ;
 
--- NonceRequest and NonceResponse messages
+-- NonceRequest and NonceResponse types
 
 ATTESTATION-NONCE-REQUEST ::= TYPE-IDENTIFIER
 
@@ -1078,44 +991,48 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
    ... -- None defined in this document --
 }
 
- id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
  NonceRequest ::= SEQUENCE {
     len    INTEGER (8..64) OPTIONAL,
     -- indicates the required length of the requested nonce
     type   ATTESTATION-NONCE-REQUEST.&id(
               {AttestationNonceRequestSet}) OPTIONAL,
     -- identifies the nonce-request syntax for the selected
-    -- attestation statement type
+    --   attestation statement type
     reqInfo ATTESTATION-NONCE-REQUEST.&Type(
               {AttestationNonceRequestSet}{@type}) OPTIONAL
     -- contains type-specific nonce-request information
  }
 
- id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
  NonceResponse ::= SEQUENCE {
     nonce  OCTET STRING (SIZE(0 | 8..64)),
     -- contains the nonce of length len
+    -- a zero-length OCTET String indicate that no freshness
+    --   proof is required
     expiry INTEGER OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
-    -- the nonce valid
+    --   the nonce valid
     type   ATTESTATION-NONCE-RESPONSE.&id(
               {AttestationNonceResponseSet}) OPTIONAL,
     -- identifies the nonce-response syntax for the selected
-    -- attestation statement type
+    --   attestation statement type
     respInfo ATTESTATION-NONCE-RESPONSE.&Type(
                {AttestationNonceResponseSet}{@type}) OPTIONAL
     -- contains type-specific nonce-response information
  }
 
-id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-it TBD1 }
+ id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
+    NonceRequestValue ::= NonceRequest
 
-cmc-nonceReq CMC-CONTROL ::=
-      { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
+ id-it-nonceResponse OBJECT IDENTIFIER ::= { id-it TBD2 }
+    NonceResponseValue ::= NonceResponse
 
-id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-it TBD2 }
+ cmc-nonceReq CMC-CONTROL ::=
+     { NonceRequest IDENTIFIED BY id-cmc-nonceReq }
+ id-cmc-nonceReq OBJECT IDENTIFIER ::= { id-cmc TBD4 }
 
-cmc-nonceResp CMC-CONTROL ::=
-      { NonceResponse IDENTIFIED BY id-cmc-nonceResp }
+ cmc-nonceResp CMC-CONTROL ::=
+     { NonceResponse IDENTIFIED BY id-cmc-nonceResp }
+ id-cmc-nonceResp OBJECT IDENTIFIER ::= { id-cmc TBD5 }
 
 END
 <CODE ENDS>
