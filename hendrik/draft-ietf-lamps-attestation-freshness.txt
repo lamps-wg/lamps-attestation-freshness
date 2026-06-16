@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 17 December 2026                                      J. Mandel
+Expires: 18 December 2026                                      J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                            15 June 2026
+                                                            16 June 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 December 2026.
+   This Internet-Draft will expire on 18 December 2026.
 
 Copyright Notice
 
@@ -378,7 +378,7 @@ Table of Contents
 3.2.  JSON Representation
 
    This section defines nonce request and nonce response message content
-   as a CBOR structure [RFC8949] for use in EST-coaps, see Section 5.2.
+   as a JSON structure [RFC8259] for use in EST, see Section 5.1.
 
    The JSON structure has the following members:
 
