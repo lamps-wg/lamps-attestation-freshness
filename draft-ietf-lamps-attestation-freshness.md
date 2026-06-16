@@ -404,6 +404,10 @@ The JSON structure has the following members:
   corresponding "type" member contains an OID. Their contents are defined by
   that OID.
 
+The JSON nonce request object is formally described by the nonce-request CDDL
+rule in {{CDDL}}. The JSON nonce response object is formally described by the
+nonce-response-json CDDL rule in {{CDDL}}.
+
 {{fig-example-json}} shows an example:
 
 ~~~~
@@ -428,7 +432,7 @@ The JSON structure has the following members:
 This section defines nonce request and nonce response message content as a CBOR
 structure {{RFC8949}} for use in EST-coaps, see {{EST-coaps}}.
 
-The CBOR structure defined in CDDL {{RFC8610}} has the following members:
+The CBOR structure has the following members:
 
 - All map keys are text strings.
 - The "nonce" member MUST either contain a zero-length octet string or the nonce
@@ -439,6 +443,19 @@ The CBOR structure defined in CDDL {{RFC8610}} has the following members:
   values. They MUST only be included if the corresponding "type" member contains
   an OID. Their CBOR encoding is defined by that OID.
 
+The CBOR nonce request object is formally described by the nonce-request CDDL
+rule in {{CDDL}}. The CBOR nonce response object is formally described by the
+nonce-response-cbor CDDL rule in {{CDDL}}.
+
+## CDDL Representation {#CDDL}
+
+This section provides a CDDL {{RFC8610}} definition for the JSON and CBOR nonce
+request and nonce response message content. The nonce-request rule applies to
+both JSON and CBOR. The nonce-response-json and nonce-response-cbor rules define
+the encoding-specific representation of the nonce value. For JSON, the
+base64url-nonce rule captures the allowed character set and encoded length; the
+decoded nonce length requirements are specified in {{JSON}}.
+
 ~~~~ cddl
 nonce-request = {
   ? "len": nonce-length,
@@ -446,15 +463,24 @@ nonce-request = {
   ? "reqInfo": any
 }
 
-nonce-response = {
-    "nonce": h'' / nonce,
+nonce-response-json = {
+    "nonce": json-nonce,
+  ? "expiry": uint,
+  ? "type": dotted-decimal-oid,
+  ? "respInfo": any
+}
+
+nonce-response-cbor = {
+    "nonce": cbor-nonce,
   ? "expiry": uint,
   ? "type": dotted-decimal-oid,
   ? "respInfo": any
 }
 
 nonce-length = 8..64
-nonce = bstr .size (8..64)
+cbor-nonce = h'' / bstr .size (8..64)
+json-nonce = "" / base64url-nonce
+base64url-nonce = tstr .regexp "[A-Za-z0-9_-]{11,86}"
 dotted-decimal-oid = tstr
 ~~~~
 
