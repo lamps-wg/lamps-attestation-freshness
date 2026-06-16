@@ -387,8 +387,8 @@ NonceResponse ::= SEQUENCE {
 
 ## JSON Representation {#JSON}
 
-This section defines nonce request and nonce response message content as a CBOR
-structure {{RFC8949}} for use in EST-coaps, see {{EST-coaps}}.
+This section defines nonce request and nonce response message content as a JSON
+structure {{RFC8259}} for use in EST, see {{EST-https}}.
 
 The JSON structure has the following members:
 
