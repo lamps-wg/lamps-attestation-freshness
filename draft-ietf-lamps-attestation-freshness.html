@@ -1197,7 +1197,7 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-est-over-https" class="internal xref">EST over HTTPS</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-est-over-secure-coap" class="internal xref">EST over secure COAP</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-est-over-secure-coap" class="internal xref">EST over Secure CoAP</a></p>
 </li>
             </ul>
 </li>
@@ -1382,7 +1382,7 @@ not set, respInfo MUST also be omitted.<a href="#section-3-6.4.1" class="pilcrow
 <p id="section-3-7">This document does not further specify the content of the reqInfo and respInfo
 structures; those structures must be defined elsewhere. Each definition must
 assign an object identifier and specify the exact content of the corresponding
-field. The definition of the reqInfo structure must also specify the type of the expacted
+field. The definition of the reqInfo structure must also specify the type of the expected
 respInfo structure. The message structure and the reqInfo or respInfo structures
 can use different encodings. For example, an ASN.1 message can contain reqInfo or
 respInfo encoded as JSON, if necessary. The reqInfo structure may be used to
@@ -1585,7 +1585,7 @@ structures can also use a conceptual message wrapper (CMW).<a href="#section-3-1
 <a href="#name-class-1-composite-attester" class="selfRef">Class 1 Composite Attester</a>
         </figcaption></figure>
 </div>
-<p id="section-3-12">The interaction between the end entity and the RY/CA is illustrated in <a href="#fig-msg" class="auto internal xref">Figure 3</a>.<a href="#section-3-12" class="pilcrow">¶</a></p>
+<p id="section-3-12">The interaction between the end entity and the RA/CA is illustrated in <a href="#fig-msg" class="auto internal xref">Figure 3</a>.<a href="#section-3-12" class="pilcrow">¶</a></p>
 <span id="name-exchange-with-nonce-and-evi"></span><div id="fig-msg">
 <figure id="figure-3">
         <div id="section-3-13.1">
@@ -1622,7 +1622,7 @@ structures can also use a conceptual message wrapper (CMW).<a href="#section-3-1
                 <text x="372" y="148">Create</text>
                 <text x="436" y="148">response</text>
                 <text x="208" y="180">nonce</text>
-                <text x="268" y="180">Response</text>
+                <text x="268" y="180">response</text>
                 <text x="216" y="196">(nonce,</text>
                 <text x="280" y="196">expiry)</text>
                 <text x="36" y="228">Generate</text>
@@ -1665,8 +1665,9 @@ structures can also use a conceptual message wrapper (CMW).<a href="#section-3-1
                 <text x="268" y="532">interactions</text>
                 <text x="340" y="532">with</text>
                 <text x="376" y="532">the</text>
-                <text x="440" y="532">Attester(on</text>
-                <text x="504" y="532">the</text>
+                <text x="428" y="532">Attester</text>
+                <text x="480" y="532">(on</text>
+                <text x="512" y="532">the</text>
                 <text x="40" y="548">end</text>
                 <text x="84" y="548">entity</text>
                 <text x="136" y="548">side)</text>
@@ -1724,7 +1725,7 @@ NonceRequest ::= SEQUENCE {
 NonceResponse ::= SEQUENCE {
    nonce OCTET STRING (SIZE(0 | 8..64)),
    -- Contains the nonce of length len
-   -- A zero-length OCTET String indicate that no freshness
+   -- A zero-length OCTET STRING indicates that no freshness
    -- proof is required
    expiry INTEGER OPTIONAL,
    -- Indicates how long in seconds the nonce issuer
@@ -1756,7 +1757,7 @@ integers.<a href="#section-3.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-3.2">
             <p id="section-3.2-3.2.1">The "nonce" member MUST either contain a zero-length string or the nonce
-values between 8 and 64 bytes in length conveyed as JSON string containing
+value between 8 and 64 bytes in length conveyed as a JSON string containing
 the unpadded base64url encoding, as specified in <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>.
 Such encodings are between 11 and 86 characters in length.<a href="#section-3.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
@@ -1809,7 +1810,7 @@ structure <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for us
 </li>
           <li class="normal" id="section-3.3-3.2">
             <p id="section-3.3-3.2.1">The "nonce" member MUST either contain a zero-length octet string or the nonce
-values between 8 and 64 bytes in length conveyed as CBOR byte string.<a href="#section-3.3-3.2.1" class="pilcrow">¶</a></p>
+value between 8 and 64 bytes in length conveyed as a CBOR byte string.<a href="#section-3.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-3.3">
             <p id="section-3.3-3.3.1">The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
@@ -1916,10 +1917,10 @@ requested nonce, CMP offers several ways to indicate this. Which variant fits de
 on the circumstances.<a href="#section-4-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-8.1">
-          <p id="section-4-8.1.1">Respond an error message containing the PKIFailureInfo bit as defined by <span>[<a href="#RFC9483" class="cite xref">RFC9483</a>]</span>.<a href="#section-4-8.1.1" class="pilcrow">¶</a></p>
+          <p id="section-4-8.1.1">Respond with an error message containing the PKIFailureInfo bit as defined by <span>[<a href="#RFC9483" class="cite xref">RFC9483</a>]</span>.<a href="#section-4-8.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-8.2">
-          <p id="section-4-8.2.1">If HTTP or COAP is used for transferring the general message, return an status code
+          <p id="section-4-8.2.1">If HTTP or CoAP is used for transferring the general message, return a status code
 on transfer level as described in <span>[<a href="#RFC9811" class="cite xref">RFC9811</a>]</span> or <span>[<a href="#RFC9482" class="cite xref">RFC9482</a>]</span>.<a href="#section-4-8.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
@@ -1974,7 +1975,7 @@ or CBOR is to be transferred.<a href="#section-5-4.2.1" class="pilcrow">¶</a></
 <p id="section-5.1-1">If the nonce request and nonce response message content is transferred over HTTPS,
 the specification in <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> applies.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">If the nonce request message was successful, the EST server MUST respond with an HTTP 200
-status code and the nonce response message content MUST be encoded as JSON object, see
+status code and the nonce response message content MUST be encoded as a JSON object, see
 <a href="#JSON" class="auto internal xref">Section 3.2</a>. The HTTP 200 status code MUST also be used if the nonce is an empty string.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1-3">In the event of a possible error, the EST server MUST respond with an HTTP
 status code 400 (Bad Request) and MUST omit the nonce response message content. If the
@@ -1983,7 +1984,7 @@ to deliver the requested nonce, it MUST respond with an HTTP 503 (Service
 Unavailable).<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.1-4">The EST server MAY request HTTP-based client authentication as described in
 <span><a href="https://rfc-editor.org/rfc/rfc7030#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
-<p id="section-5.1-5">The following media types MUST be used as the content-type of the POST request
+<p id="section-5.1-5">The following media types MUST be used as the Content-Type of the POST request
 and the response.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
 <table class="center" id="table-4">
           <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
@@ -2011,8 +2012,8 @@ and the response.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
             </tr>
           </tbody>
         </table>
-<p id="section-5.1-7">The following example shows a nonce request - nonce response message exchange without
-transmitting optional parameter in the request:<a href="#section-5.1-7" class="pilcrow">¶</a></p>
+<p id="section-5.1-7">The following example shows a nonce request and nonce response message exchange without
+transmitting optional parameters in the request:<a href="#section-5.1-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-8">
 <pre>
 GET /.well-known/est/nonce HTTP/1.1
@@ -2026,8 +2027,8 @@ Content-Type: application/est-attestation-freshness+json
 }
 </pre><a href="#section-5.1-8" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-9">The following example shows a nonce request - nonce response message exchange
-transmitting optional parameter in the request:<a href="#section-5.1-9" class="pilcrow">¶</a></p>
+<p id="section-5.1-9">The following example shows a nonce request and nonce response message exchange
+transmitting optional parameters in the request:<a href="#section-5.1-9" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-10">
 <pre>
 POST /.well-known/est/nonce HTTP/1.1
@@ -2060,15 +2061,15 @@ Content-Type: application/est-attestation-freshness+json
 <div id="EST-coaps">
 <section id="section-5.2">
         <h3 id="name-est-over-secure-coap">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-est-over-secure-coap" class="section-name selfRef">EST over secure COAP</a>
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-est-over-secure-coap" class="section-name selfRef">EST over Secure CoAP</a>
         </h3>
 <p id="section-5.2-1">If the nonce request and nonce response message content is transferred via
 secure CoAP, the specification in <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span> applies. The message content
 is encoded in CBOR as described in <a href="#CBOR" class="auto internal xref">Section 3.3</a>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.2-2">If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
-nonce response message content MUST be encoded as CBOR object, see <a href="#CBOR" class="auto internal xref">Section 3.3</a>.
-The code 2.05 or code 2.04 MUST also be used if the nonce is an zero-length
+nonce response message content MUST be encoded as a CBOR object, see <a href="#CBOR" class="auto internal xref">Section 3.3</a>.
+The code 2.05 or code 2.04 MUST also be used if the nonce is a zero-length
 byte string.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <p id="section-5.2-3">In the event of a possible error, the EST server MUST respond with a code
 4.00 (Bad Request) and MUST omit the nonce response message content. If the
@@ -2076,8 +2077,8 @@ nonce request has been made correctly, but the EST server is unable or
 unwilling to deliver the requested nonce, it MUST respond with a code 5.03
 (Service Unavailable).<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 <p id="section-5.2-4">The following media type MUST be used for nonce request and nonce response message
-content according to <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span> for CoAP Content Format and Accept option as the
-content-type.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+content. The corresponding CoAP Content-Format value is used in the CoAP
+Content-Format and Accept options as specified in <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
 <table class="center" id="table-5">
           <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
 <thead>
@@ -2089,7 +2090,7 @@ content-type.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">nonce request<br>nonce response message content</td>
+              <td class="text-left" rowspan="1" colspan="1">NonceRequest<br>NonceResponse</td>
               <td class="text-left" rowspan="1" colspan="1">application/est-attestation-freshness+cbor</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <a href="#EST-coaps" class="auto internal xref">Section 5.2</a>
@@ -2107,7 +2108,7 @@ content-type.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-use-with-cmc" class="section-name selfRef">Use with CMC</a>
       </h2>
 <p id="section-6-1">The nonce request and nonce response message content is conveyed as ASN.1,
-see <a href="#ASN.1" class="auto internal xref">Section 3.1</a>, as CMC Controls in a Full PKI Requests, see
+see <a href="#ASN.1" class="auto internal xref">Section 3.1</a>, as CMC Controls in a Full PKI Request, see
 <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-27#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. The received nonce can be
 used for a CSR to be transferred in a Simple or Full PKI request.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">To transfer the controls, the content type id-data SHOULD be used.<a href="#section-6-2" class="pilcrow">¶</a></p>
@@ -2622,8 +2623,8 @@ reveal privacy-sensitive or deployment-sensitive information, such as
 platform topology, certificate identifiers, or measurement selections.
 <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> defines the IETF remote attestation architecture and
 extensively discusses nonce-based freshness.<a href="#section-9-2" class="pilcrow">¶</a></p>
-<p id="section-9-3">Specific attestation technology specification such as <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span> and
-<span>[<a href="#RFC9783" class="cite xref">RFC9783</a>]</span> offers guidance on replay protection using nonces. This
+<p id="section-9-3">Specific attestation technology specifications such as <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span> and
+<span>[<a href="#RFC9783" class="cite xref">RFC9783</a>]</span> offer guidance on replay protection using nonces. This
 document defers specific recommendations to those specifications.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">If an attestation technology or Composite Attester profile transforms a
 received nonce before embedding it in Evidence, that transformation MUST
@@ -2846,7 +2847,7 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
  NonceResponse ::= SEQUENCE {
     nonce  OCTET STRING (SIZE(0 | 8..64)),
     -- contains the nonce of length len
-    -- a zero-length OCTET String indicate that no freshness
+    -- a zero-length OCTET STRING indicates that no freshness
     --   proof is required
     expiry INTEGER OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
