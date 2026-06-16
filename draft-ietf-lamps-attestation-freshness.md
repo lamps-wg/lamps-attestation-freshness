@@ -207,7 +207,7 @@ The nonce response message has the following fields:
 This document does not further specify the content of the reqInfo and respInfo
 structures; those structures must be defined elsewhere. Each definition must
 assign an object identifier and specify the exact content of the corresponding
-field. The definition of the reqInfo structure must also specify the type of the expacted
+field. The definition of the reqInfo structure must also specify the type of the expected
 respInfo structure. The message structure and the reqInfo or respInfo structures
 can use different encodings. For example, an ASN.1 message can contain reqInfo or
 respInfo encoded as JSON, if necessary. The reqInfo structure may be used to
@@ -295,7 +295,7 @@ structures can also use a conceptual message wrapper (CMW).
 ~~~~
 {: #fig-lead-Attester title="Class 1 Composite Attester"}
 
-The interaction between the end entity and the RY/CA is illustrated in {{fig-msg}}.
+The interaction between the end entity and the RA/CA is illustrated in {{fig-msg}}.
 
 ~~~~ aasvg
 end entity                                      RA/CA
@@ -307,7 +307,7 @@ end entity                                      RA/CA
                                            Generate or obtain nonce*
                                            Create response
 
-                 <---- nonce Response ------
+                 <---- nonce response ------
                        (nonce, expiry)
 
 Generate key pair
@@ -329,7 +329,7 @@ Generate certification
 
 Store certificate
 
-*: These steps can require interactions with the Attester(on the
+*: These steps can require interactions with the Attester (on the
    end entity side) and with the Verifier (on the RA/CA side).
 ~~~~
 {: #fig-msg title="Exchange with Nonce and Evidence."}
@@ -370,7 +370,7 @@ NonceRequest ::= SEQUENCE {
 NonceResponse ::= SEQUENCE {
    nonce OCTET STRING (SIZE(0 | 8..64)),
    -- Contains the nonce of length len
-   -- A zero-length OCTET String indicate that no freshness
+   -- A zero-length OCTET STRING indicates that no freshness
    -- proof is required
    expiry INTEGER OPTIONAL,
    -- Indicates how long in seconds the nonce issuer
@@ -395,7 +395,7 @@ The JSON structure has the following members:
 - The OPTIONAL "len" and "expiry" members, if present, MUST be unsigned
   integers.
 - The "nonce" member MUST either contain a zero-length string or the nonce
-  values between 8 and 64 bytes in length conveyed as JSON string containing
+  value between 8 and 64 bytes in length conveyed as a JSON string containing
   the unpadded base64url encoding, as specified in {{Section 5 of RFC4648}}.
   Such encodings are between 11 and 86 characters in length.
 - The OPTIONAL "type" member, if present, MUST be a text string containing the
@@ -432,7 +432,7 @@ The CBOR structure defined in CDDL {{RFC8610}} has the following members:
 
 - All map keys are text strings.
 - The "nonce" member MUST either contain a zero-length octet string or the nonce
-  values between 8 and 64 bytes in length conveyed as CBOR byte string.
+  value between 8 and 64 bytes in length conveyed as a CBOR byte string.
 - The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
   an object identifier in dotted-decimal notation.
 - The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
@@ -494,8 +494,8 @@ In the event of a possible error or if the RA/CA is unable or unwilling to deliv
 requested nonce, CMP offers several ways to indicate this. Which variant fits depends
 on the circumstances.
 
-- Respond an error message containing the PKIFailureInfo bit as defined by {{RFC9483}}.
-- If HTTP or COAP is used for transferring the general message, return an status code
+- Respond with an error message containing the PKIFailureInfo bit as defined by {{RFC9483}}.
+- If HTTP or CoAP is used for transferring the general message, return a status code
   on transfer level as described in {{RFC9811}} or {{RFC9482}}.
 
 # Use with EST {#EST}
@@ -522,7 +522,7 @@ If the nonce request and nonce response message content is transferred over HTTP
 the specification in {{RFC7030}} applies.
 
 If the nonce request message was successful, the EST server MUST respond with an HTTP 200
-status code and the nonce response message content MUST be encoded as JSON object, see
+status code and the nonce response message content MUST be encoded as a JSON object, see
 {{JSON}}. The HTTP 200 status code MUST also be used if the nonce is an empty string.
 
 In the event of a possible error, the EST server MUST respond with an HTTP
@@ -534,17 +534,16 @@ Unavailable).
 The EST server MAY request HTTP-based client authentication as described in
 {{Section 3.2.3 of RFC7030}}.
 
-The following media types MUST be used as the content-type of the POST request
+The following media types MUST be used as the Content-Type of the POST request
 and the response.
 
 | Message type<br/>(per operation) | Media type(s) | Reference |
 | --- | --- | --- |
 | NonceRequest | N/A (for GET) or<br/>application/est-attestation-freshness+json (for POST) | {{EST-https}} |
-| --- | --- | --- |
-| NonceResponse   | application/est-attestation-freshness+json | {{EST-https}} |
+| NonceResponse | application/est-attestation-freshness+json | {{EST-https}} |
 
-The following example shows a nonce request - nonce response message exchange without
-transmitting optional parameter in the request:
+The following example shows a nonce request and nonce response message exchange without
+transmitting optional parameters in the request:
 
 
 ~~~
@@ -559,8 +558,8 @@ Content-Type: application/est-attestation-freshness+json
 }
 ~~~
 
-The following example shows a nonce request - nonce response message exchange
-transmitting optional parameter in the request:
+The following example shows a nonce request and nonce response message exchange
+transmitting optional parameters in the request:
 
 ~~~
 POST /.well-known/est/nonce HTTP/1.1
@@ -588,7 +587,7 @@ Content-Type: application/est-attestation-freshness+json
 }
 ~~~
 
-## EST over secure COAP {#EST-coaps}
+## EST over Secure CoAP {#EST-coaps}
 
 If the nonce request and nonce response message content is transferred via
 secure CoAP, the specification in {{RFC9148}} applies. The message content
@@ -596,8 +595,8 @@ is encoded in CBOR as described in {{CBOR}}.
 
 If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
-nonce response message content MUST be encoded as CBOR object, see {{CBOR}}.
-The code 2.05 or code 2.04 MUST also be used if the nonce is an zero-length
+nonce response message content MUST be encoded as a CBOR object, see {{CBOR}}.
+The code 2.05 or code 2.04 MUST also be used if the nonce is a zero-length
 byte string.
 
 In the event of a possible error, the EST server MUST respond with a code
@@ -607,18 +606,18 @@ unwilling to deliver the requested nonce, it MUST respond with a code 5.03
 (Service Unavailable).
 
 The following media type MUST be used for nonce request and nonce response message
-content according to {{RFC9148}} for CoAP Content Format and Accept option as the
-content-type.
+content. The corresponding CoAP Content-Format value is used in the CoAP
+Content-Format and Accept options as specified in {{RFC9148}}.
 
 | Message type<br/>(per operation) | Media type | Reference |
 | --- | --- | --- |
-| nonce request<br/>nonce response message content | application/est-attestation-freshness+cbor | {{EST-coaps}} |
+| NonceRequest<br/>NonceResponse | application/est-attestation-freshness+cbor | {{EST-coaps}} |
 
 
 # Use with CMC {#CMC}
 
 The nonce request and nonce response message content is conveyed as ASN.1,
-see {{ASN.1}}, as CMC Controls in a Full PKI Requests, see
+see {{ASN.1}}, as CMC Controls in a Full PKI Request, see
 {{Section 6 of I-D.ietf-lamps-csr-attestation}}. The received nonce can be
 used for a CSR to be transferred in a Simple or Full PKI request.
 
@@ -653,7 +652,7 @@ ContentInfo.content
       {103, id-cmc-nonceResp, <NonceResponse>}
 ~~~
 
-#  IANA Considerations {#iana}
+# IANA Considerations {#iana}
 
 ## CMP
 
@@ -898,7 +897,7 @@ discarding expired state. The use of a stateless cookie mechanism to reduce this
 state-management burden is also possible but not further detailed in this
 specification.
 
-#  Security Considerations {#sec-cons}
+# Security Considerations {#sec-cons}
 
 This specification details the process of obtaining a nonce via CMP, EST,
 and CMC. Therefore, the security considerations of these protocols apply. Regarding
@@ -915,8 +914,8 @@ platform topology, certificate identifiers, or measurement selections.
 {{RFC9334}} defines the IETF remote attestation architecture and
 extensively discusses nonce-based freshness.
 
-Specific attestation technology specification such as {{RFC9711}} and
-{{RFC9783}} offers guidance on replay protection using nonces. This
+Specific attestation technology specifications such as {{RFC9711}} and
+{{RFC9783}} offer guidance on replay protection using nonces. This
 document defers specific recommendations to those specifications.
 
 If an attestation technology or Composite Attester profile transforms a
@@ -1006,7 +1005,7 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
  NonceResponse ::= SEQUENCE {
     nonce  OCTET STRING (SIZE(0 | 8..64)),
     -- contains the nonce of length len
-    -- a zero-length OCTET String indicate that no freshness
+    -- a zero-length OCTET STRING indicates that no freshness
     --   proof is required
     expiry INTEGER OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
