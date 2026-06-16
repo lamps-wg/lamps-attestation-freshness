@@ -1185,6 +1185,9 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-cbor-representation" class="internal xref">CBOR Representation</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-cddl-representation" class="internal xref">CDDL Representation</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
@@ -1771,10 +1774,13 @@ corresponding "type" member contains an OID. Their contents are defined by
 that OID.<a href="#section-3.2-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.2-4"><a href="#fig-example-json" class="auto internal xref">Figure 4</a> shows an example:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">The JSON nonce request object is formally described by the nonce-request CDDL
+rule in <a href="#CDDL" class="auto internal xref">Section 3.4</a>. The JSON nonce response object is formally described by the
+nonce-response-json CDDL rule in <a href="#CDDL" class="auto internal xref">Section 3.4</a>.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5"><a href="#fig-example-json" class="auto internal xref">Figure 4</a> shows an example:<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 <span id="name-nonce-request-and-nonce-res"></span><div id="fig-example-json">
 <figure id="figure-4">
-          <div class="alignLeft art-text artwork" id="section-3.2-5.1">
+          <div class="alignLeft art-text artwork" id="section-3.2-6.1">
 <pre>
 {
   "len": 32,
@@ -1803,7 +1809,7 @@ that OID.<a href="#section-3.2-3.4.1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-3.3-1">This section defines nonce request and nonce response message content as a CBOR
 structure <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for use in EST-coaps, see <a href="#EST-coaps" class="auto internal xref">Section 5.2</a>.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2">The CBOR structure defined in CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> has the following members:<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">The CBOR structure has the following members:<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3-3.1">
             <p id="section-3.3-3.1.1">All map keys are text strings.<a href="#section-3.3-3.1.1" class="pilcrow">¶</a></p>
@@ -1822,7 +1828,23 @@ values. They MUST only be included if the corresponding "type" member contains
 an OID. Their CBOR encoding is defined by that OID.<a href="#section-3.3-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-4">
+<p id="section-3.3-4">The CBOR nonce request object is formally described by the nonce-request CDDL
+rule in <a href="#CDDL" class="auto internal xref">Section 3.4</a>. The CBOR nonce response object is formally described by the
+nonce-response-cbor CDDL rule in <a href="#CDDL" class="auto internal xref">Section 3.4</a>.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="CDDL">
+<section id="section-3.4">
+        <h3 id="name-cddl-representation">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cddl-representation" class="section-name selfRef">CDDL Representation</a>
+        </h3>
+<p id="section-3.4-1">This section provides a CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> definition for the JSON and CBOR nonce
+request and nonce response message content. The nonce-request rule applies to
+both JSON and CBOR. The nonce-response-json and nonce-response-cbor rules define
+the encoding-specific representation of the nonce value. For JSON, the
+base64url-nonce rule captures the allowed character set and encoded length; the
+decoded nonce length requirements are specified in <a href="#JSON" class="auto internal xref">Section 3.2</a>.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.4-2">
 <pre>
 nonce-request = {
   ? "len": nonce-length,
@@ -1830,17 +1852,26 @@ nonce-request = {
   ? "reqInfo": any
 }
 
-nonce-response = {
-    "nonce": h'' / nonce,
+nonce-response-json = {
+    "nonce": json-nonce,
+  ? "expiry": uint,
+  ? "type": dotted-decimal-oid,
+  ? "respInfo": any
+}
+
+nonce-response-cbor = {
+    "nonce": cbor-nonce,
   ? "expiry": uint,
   ? "type": dotted-decimal-oid,
   ? "respInfo": any
 }
 
 nonce-length = 8..64
-nonce = bstr .size (8..64)
+cbor-nonce = h'' / bstr .size (8..64)
+json-nonce = "" / base64url-nonce
+base64url-nonce = tstr .regexp "[A-Za-z0-9_-]{11,86}"
 dotted-decimal-oid = tstr
-</pre><a href="#section-3.3-4" class="pilcrow">¶</a>
+</pre><a href="#section-3.4-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
