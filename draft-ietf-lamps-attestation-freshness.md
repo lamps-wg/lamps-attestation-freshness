@@ -335,7 +335,8 @@ Store certificate
 {: #fig-msg title="Exchange with Nonce and Evidence."}
 
 The following sections define the generic data structures for nonce request and
-nonce response message content. CMP and CMC use ASN.1, while EST uses JSON and CBOR.
+nonce response message content. CMP and CMC use ASN.1, while EST uses JSON and CBOR,
+both defined CDDL.
 
 ## ASN.1 Representation {#ASN.1}
 
@@ -384,68 +385,6 @@ NonceResponse ::= SEQUENCE {
    -- Contains type-specific nonce-response information
 }
 ~~~~
-
-## JSON Representation {#JSON}
-
-This section defines nonce request and nonce response message content as a JSON
-structure {{RFC8259}} for use in EST, see {{EST-https}}.
-
-The JSON structure has the following members:
-
-- The OPTIONAL "len" and "expiry" members, if present, MUST be unsigned
-  integers.
-- The "nonce" member MUST either contain a zero-length string or the nonce
-  value between 8 and 64 bytes in length conveyed as a JSON string containing
-  the unpadded base64url encoding, as specified in {{Section 5 of RFC4648}}.
-  Such encodings are between 11 and 86 characters in length.
-- The OPTIONAL "type" member, if present, MUST be a text string containing the
-  object identifier as a dotted-decimal OID.
-- The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
-  corresponding "type" member contains an OID. Their contents are defined by
-  that OID.
-
-The JSON nonce request object is formally described by the nonce-request CDDL
-rule in {{CDDL}}. The JSON nonce response object is formally described by the
-nonce-response-json CDDL rule in {{CDDL}}.
-
-{{fig-example-json}} shows an example:
-
-~~~~
-{
-  "len": 32,
-  "type": "1.2.3.4.5",
-  "reqInfo": { ... }
-}
-
-{
-  "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
-  "expiry": 600,
-  "type": "1.2.3.4.6",
-  "respInfo": { ... }
-}
-~~~~
-{: #fig-example-json title="Nonce Request and Nonce Response Examples (JSON)"}
-
-
-## CBOR Representation {#CBOR}
-
-This section defines nonce request and nonce response message content as a CBOR
-structure {{RFC8949}} for use in EST-coaps, see {{EST-coaps}}.
-
-The CBOR structure has the following members:
-
-- All map keys are text strings.
-- The "nonce" member MUST either contain a zero-length octet string or the nonce
-  value between 8 and 64 bytes in length conveyed as a CBOR byte string.
-- The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
-  an object identifier in dotted-decimal notation.
-- The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
-  values. They MUST only be included if the corresponding "type" member contains
-  an OID. Their CBOR encoding is defined by that OID.
-
-The CBOR nonce request object is formally described by the nonce-request CDDL
-rule in {{CDDL}}. The CBOR nonce response object is formally described by the
-nonce-response-cbor CDDL rule in {{CDDL}}.
 
 ## CDDL Representation {#CDDL}
 
@@ -547,6 +486,24 @@ uses either the GET or POST method:
 If the nonce request and nonce response message content is transferred over HTTPS,
 the specification in {{RFC7030}} applies.
 
+The JSON nonce request object is formally described by the nonce-request CDDL
+rule in {{CDDL}}. The JSON nonce response object is formally described by the
+nonce-response-json CDDL rule in {{CDDL}}.
+
+The JSON structure has the following members:
+
+- The OPTIONAL "len" and "expiry" members, if present, MUST be unsigned
+  integers.
+- The "nonce" member MUST either contain a zero-length string or the nonce
+  value between 8 and 64 bytes in length conveyed as a JSON string containing
+  the unpadded base64url encoding, as specified in {{Section 5 of RFC4648}}.
+  Such encodings are between 11 and 86 characters in length.
+- The OPTIONAL "type" member, if present, MUST be a text string containing the
+  object identifier as a dotted-decimal OID.
+- The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
+  corresponding "type" member contains an OID. Their contents are defined by
+  that OID.
+
 If the nonce request message was successful, the EST server MUST respond with an HTTP 200
 status code and the nonce response message content MUST be encoded as a JSON object, see
 {{JSON}}. The HTTP 200 status code MUST also be used if the nonce is an empty string.
@@ -618,6 +575,21 @@ Content-Type: application/est-attestation-freshness+json
 If the nonce request and nonce response message content is transferred via
 secure CoAP, the specification in {{RFC9148}} applies. The message content
 is encoded in CBOR as described in {{CBOR}}.
+
+The CBOR nonce request object is formally described by the nonce-request CDDL
+rule in {{CDDL}}. The CBOR nonce response object is formally described by the
+nonce-response-cbor CDDL rule in {{CDDL}}.
+
+The CBOR structure has the following members:
+
+- All map keys are text strings.
+- The "nonce" member MUST either contain a zero-length octet string or the nonce
+  value between 8 and 64 bytes in length conveyed as a CBOR byte string.
+- The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
+  an object identifier in dotted-decimal notation.
+- The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
+  values. They MUST only be included if the corresponding "type" member contains
+  an OID. Their CBOR encoding is defined by that OID.
 
 If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
