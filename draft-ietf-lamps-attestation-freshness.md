@@ -393,7 +393,7 @@ request and nonce response message content. The nonce-request rule applies to
 both JSON and CBOR. The nonce-response-json and nonce-response-cbor rules define
 the encoding-specific representation of the nonce value. For JSON, the
 base64url-nonce rule captures the allowed character set and encoded length; the
-decoded nonce length requirements are specified in {{JSON}}.
+decoded nonce length requirements are specified in {{EST-https}}.
 
 ~~~~ cddl
 nonce-request = {
@@ -465,8 +465,8 @@ on the circumstances.
 
 # Use with EST {#EST}
 
-The nonce request and nonce response message content is conveyed as JSON, see
-{{JSON}}, or CBOR, see {{CBOR}}, content between end entity (EST client) and
+The nonce request and nonce response message content is conveyed as JSON or CBOR
+according to the CDDL definition, see {{CDDL}}, between end entity (EST client) and
 RA/CA (EST server). A compliant EST server MUST provide an EST endpoint with
 the path-segment /nonce for this operation.
 
@@ -505,8 +505,8 @@ The JSON structure has the following members:
   that OID.
 
 If the nonce request message was successful, the EST server MUST respond with an HTTP 200
-status code and the nonce response message content MUST be encoded as a JSON object, see
-{{JSON}}. The HTTP 200 status code MUST also be used if the nonce is an empty string.
+status code and the nonce response message content MUST be encoded as a JSON object.
+The HTTP 200 status code MUST also be used if the nonce is an empty string.
 
 In the event of a possible error, the EST server MUST respond with an HTTP
 status code 400 (Bad Request) and MUST omit the nonce response message content. If the
@@ -573,8 +573,7 @@ Content-Type: application/est-attestation-freshness+json
 ## EST over Secure CoAP {#EST-coaps}
 
 If the nonce request and nonce response message content is transferred via
-secure CoAP, the specification in {{RFC9148}} applies. The message content
-is encoded in CBOR as described in {{CBOR}}.
+secure CoAP, the specification in {{RFC9148}} applies.
 
 The CBOR nonce request object is formally described by the nonce-request CDDL
 rule in {{CDDL}}. The CBOR nonce response object is formally described by the
@@ -593,7 +592,7 @@ The CBOR structure has the following members:
 
 If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
-nonce response message content MUST be encoded as a CBOR object, see {{CBOR}}.
+nonce response message content MUST be encoded as a CBOR object.
 The code 2.05 or code 2.04 MUST also be used if the nonce is a zero-length
 byte string.
 
