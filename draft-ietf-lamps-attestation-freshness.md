@@ -170,49 +170,49 @@ the applicable certificate lifecycle management protocols: CMP, EST, and CMC.
 # Architecture and Message Formats {#Architecture}
 
 According to {{I-D.ietf-lamps-csr-attestation}}, a CSR can contain multiple
-AttestationStatements and multiple certificates for validating those
-AttestationStatements. This document describes how an end entity can use CMP,
+`AttestationStatements` and multiple certificates for validating those
+`AttestationStatements`. This document describes how an end entity can use CMP,
 EST, or CMC to request a nonce from the RA/CA for a specific type of Evidence
 to be included in the CSR.
 
 The end entity sends a nonce request message with the following fields:
 
-- len: In this OPTIONAL field, the end entity can specify the desired length of
+- `len`: In this OPTIONAL field, the end entity can specify the desired length of
   the requested nonce in bytes as a value between 8 and 64.
-- type: In this OPTIONAL field, the end entity can specify the type of the
+- `type`: In this OPTIONAL field, the end entity can specify the type of the
   reqInfo structure.
-- reqInfo: If type is set, this OPTIONAL field MUST contain the type-specific
+- `reqInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
   content that the RA/CA requires to generate respInfo. If type is not set,
-  reqInfo MUST also be omitted.
+  `reqInfo` MUST also be omitted.
 
 The RA/CA can return the requested nonce in a nonce response message together
 with information specific to the generation of the Evidence.
 
 The nonce response message has the following fields:
 
-- nonce: This field MUST contain the nonce if the RA/CA is able and willing to
+- `nonce`: This field MUST contain the nonce if the RA/CA is able and willing to
   provide it. If a specific length was requested, the RA/CA SHOULD provide a
   nonce of that size. If the RA/CA doesn't need a freshness proof, the nonce
   MUST be an empty or zero-length string.
-- expiry: In this OPTIONAL field, the RA/CA can specify the validity period of
+- `expiry`: In this OPTIONAL field, the RA/CA can specify the validity period of
   the nonce in seconds as an integer value. The nonce can be used during this
   period; the response therefore needs to be conveyed promptly.
-- type: In this OPTIONAL field, the RA/CA can specify the type of the respInfo
+- `type`: In this OPTIONAL field, the RA/CA can specify the type of the `respInfo`
   structure. The type in the nonce response message is defined by the type in
   the nonce request message.
-- respInfo: If type is set, this OPTIONAL field MUST contain the type-specific
+- `respInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
   content requested by the end entity for generating the Evidence. If type is
-  not set, respInfo MUST also be omitted.
+  not set, `respInfo` MUST also be omitted.
 
-This document does not further specify the content of the reqInfo and respInfo
+This document does not further specify the content of the `reqInfo` and `respInfo`
 structures; those structures must be defined elsewhere. Each definition must
 assign an object identifier and specify the exact content of the corresponding
-field. The definition of the reqInfo structure must also specify the type of the expected
-respInfo structure. The message structure and the reqInfo or respInfo structures
-can use different encodings. For example, an ASN.1 message can contain reqInfo or
-respInfo encoded as JSON, if necessary. The reqInfo structure may be used to
+field. The definition of the `reqInfo` structure must also specify the type of the expected
+`respInfo` structure. The message structure and the `reqInfo` or `respInfo` structures
+can use different encodings. For example, an ASN.1 message can contain `reqInfo` or
+`respInfo` encoded as JSON, if necessary. The `reqInfo` structure may be used to
 provide the required information to the Relying Party to route the nonce request
-to the appropriate Verifier when multiple verifiers are supported. The respInfo
+to the appropriate Verifier when multiple verifiers are supported. The `respInfo`
 structure may be used to convey Generic Information Elements
 ({{Section 6 of I-D.ietf-rats-reference-interaction-models}}) such as Attesting
 Environment IDs and Claim Selection.
@@ -248,7 +248,7 @@ device with Attester       Relying Party                 Verifier
 {: #fig-msgFlow title="Message Flow in Background Check Model"}
 
 The nonce request and nonce response messages allow the end entity to request
-only one nonce and one respInfo structure from the RA/CA. If the end entity
+only one nonce and one `respInfo` structure from the RA/CA. If the end entity
 wants to include multiple Evidence statements in a CSR, it can use the
 composite Attester model described in {{Section 3.3 of RFC9334}} and
 {{I-D.richardson-rats-composite-attesters}}, i.e., together with a conceptual
@@ -257,7 +257,7 @@ message wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} structure, as described in
 should then pass the nonce to the sub-Attesters. Based on Figure 2 of
 {{I-D.richardson-rats-composite-attesters}}, {{fig-lead-Attester}} shows an
 example of how a nonce can be distributed among several Attesters in an end
-entity. If multiple respInfo structures are required, the reqInfo and respInfo
+entity. If multiple `respInfo` structures are required, the `reqInfo` and `respInfo`
 structures can also use a conceptual message wrapper (CMW).
 
 ~~~~ aasvg
@@ -427,8 +427,8 @@ dotted-decimal-oid = tstr
 # Use with CMP {#CMP}
 
 The nonce request and nonce response message content is conveyed as ASN.1 content,
-see {{ASN.1}}, in a general message (genm) {{Section 5.3.19 of RFC9810}}
-and general response (genp) {{Section 5.3.20 of RFC9810}}, respectively.
+see {{ASN.1}}, in a general message (`genm`) {{Section 5.3.19 of RFC9810}}
+and general response (`genp`) {{Section 5.3.20 of RFC9810}}, respectively.
 
 ~~~~
 GenMsg:    {id-it TBD1}, NonceRequest
@@ -459,7 +459,7 @@ In the event of a possible error or if the RA/CA is unable or unwilling to deliv
 requested nonce, CMP offers several ways to indicate this. Which variant fits depends
 on the circumstances.
 
-- Respond with an error message containing the PKIFailureInfo bit as defined by {{RFC9483}}.
+- Respond with an error message containing the `PKIFailureInfo` bit as defined by {{RFC9483}}.
 - If HTTP or CoAP is used for transferring the general message, return a status code
   on transfer level as described in {{RFC9811}} or {{RFC9482}}.
 
@@ -475,10 +475,10 @@ the path-segment /nonce for this operation.
 | Request of a nonce | `/nonce` | {{EST}} |
 
 Depending on whether additional parameters are to be transferred, the client
-uses either the GET or POST method:
+uses either the `GET` or `POST` method:
 
-- The GET method MUST be used if no optional content is to be transferred
-- The POST method MUST be used if nonce request message content encoded in JSON
+- The `GET` method MUST be used if no optional content is to be transferred
+- The `POST` method MUST be used if nonce request message content encoded in JSON
   or CBOR is to be transferred.
 
 ## EST over HTTPS {#EST-https}
@@ -517,7 +517,7 @@ Unavailable).
 The EST server MAY request HTTP-based client authentication as described in
 {{Section 3.2.3 of RFC7030}}.
 
-The following media types MUST be used as the Content-Type of the POST request
+The following media types MUST be used as the Content-Type of the `POST` request
 and the response.
 
 | Message type<br/>(per operation) | Media type(s) | Reference |
@@ -619,7 +619,7 @@ see {{ASN.1}}, as CMC Controls in a Full PKI Request, see
 used for a CSR to be transferred in a Simple or Full PKI request.
 
 
-To transfer the controls, the content type id-data SHOULD be used.
+To transfer the controls, the content type `id-data` SHOULD be used.
 
 
 ~~~~
