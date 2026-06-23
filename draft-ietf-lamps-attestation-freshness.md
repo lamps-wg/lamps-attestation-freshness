@@ -615,7 +615,7 @@ Content-Format and Accept options as specified in {{RFC9148}}.
 
 The nonce request and nonce response message content is conveyed as ASN.1,
 see {{ASN.1}}, as CMC Controls in a Full PKI Request, see
-{{Section 6 of I-D.ietf-lamps-csr-attestation}}. The received nonce can be
+{{Section 6 of I-D.ietf-lamps-rfc5272bis}}. The received nonce can be
 used for a CSR to be transferred in a Simple or Full PKI request.
 
 
