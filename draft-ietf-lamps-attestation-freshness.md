@@ -231,7 +231,7 @@ device with Attester       Relying Party                 Verifier
     |-------------------------->|                            |
     |                           |  request nonce (optional)  |
     |                           |--------------------------->|
-    |                           |  nonce                     |
+    |                           |  nonce (optional)          |
     |                           |<---------------------------|
     |  nonce                    |                            |
     |<--------------------------|                            |
