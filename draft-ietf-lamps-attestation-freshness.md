@@ -814,8 +814,8 @@ IANA is requested to register the following object identifier in the
 
 | Decimal | Description | Reference |
 | --- | --- | --- |
-| TBD4 | id-cmc-nonceReq | This-RFC |
-| TBD5 | id-cmc-nonceResp | This-RFC |
+| TBD4 | `id-cmc-nonceReq` | This-RFC |
+| TBD5 | `id-cmc-nonceResp` | This-RFC |
 
 ## ASN.1 Module
 
@@ -825,7 +825,7 @@ OID is defined in {{asn1}}.
 
 | Decimal | Description | References |
 | --- | --- | --- |
-| TBDMOD | id-mod-att-fresh-req | This-RFC |
+| TBDMOD | `id-mod-att-fresh-req` | This-RFC |
 
 # Operational Considerations {#operations}
 
