@@ -649,6 +649,11 @@ ContentInfo.content
       {103, id-cmc-nonceResp, <NonceResponse>}
 ~~~
 
+In the event of a possible error or the Server is unable to deliver
+the requested nonce, the CMC Server can return information about the status
+of the request using an Extended CMC Status Info Control or a CMC Status Info Control
+defined in {{Section 6.1 of I-D.ietf-lamps-rfc5272bis}}.
+
 # IANA Considerations {#iana}
 
 ## CMP
