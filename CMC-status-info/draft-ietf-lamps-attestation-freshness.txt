@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 26 December 2026                                      J. Mandel
+Expires: 27 December 2026                                      J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                            24 June 2026
+                                                            25 June 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 December 2026.
+   This Internet-Draft will expire on 27 December 2026.
 
 Copyright Notice
 
@@ -673,10 +673,10 @@ Table of Contents
          {102, id-cmc-recipientNonce, 10001}
          {103, id-cmc-nonceResp, <NonceResponse>}
 
-   In the event of a possible error or the Server is unable to deliver
-   the requested nonce, the CMC Server can return information about the
-   status of the request using an Extended CMC Status Info Control or a
-   CMC Status Info Control defined in Section 6.1 of
+   In the event of an error, or if the server is unable to provide the
+   requested nonce, the CMC Server MAY return status information about
+   the request using either an Extended CMC Status Info Control or a CMC
+   Status Info Control, as defined in Section 6.1 of
    [I-D.ietf-lamps-rfc5272bis].
 
 7.  IANA Considerations
