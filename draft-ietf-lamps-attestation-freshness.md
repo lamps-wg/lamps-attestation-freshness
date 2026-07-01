@@ -974,7 +974,7 @@ NonceRequest = {
 NonceResponse = {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": 600,
-  "type": "1.2.3.4.5",
+  "type": "1.2.3.4.6",
   "respInfo": {
     "tpm20-pcr-selection": [
       {
