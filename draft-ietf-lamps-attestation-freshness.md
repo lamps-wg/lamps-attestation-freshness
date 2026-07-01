@@ -68,6 +68,7 @@ normative:
   RFC7030:
   RFC7252:
   RFC9148:
+  RFC9175:
   RFC8615:
   RFC8610:
   RFC8259:
@@ -252,6 +253,9 @@ PKI management operation context provided by the certificate lifecycle managemen
 protocol being used, just as the certificate request and response messages are,
 so that the RA/CA can unambiguously associate the provided nonce with the evidence
 in the CSR.
+This association is required because the RA/CA treats the Evidence carried in the
+CSR as opaque and therefore cannot rely on inspecting the Evidence to determine
+which previously issued nonce applies to that CSR.
 
 The nonce request and nonce response messages allow the end entity to request
 only one nonce and one `respInfo` structure from the RA/CA. If the end entity
@@ -581,7 +585,13 @@ Content-Type: application/est-attestation-freshness+json
 ~~~
 
 To ensure that the nonce request and response messages are associated with the subsequent
-request and response messages used to transmit the CSR, the same (D)TLS session SHOULD be used.
+request and response messages used to transmit the CSR, the EST server MUST use a
+session-maintenance mechanism that binds the nonce request and response messages to the
+subsequent request and response messages used to transmit the CSR. This can be achieved
+by using the same (D)TLS session or by using an HTTP state mechanism, such as cookies,
+when EST is transferred over HTTP. If the EST server cannot associate the CSR request
+with the prior nonce request and response messages, it MUST NOT treat the CSR as
+associated with the previously provided nonce.
 
 ## EST over Secure CoAP {#EST-coaps}
 
@@ -622,6 +632,17 @@ Content-Format and Accept options as specified in {{RFC9148}}.
 | Message type<br/>(per operation) | Media type | Reference |
 | --- | --- | --- |
 | NonceRequest<br/>NonceResponse | application/est-attestation-freshness+cbor | {{EST-coaps}} |
+
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the EST-coaps server MUST use a
+session-maintenance mechanism that binds the nonce request and response messages to the
+subsequent request and response messages used to transmit the CSR. CoAP does not define
+HTTP cookies. This association can be achieved by using the same secure CoAP security
+association, such as the same DTLS connection, or by using an integrity-protected CoAP
+mechanism that carries server-generated opaque state, such as the Echo option defined in
+{{RFC9175}}. If the EST-coaps server cannot associate the CSR request with the prior
+nonce request and response messages, it MUST NOT treat the CSR as associated with the
+previously provided nonce.
 
 
 # Use with CMC {#CMC}
@@ -666,7 +687,12 @@ ContentInfo.content
 
 To ensure that the nonce request and response messages are associated with the subsequent
 request and response messages used to transmit the CSR, the transaction identifier specified in
-{{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} SCHOULD be used.
+{{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} MUST be used. The same transaction identifier
+MUST be used for the nonce request and response messages and for the subsequent request and
+response messages used to transmit the CSR. The senderNonce and recipientNonce controls
+specified in {{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} can be used to pair each CMC
+request with its corresponding response, but they do not replace the transaction identifier
+used to associate the nonce exchange with the subsequent CSR exchange.
 
 In the event of an error, or if the server is unable to provide the requested nonce,
 the CMC Server MAY return status information about the request using either an
