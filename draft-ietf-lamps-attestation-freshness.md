@@ -179,11 +179,12 @@ The end entity sends a nonce request message with the following fields:
 
 - `len`: In this OPTIONAL field, the end entity can specify the desired length of
   the requested nonce in bytes as a value between 8 and 64.
-- `type`: In this OPTIONAL field, the end entity can specify the type of the
-  reqInfo structure.
-- `reqInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
-  content that the RA/CA requires to generate respInfo. If type is not set,
-  `reqInfo` MUST also be omitted.
+- `reqTypeInfo`: This OPTIONAL structure groups the type-specific information
+  for the nonce request. It contains:
+  - `type`: The end entity can specify the type of the reqInfo structure.
+  - `reqInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
+    content that the RA/CA requires to generate respInfo. If type is not set,
+    `reqInfo` MUST also be omitted.
 
 The RA/CA can return the requested nonce in a nonce response message together
 with information specific to the generation of the Evidence.
@@ -197,12 +198,14 @@ The nonce response message has the following fields:
 - `expiry`: In this OPTIONAL field, the RA/CA can specify the validity period of
   the nonce in seconds as an integer value. The nonce can be used during this
   period; the response therefore needs to be conveyed promptly.
-- `type`: In this OPTIONAL field, the RA/CA can specify the type of the `respInfo`
-  structure. The type in the nonce response message is defined by the type in
-  the nonce request message.
-- `respInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
-  content requested by the end entity for generating the Evidence. If type is
-  not set, `respInfo` MUST also be omitted.
+- `respTypeInfo`: This OPTIONAL structure groups the type-specific information
+  for the nonce response. It contains:
+  - `type`: The RA/CA can specify the type of the `respInfo` structure. The type
+    in the nonce response message is defined by the type in the nonce request
+    message.
+  - `respInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
+    content requested by the end entity for generating the Evidence. If type is
+    not set, `respInfo` MUST also be omitted.
 
 This document does not further specify the content of the `reqInfo` and `respInfo`
 structures; those structures must be defined elsewhere. Each definition must
@@ -406,21 +409,33 @@ decoded nonce length requirements are specified in {{EST-https}}.
 ~~~~ cddl
 nonce-request = {
   ? "len": nonce-length,
-  ? "type": dotted-decimal-oid,
+  ? "reqTypeInfo": nonce-request-type-info
+}
+
+nonce-request-type-info = {
+  "type": dotted-decimal-oid,
   ? "reqInfo": any
 }
 
 nonce-response-json = {
     "nonce": json-nonce,
   ? "expiry": uint,
-  ? "type": dotted-decimal-oid,
+  ? "respTypeInfo": nonce-response-type-info-json
+}
+
+nonce-response-type-info-json = {
+  "type": dotted-decimal-oid,
   ? "respInfo": any
 }
 
 nonce-response-cbor = {
     "nonce": cbor-nonce,
   ? "expiry": uint,
-  ? "type": dotted-decimal-oid,
+  ? "respTypeInfo": nonce-response-type-info-cbor
+}
+
+nonce-response-type-info-cbor = {
+  "type": dotted-decimal-oid,
   ? "respInfo": any
 }
 
@@ -506,11 +521,13 @@ The JSON structure has the following members:
   value between 8 and 64 bytes in length conveyed as a JSON string containing
   the unpadded base64url encoding, as specified in {{Section 5 of RFC4648}}.
   Such encodings are between 11 and 86 characters in length.
-- The OPTIONAL "type" member, if present, MUST be a text string containing the
-  object identifier as a dotted-decimal OID.
-- The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
-  corresponding "type" member contains an OID. Their contents are defined by
-  that OID.
+- The OPTIONAL "reqTypeInfo" member (in requests) and "respTypeInfo" member
+  (in responses) are JSON objects that group the type-specific information.
+  Each object contains:
+  - A "type" member, which MUST be a text string containing the object
+    identifier as a dotted-decimal OID.
+  - An OPTIONAL "reqInfo" or "respInfo" member whose contents are defined
+    by the OID in the corresponding "type" member.
 
 If the nonce request message was successful, the EST server MUST respond with an HTTP 200
 status code and the nonce response message content MUST be encoded as a JSON object.
@@ -558,10 +575,12 @@ Content-Type: application/est-attestation-freshness+json
 
 {
   "len": 32,
-  "type": "1.2.3.4.5",
-  "reqInfo": {
-    "pcr-index": [0, 1, 2, 3],
-    "certificate-name": ["aik-1"]
+  "reqTypeInfo": {
+    "type": "1.2.3.4.5",
+    "reqInfo": {
+      "pcr-index": [0, 1, 2, 3],
+      "certificate-name": ["aik-1"]
+    }
   }
 }
 
@@ -571,9 +590,11 @@ Content-Type: application/est-attestation-freshness+json
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": 600,
-  "type": "1.2.3.4.6",
-  "respInfo": {
-    "certificate-name": "aik-1"
+  "respTypeInfo": {
+    "type": "1.2.3.4.6",
+    "respInfo": {
+      "certificate-name": "aik-1"
+    }
   }
 }
 ~~~
@@ -592,11 +613,14 @@ The CBOR structure has the following members:
 - All map keys are text strings.
 - The "nonce" member MUST either contain a zero-length octet string or the nonce
   value between 8 and 64 bytes in length conveyed as a CBOR byte string.
-- The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
-  an object identifier in dotted-decimal notation.
-- The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
-  values. They MUST only be included if the corresponding "type" member contains
-  an OID. Their CBOR encoding is defined by that OID.
+- The OPTIONAL "reqTypeInfo" member (in requests) and "respTypeInfo" member
+  (in responses) are CBOR maps that group the type-specific information.
+  Each map contains:
+  - A "type" member, which is a text string containing the object identifier
+    in dotted-decimal notation.
+  - An OPTIONAL "reqInfo" or "respInfo" member containing type-specific CBOR
+    values. Their CBOR encoding is defined by the OID in the corresponding
+    "type" member.
 
 If the nonce request was successful, the EST server MUST respond to a GET
 request with a code 2.05 and to a POST request with code 2.04 and the
