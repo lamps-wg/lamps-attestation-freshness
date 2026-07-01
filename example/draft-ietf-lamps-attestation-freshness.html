@@ -1261,7 +1261,7 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-example-tpm-pcr-selection-f" class="internal xref">Example: TPM PCR Selection for <code>reqInfo</code> and <code>respInfo</code></a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-example-tpm-20-pcr-selectio" class="internal xref">Example: TPM 2.0 PCR Selection for <code>reqInfo</code> and <code>respInfo</code></a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
             <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-asn1-module-2" class="internal xref">ASN.1 Module</a></p>
@@ -2775,29 +2775,34 @@ policy or by the attestation technology specification.<a href="#section-9-5" cla
 </div>
 <div id="appx-tpm-pcr-example">
 <section id="appendix-A">
-      <h2 id="name-example-tpm-pcr-selection-f">
-<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-example-tpm-pcr-selection-f" class="section-name selfRef">Example: TPM PCR Selection for <code>reqInfo</code> and <code>respInfo</code></a>
+      <h2 id="name-example-tpm-20-pcr-selectio">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-example-tpm-20-pcr-selectio" class="section-name selfRef">Example: TPM 2.0 PCR Selection for <code>reqInfo</code> and <code>respInfo</code></a>
       </h2>
 <p id="appendix-A-1">This appendix provides an informative example showing how <code>reqInfo</code> and
-<code>respInfo</code> can be used with a TPM-based attestation procedure such as the
-challenge-response exchanges described in <span>[<a href="#RFC9684" class="cite xref">RFC9684</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<code>respInfo</code> can be used with a TPM 2.0-based attestation procedure such as the
+challenge-response exchange described in <span><a href="https://rfc-editor.org/rfc/rfc9684#section-2.1.1.3.2" class="relref">Section 2.1.1.3.2</a> of [<a href="#RFC9684" class="cite xref">RFC9684</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">In this example, the end entity wants to obtain a nonce for use with a TPM
-attestation statement. The end entity also needs to tell the RA/CA or the
-Verifier which PCRs are to be quoted and which Attestation Key certificate
-should be used. The request therefore carries this information in <code>reqInfo</code>.
-The response carries <code>respInfo</code> to confirm which Attestation Key certificate was
-selected for the corresponding nonce.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
-<p id="appendix-A-3">The exact syntax of <code>reqInfo</code> and <code>respInfo</code> is defined by the nonce-exchange
+attestation statement. The end entity first requests a nonce from the
+Relying Party or Verifier. The <code>reqInfo</code> field can carry optional information
+from the Attester side that helps the Verifier prepare the TPM 2.0 challenge,
+such as which Attestation Key certificates are available.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">The resulting <code>NonceResponse</code> corresponds to the TPM 2.0 challenge parameters
+from <span>[<a href="#RFC9684" class="cite xref">RFC9684</a>]</span>, with one exception: the <code>nonce-value</code> from the RFC 9684
+challenge is conveyed in this document's top-level <code>nonce</code> field rather than
+inside <code>respInfo</code>. The remaining challenge parameters, such as the selected PCR
+bank, PCR indices, and the selected Attestation Key certificate, are conveyed
+in <code>respInfo</code>.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">The exact syntax of <code>reqInfo</code> and <code>respInfo</code> is defined by the nonce-exchange
 type identified in the <code>type</code> field. The JSON objects below are only examples
-used to explain the role of these fields:<a href="#appendix-A-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A-4">
+used to explain the role of these fields:<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A-5">
 <pre>
 NonceRequest = {
   "len": 32,
   "type": "1.2.3.4.5",
   "reqInfo": {
-    "pcr-index": [0, 1, 2, 3],
-    "certificate-name": ["aik-1"]
+    "certificate-name": ["aik-1", "aik-2"],
+    "supported-hash-algo": ["TPM_ALG_SHA256"]
   }
 }
 
@@ -2806,31 +2811,38 @@ NonceResponse = {
   "expiry": 600,
   "type": "1.2.3.4.5",
   "respInfo": {
+    "tpm20-pcr-selection": [
+      {
+        "tpm20-hash-algo": "TPM_ALG_SHA256",
+        "pcr-index": [0, 1, 2, 3]
+      }
+    ],
     "certificate-name": "aik-1"
   }
 }
-</pre><a href="#appendix-A-4" class="pilcrow">¶</a>
+</pre><a href="#appendix-A-5" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A-5">In this example:<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<p id="appendix-A-6">In this example:<a href="#appendix-A-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-6.1">
-          <p id="appendix-A-6.1.1"><code>pcr-index</code> identifies the PCRs that the Attester is expected to include in
-the TPM quote or equivalent Evidence.<a href="#appendix-A-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-7.1">
+          <p id="appendix-A-7.1.1"><code>reqInfo.certificate-name</code> lets the Attester indicate more than one available
+Attestation Key certificate when multiple TPM attestation keys are present.<a href="#appendix-A-7.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-6.2">
-          <p id="appendix-A-6.2.1"><code>certificate-name</code> lets the requester identify one or more acceptable
-Attestation Key certificates when more than one TPM attestation key is
-available.<a href="#appendix-A-6.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-7.2">
+          <p id="appendix-A-7.2.1"><code>respInfo.tpm20-pcr-selection</code> identifies the PCR bank and PCR indices that
+the Attester is expected to include in the TPM quote or equivalent Evidence.<a href="#appendix-A-7.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-6.3">
-          <p id="appendix-A-6.3.1">The <code>respInfo</code> value confirms which Attestation Key certificate is associated
-with the returned nonce and is therefore to be used when generating the fresh
-Evidence.<a href="#appendix-A-6.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-7.3">
+          <p id="appendix-A-7.3.1"><code>respInfo.certificate-name</code> identifies which Attestation Key certificate the
+Attester is to use when generating the fresh Evidence associated with the
+returned nonce.<a href="#appendix-A-7.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-7">This example is intended only to explain the purpose of <code>reqInfo</code> and
+<p id="appendix-A-8">This example is intended only to explain the purpose of <code>reqInfo</code> and
 <code>respInfo</code>. It does not define a new nonce-exchange type, a new OID, or a TPM
-attestation profile.<a href="#appendix-A-7" class="pilcrow">¶</a></p>
+attestation profile. The TPM quote itself, its signature, and any optional
+unsigned PCR values are conveyed later as Evidence and are not part of
+<code>respInfo</code>.<a href="#appendix-A-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="asn1">
