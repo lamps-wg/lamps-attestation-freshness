@@ -566,21 +566,14 @@ Content-Type: application/est-attestation-freshness+json
 }
 ~~~
 
-The following example shows a nonce request and nonce response message exchange
-transmitting optional parameters in the request:
+The following example shows a nonce request and nonce response message exchange:
 
 ~~~
 POST /.well-known/est/nonce HTTP/1.1
 Content-Type: application/est-attestation-freshness+json
 
 {
-  "len": 32,
-  "reqTypeInfo": {
-    "type": "1.2.3.4.5",
-    "reqInfo": {
-      "certificate-name": ["aik-1"]
-    }
-  }
+  "len": 32
 }
 
 HTTP/1.1 200 OK
@@ -588,13 +581,7 @@ Content-Type: application/est-attestation-freshness+json
 
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
-  "expiry": 600,
-  "respTypeInfo": {
-    "type": "1.2.3.4.6",
-    "respInfo": {
-      "certificate-name": "aik-1"
-    }
-  }
+  "expiry": 600
 }
 ~~~
 
