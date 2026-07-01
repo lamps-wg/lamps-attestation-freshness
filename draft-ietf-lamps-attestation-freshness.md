@@ -581,7 +581,7 @@ Content-Type: application/est-attestation-freshness+json
 ~~~
 
 To ensure that the nonce request and response messages are associated with the subsequent
-request and response messages used to transmit the CSR, the same (D)TLS session SCHOULD be used.
+request and response messages used to transmit the CSR, the same (D)TLS session SHOULD be used.
 
 ## EST over Secure CoAP {#EST-coaps}
 
