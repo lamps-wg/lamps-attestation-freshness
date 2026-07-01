@@ -68,6 +68,7 @@ normative:
   RFC7030:
   RFC7252:
   RFC9148:
+  RFC9175:
   RFC8615:
   RFC8610:
   RFC8259:
@@ -246,6 +247,15 @@ device with Attester       Relying Party                 Verifier
     |                           |                            |
 ~~~~
 {: #fig-msgFlow title="Message Flow in Background Check Model"}
+
+The nonce request and response messages SHOULD be transferred within the same
+PKI management operation context provided by the certificate lifecycle management
+protocol being used, just as the certificate request and response messages are,
+so that the RA/CA can unambiguously associate the provided nonce with the evidence
+in the CSR.
+This association is required because the RA/CA treats the Evidence carried in the
+CSR as opaque and therefore cannot rely on inspecting the Evidence to determine
+which previously issued nonce applies to that CSR.
 
 The nonce request and nonce response messages allow the end entity to request
 only one nonce and one `respInfo` structure from the RA/CA. If the end entity
@@ -455,6 +465,10 @@ defined in {{Section 2.1 of RFC9482}} MAY be used for the nonce request message.
 | --- | --- | --- |
 | Get Attestation Freshness Nonce | `nonce` | {{CMP}} |
 
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the transaction ID specified in
+{{Section 5.1.1 of RFC9810}} MUST be used.
+
 In the event of a possible error or if the RA/CA is unable or unwilling to deliver the
 requested nonce, CMP offers several ways to indicate this. Which variant fits depends
 on the circumstances.
@@ -570,6 +584,15 @@ Content-Type: application/est-attestation-freshness+json
 }
 ~~~
 
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the EST server MUST use a
+session-maintenance mechanism that binds the nonce request and response messages to the
+subsequent request and response messages used to transmit the CSR. This can be achieved
+by using the same (D)TLS session or by using an HTTP state mechanism, such as cookies,
+when EST is transferred over HTTP. If the EST server cannot associate the CSR request
+with the prior nonce request and response messages, it MUST NOT treat the CSR as
+associated with the previously provided nonce.
+
 ## EST over Secure CoAP {#EST-coaps}
 
 If the nonce request and nonce response message content is transferred via
@@ -610,6 +633,17 @@ Content-Format and Accept options as specified in {{RFC9148}}.
 | --- | --- | --- |
 | NonceRequest<br/>NonceResponse | application/est-attestation-freshness+cbor | {{EST-coaps}} |
 
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the EST-coaps server MUST use a
+session-maintenance mechanism that binds the nonce request and response messages to the
+subsequent request and response messages used to transmit the CSR. CoAP does not define
+HTTP cookies. This association can be achieved by using the same secure CoAP security
+association, such as the same DTLS connection, or by using an integrity-protected CoAP
+mechanism that carries server-generated opaque state, such as the Echo option defined in
+{{RFC9175}}. If the EST-coaps server cannot associate the CSR request with the prior
+nonce request and response messages, it MUST NOT treat the CSR as associated with the
+previously provided nonce.
+
 
 # Use with CMC {#CMC}
 
@@ -638,18 +672,32 @@ The following example shows the nonce request and nonce response message content
 ContentInfo.contentType = id-data
 ContentInfo.content
    controlSequence
-      {101, id-cmc-senderNonce, 10001}
-      {102, id-cmc-nonceReq, <NonceRequest>}
+      {101, id-cmc-transactionId, 10132985123483401}
+      {102, id-cmc-senderNonce, 10001}
+      {103, id-cmc-nonceReq, <NonceRequest>}
 
 ContentInfo.contentType = id-data
 ContentInfo.content
    controlSequence
-      {101, id-cmc-senderNonce, 10005}
-      {102, id-cmc-recipientNonce, 10001}
-      {103, id-cmc-nonceResp, <NonceResponse>}
+      {101, id-cmc-transactionId, 10132985123483401}
+      {102, id-cmc-senderNonce, 10005}
+      {103, id-cmc-recipientNonce, 10001}
+      {104, id-cmc-nonceResp, <NonceResponse>}
 ~~~
 
-In the event of an error, or if the server is unable to provide the requested nonce, the CMC Server MAY return status information about the request using either an Extended CMC Status Info Control or a CMC Status Info Control, as defined in {{Section 6.1 of I-D.ietf-lamps-rfc5272bis}}.
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the transaction identifier specified in
+{{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} MUST be used. The same transaction identifier
+MUST be used for the nonce request and response messages and for the subsequent request and
+response messages used to transmit the CSR. The senderNonce and recipientNonce controls
+specified in {{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} can be used to pair each CMC
+request with its corresponding response, but they do not replace the transaction identifier
+used to associate the nonce exchange with the subsequent CSR exchange.
+
+In the event of an error, or if the server is unable to provide the requested nonce,
+the CMC Server MAY return status information about the request using either an
+Extended CMC Status Info Control or a CMC Status Info Control, as defined in
+{{Section 6.1 of I-D.ietf-lamps-rfc5272bis}}.
 
 # IANA Considerations {#iana}
 
