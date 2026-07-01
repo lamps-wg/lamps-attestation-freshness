@@ -944,7 +944,7 @@ This appendix provides an informative example showing how `reqInfo` and
 `respInfo` can be used with a TPM 2.0-based attestation procedure such as the
 challenge-response exchange described in {{Section 2.1.1.3.2 of RFC9684}}.
 
-In this example, the end entity wants to obtain a nonce for use with a TPM
+In this example, the end entity wants to obtain a nonce for use with a TPM 2.0
 attestation statement. The end entity first requests a nonce from the
 Relying Party or Verifier. The `reqInfo` field can carry optional information
 from the Attester side that helps the Verifier prepare the TPM 2.0 challenge,
