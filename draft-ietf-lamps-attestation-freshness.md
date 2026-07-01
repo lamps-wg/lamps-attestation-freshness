@@ -356,34 +356,42 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
    ... -- None defined in this document --
 }
 
-NonceRequest ::= SEQUENCE {
-   len INTEGER (8..64) OPTIONAL,
-   -- Indicates the required length of the requested nonce
-   type ATTESTATION-NONCE-REQUEST.&id(
-      {AttestationNonceRequestSet}) OPTIONAL,
-   -- Identifies the nonce-request syntax for the
-   --   selected Attestation statement type
-   reqInfo ATTESTATION-NONCE-REQUEST.&Type(
-      {AttestationNonceRequestSet}{@type}) OPTIONAL
-   -- Contains type-specific nonce-request information
+NonceRequestTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-REQUEST.&id(
+                 {AttestationNonceRequestSet}),
+    -- identifies the nonce-request syntax for the selected
+    --   attestation statement type
+    reqInfo  ATTESTATION-NONCE-REQUEST.&Type(
+                 {AttestationNonceRequestSet}{@type}) OPTIONAL
+    -- contains type-specific nonce-request information
 }
 
-NonceResponse ::= SEQUENCE {
-   nonce OCTET STRING (SIZE(0 | 8..64)),
-   -- Contains the nonce of length len
-   -- A zero-length OCTET STRING indicates that no freshness
-   -- proof is required
-   expiry INTEGER OPTIONAL,
-   -- Indicates how long in seconds the nonce issuer
-   --   considers the nonce valid
-   type ATTESTATION-NONCE-RESPONSE.&id(
-      {AttestationNonceResponseSet}) OPTIONAL,
-   -- Identifies the nonce-response syntax for the
-   --   selected Attestation statement type
-   respInfo ATTESTATION-NONCE-RESPONSE.&Type(
-      {AttestationNonceResponseSet}{@type}) OPTIONAL
-   -- Contains type-specific nonce-response information
+NonceResponseTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-RESPONSE.&id(
+                 {AttestationNonceResponseSet}),
+    -- identifies the nonce-response syntax for the selected
+    --   attestation statement type
+    respInfo ATTESTATION-NONCE-RESPONSE.&Type(
+                 {AttestationNonceResponseSet}{@type}) OPTIONAL
+    -- contains type-specific nonce-response information
 }
+
+ NonceRequest ::= SEQUENCE {
+    len      INTEGER (8..64) OPTIONAL,
+    -- indicates the required length of the requested nonce
+    reqTypeInfo NonceRequestTypeInfo OPTIONAL
+ }
+
+ NonceResponse ::= SEQUENCE {
+    nonce    OCTET STRING (SIZE(0 | 8..64)),
+    -- contains the nonce of length len
+    -- a zero-length OCTET STRING indicates that no freshness
+    --   proof is required
+    expiry   INTEGER OPTIONAL,
+    -- indicates how long in seconds the nonce issuer considers
+    --   the nonce valid
+    respTypeInfo NonceResponseTypeInfo OPTIONAL
+ }
 ~~~~
 
 ## CDDL Representation {#CDDL}
@@ -949,7 +957,7 @@ The following module adheres to ASN.1 specifications {{X.680}} and
 ~~~ asn1
 <CODE BEGINS>
 
-att-fresh-req
+Att-Fresh-Req
   { iso(1) identified-organization(3) dod(6) internet(1)
   security(5) mechanisms(5) pkix(7) id-mod(0)
   id-mod-att-fresh-req (TBDMOD) }
@@ -959,7 +967,7 @@ BEGIN
 EXPORTS ALL;
 IMPORTS
 
-id-it, InfoTypeAndValue{}
+id-it
   FROM PKIXCMP-2023
     { iso(1) identified-organization(3) dod(6) internet(1)
       security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -989,35 +997,42 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
    ... -- None defined in this document --
 }
 
- NonceRequest ::= SEQUENCE {
-    len    INTEGER (8..64) OPTIONAL,
-    -- indicates the required length of the requested nonce
-    type   ATTESTATION-NONCE-REQUEST.&id(
-              {AttestationNonceRequestSet}) OPTIONAL,
+NonceRequestTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-REQUEST.&id(
+                 {AttestationNonceRequestSet}),
     -- identifies the nonce-request syntax for the selected
     --   attestation statement type
-    reqInfo ATTESTATION-NONCE-REQUEST.&Type(
-              {AttestationNonceRequestSet}{@type}) OPTIONAL
+    reqInfo  ATTESTATION-NONCE-REQUEST.&Type(
+                 {AttestationNonceRequestSet}{@type}) OPTIONAL
     -- contains type-specific nonce-request information
- }
+}
 
- NonceResponse ::= SEQUENCE {
-    nonce  OCTET STRING (SIZE(0 | 8..64)),
-    -- contains the nonce of length len
-    -- a zero-length OCTET STRING indicates that no freshness
-    --   proof is required
-    expiry INTEGER OPTIONAL,
-    -- indicates how long in seconds the nonce issuer considers
-    --   the nonce valid
-    type   ATTESTATION-NONCE-RESPONSE.&id(
-              {AttestationNonceResponseSet}) OPTIONAL,
+NonceResponseTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-RESPONSE.&id(
+                 {AttestationNonceResponseSet}),
     -- identifies the nonce-response syntax for the selected
     --   attestation statement type
     respInfo ATTESTATION-NONCE-RESPONSE.&Type(
-               {AttestationNonceResponseSet}{@type}) OPTIONAL
+                 {AttestationNonceResponseSet}{@type}) OPTIONAL
     -- contains type-specific nonce-response information
+}
+
+ NonceRequest ::= SEQUENCE {
+    len      INTEGER (8..64) OPTIONAL,
+    -- indicates the required length of the requested nonce
+    reqTypeInfo NonceRequestTypeInfo OPTIONAL
  }
 
+ NonceResponse ::= SEQUENCE {
+    nonce    OCTET STRING (SIZE(0 | 8..64)),
+    -- contains the nonce of length len
+    -- a zero-length OCTET STRING indicates that no freshness
+    --   proof is required
+    expiry   INTEGER OPTIONAL,
+    -- indicates how long in seconds the nonce issuer considers
+    --   the nonce valid
+    respTypeInfo NonceResponseTypeInfo OPTIONAL
+ }
  id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
     NonceRequestValue ::= NonceRequest
 
