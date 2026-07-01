@@ -601,7 +601,7 @@ Table of Contents
 
    To ensure that the nonce request and response messages are associated
    with the subsequent request and response messages used to transmit
-   the CSR, the same (D)TLS session SCHOULD be used.
+   the CSR, the same (D)TLS session SHOULD be used.
 
 5.2.  EST over Secure CoAP
 
