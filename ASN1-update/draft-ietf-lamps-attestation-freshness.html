@@ -2029,21 +2029,14 @@ Content-Type: application/est-attestation-freshness+json
 }
 </pre><a href="#section-5.1-11" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-12">The following example shows a nonce request and nonce response message exchange
-transmitting optional parameters in the request:<a href="#section-5.1-12" class="pilcrow">¶</a></p>
+<p id="section-5.1-12">The following example shows a nonce request and nonce response message exchange:<a href="#section-5.1-12" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-13">
 <pre>
 POST /.well-known/est/nonce HTTP/1.1
 Content-Type: application/est-attestation-freshness+json
 
 {
-  "len": 32,
-  "reqTypeInfo": {
-    "type": "1.2.3.4.5",
-    "reqInfo": {
-      "certificate-name": ["aik-1"]
-    }
-  }
+  "len": 32
 }
 
 HTTP/1.1 200 OK
@@ -2051,13 +2044,7 @@ Content-Type: application/est-attestation-freshness+json
 
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
-  "expiry": 600,
-  "respTypeInfo": {
-    "type": "1.2.3.4.6",
-    "respInfo": {
-      "certificate-name": "aik-1"
-    }
-  }
+  "expiry": 600
 }
 </pre><a href="#section-5.1-13" class="pilcrow">¶</a>
 </div>
