@@ -461,6 +461,10 @@ defined in {{Section 2.1 of RFC9482}} MAY be used for the nonce request message.
 | --- | --- | --- |
 | Get Attestation Freshness Nonce | `nonce` | {{CMP}} |
 
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the transaction ID specified in
+{{Section 5.1.1 of RFC9810}} MUST be used.
+
 In the event of a possible error or if the RA/CA is unable or unwilling to deliver the
 requested nonce, CMP offers several ways to indicate this. Which variant fits depends
 on the circumstances.
@@ -576,6 +580,9 @@ Content-Type: application/est-attestation-freshness+json
 }
 ~~~
 
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the same (D)TLS session SCHOULD be used.
+
 ## EST over Secure CoAP {#EST-coaps}
 
 If the nonce request and nonce response message content is transferred via
@@ -644,18 +651,27 @@ The following example shows the nonce request and nonce response message content
 ContentInfo.contentType = id-data
 ContentInfo.content
    controlSequence
-      {101, id-cmc-senderNonce, 10001}
-      {102, id-cmc-nonceReq, <NonceRequest>}
+      {101, id-cmc-transactionId, 10132985123483401}
+      {102, id-cmc-senderNonce, 10001}
+      {103, id-cmc-nonceReq, <NonceRequest>}
 
 ContentInfo.contentType = id-data
 ContentInfo.content
    controlSequence
-      {101, id-cmc-senderNonce, 10005}
-      {102, id-cmc-recipientNonce, 10001}
-      {103, id-cmc-nonceResp, <NonceResponse>}
+      {101, id-cmc-transactionId, 10132985123483401}
+      {102, id-cmc-senderNonce, 10005}
+      {103, id-cmc-recipientNonce, 10001}
+      {104, id-cmc-nonceResp, <NonceResponse>}
 ~~~
 
-In the event of an error, or if the server is unable to provide the requested nonce, the CMC Server MAY return status information about the request using either an Extended CMC Status Info Control or a CMC Status Info Control, as defined in {{Section 6.1 of I-D.ietf-lamps-rfc5272bis}}.
+To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the transaction identifier specified in
+{{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} SCHOULD be used.
+
+In the event of an error, or if the server is unable to provide the requested nonce,
+the CMC Server MAY return status information about the request using either an
+Extended CMC Status Info Control or a CMC Status Info Control, as defined in
+{{Section 6.1 of I-D.ietf-lamps-rfc5272bis}}.
 
 # IANA Considerations {#iana}
 
