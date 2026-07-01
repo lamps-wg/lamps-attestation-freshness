@@ -578,7 +578,6 @@ Content-Type: application/est-attestation-freshness+json
   "reqTypeInfo": {
     "type": "1.2.3.4.5",
     "reqInfo": {
-      "pcr-index": [0, 1, 2, 3],
       "certificate-name": ["aik-1"]
     }
   }
