@@ -247,6 +247,12 @@ device with Attester       Relying Party                 Verifier
 ~~~~
 {: #fig-msgFlow title="Message Flow in Background Check Model"}
 
+The nonce request and response messages SHOULD be transferred within the same
+PKI management operation context provided by the certificate lifecycle management
+protocol being used, just as the certificate request and response messages are,
+so that the RA/CA can unambiguously associate the provided nonce with the evidence
+in the CSR.
+
 The nonce request and nonce response messages allow the end entity to request
 only one nonce and one `respInfo` structure from the RA/CA. If the end entity
 wants to include multiple Evidence statements in a CSR, it can use the
