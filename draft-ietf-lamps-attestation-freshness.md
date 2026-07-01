@@ -106,6 +106,7 @@ informative:
   RFC4211:
   RFC9334:
   RFC9483:
+  RFC9684:
   RFC9783:
   RFC9711:
 
@@ -215,7 +216,8 @@ provide the required information to the Relying Party to route the nonce request
 to the appropriate Verifier when multiple verifiers are supported. The `respInfo`
 structure may be used to convey Generic Information Elements
 ({{Section 6 of I-D.ietf-rats-reference-interaction-models}}) such as Attesting
-Environment IDs and Claim Selection.
+Environment IDs and Claim Selection. {{appx-tpm-pcr-example}} provides an
+informative example using a TPM PCR selection.
 
 The generic message flow between the end entity and the RA/CA is shown in
 {{fig-msgFlow}}.
@@ -934,12 +936,59 @@ SHOULD protect it using the message or transport security mechanisms of
 the enrollment protocol when confidentiality is required by deployment
 policy or by the attestation technology specification.
 
-# Acknowledgments
-
-We would like to thank Russ Housley, Thomas Fossati, Watson Ladd, Ionut Mihalcea,
-Carl Wallace, and Michael StJohns for their review comments.
-
 --- back
+
+# Example: TPM PCR Selection for `reqInfo` and `respInfo` {#appx-tpm-pcr-example}
+
+This appendix provides an informative example showing how `reqInfo` and
+`respInfo` can be used with a TPM-based attestation procedure such as the
+challenge-response exchanges described in {{RFC9684}}.
+
+In this example, the end entity wants to obtain a nonce for use with a TPM
+attestation statement. The end entity also needs to tell the RA/CA or the
+Verifier which PCRs are to be quoted and which Attestation Key certificate
+should be used. The request therefore carries this information in `reqInfo`.
+The response carries `respInfo` to confirm which Attestation Key certificate was
+selected for the corresponding nonce.
+
+The exact syntax of `reqInfo` and `respInfo` is defined by the nonce-exchange
+type identified in the `type` field. The JSON objects below are only examples
+used to explain the role of these fields:
+
+~~~
+NonceRequest = {
+  "len": 32,
+  "type": "1.2.3.4.5",
+  "reqInfo": {
+    "pcr-index": [0, 1, 2, 3],
+    "certificate-name": ["aik-1"]
+  }
+}
+
+NonceResponse = {
+  "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
+  "expiry": 600,
+  "type": "1.2.3.4.5",
+  "respInfo": {
+    "certificate-name": "aik-1"
+  }
+}
+~~~
+
+In this example:
+
+- `pcr-index` identifies the PCRs that the Attester is expected to include in
+  the TPM quote or equivalent Evidence.
+- `certificate-name` lets the requester identify one or more acceptable
+  Attestation Key certificates when more than one TPM attestation key is
+  available.
+- The `respInfo` value confirms which Attestation Key certificate is associated
+  with the returned nonce and is therefore to be used when generating the fresh
+  Evidence.
+
+This example is intended only to explain the purpose of `reqInfo` and
+`respInfo`. It does not define a new nonce-exchange type, a new OID, or a TPM
+attestation profile.
 
 # ASN.1 Module {#asn1}
 
@@ -1035,3 +1084,9 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
 END
 <CODE ENDS>
 ~~~
+
+# Acknowledgments
+{:numbered="false"}
+
+We would like to thank Russ Housley, Thomas Fossati, Watson Ladd, Ionut Mihalcea,
+Carl Wallace, and Michael StJohns for their review comments.
