@@ -1146,10 +1146,10 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
    [RFC9684].
 
    In this example, the end entity wants to obtain a nonce for use with
-   a TPM attestation statement.  The end entity first requests a nonce
-   from the Relying Party or Verifier.  The reqInfo field can carry
-   optional information from the Attester side that helps the Verifier
-   prepare the TPM 2.0 challenge, such as which Attestation Key
+   a TPM 2.0 attestation statement.  The end entity first requests a
+   nonce from the Relying Party or Verifier.  The reqInfo field can
+   carry optional information from the Attester side that helps the
+   Verifier prepare the TPM 2.0 challenge, such as which Attestation Key
    certificates are available.
 
    The resulting NonceResponse corresponds to the TPM 2.0 challenge
