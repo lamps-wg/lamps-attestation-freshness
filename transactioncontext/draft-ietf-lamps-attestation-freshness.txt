@@ -239,7 +239,10 @@ Table of Contents
    lifecycle management protocol being used, just as the certificate
    request and response messages are, so that the RA/CA can
    unambiguously associate the provided nonce with the evidence in the
-   CSR.
+   CSR.  This association is required because the RA/CA treats the
+   Evidence carried in the CSR as opaque and therefore cannot rely on
+   inspecting the Evidence to determine which previously issued nonce
+   applies to that CSR.
 
    The nonce request and nonce response messages allow the end entity to
    request only one nonce and one respInfo structure from the RA/CA.  If
@@ -601,7 +604,14 @@ Table of Contents
 
    To ensure that the nonce request and response messages are associated
    with the subsequent request and response messages used to transmit
-   the CSR, the same (D)TLS session SHOULD be used.
+   the CSR, the EST server MUST use a session-maintenance mechanism that
+   binds the nonce request and response messages to the subsequent
+   request and response messages used to transmit the CSR.  This can be
+   achieved by using the same (D)TLS session or by using an HTTP state
+   mechanism, such as cookies, when EST is transferred over HTTP.  If
+   the EST server cannot associate the CSR request with the prior nonce
+   request and response messages, it MUST NOT treat the CSR as
+   associated with the previously provided nonce.
 
 5.2.  EST over Secure CoAP
 
@@ -656,6 +666,20 @@ Table of Contents
 
                                  Table 5
 
+   To ensure that the nonce request and response messages are associated
+   with the subsequent request and response messages used to transmit
+   the CSR, the EST-coaps server MUST use a session-maintenance
+   mechanism that binds the nonce request and response messages to the
+   subsequent request and response messages used to transmit the CSR.
+   CoAP does not define HTTP cookies.  This association can be achieved
+   by using the same secure CoAP security association, such as the same
+   DTLS connection, or by using an integrity-protected CoAP mechanism
+   that carries server-generated opaque state, such as the Echo option
+   defined in [RFC9175].  If the EST-coaps server cannot associate the
+   CSR request with the prior nonce request and response messages, it
+   MUST NOT treat the CSR as associated with the previously provided
+   nonce.
+
 6.  Use with CMC
 
    The nonce request and nonce response message content is conveyed as
@@ -694,7 +718,14 @@ Table of Contents
    To ensure that the nonce request and response messages are associated
    with the subsequent request and response messages used to transmit
    the CSR, the transaction identifier specified in Section 6.6 of
-   [I-D.ietf-lamps-rfc5272bis] SCHOULD be used.
+   [I-D.ietf-lamps-rfc5272bis] MUST be used.  The same transaction
+   identifier MUST be used for the nonce request and response messages
+   and for the subsequent request and response messages used to transmit
+   the CSR.  The senderNonce and recipientNonce controls specified in
+   Section 6.6 of [I-D.ietf-lamps-rfc5272bis] can be used to pair each
+   CMC request with its corresponding response, but they do not replace
+   the transaction identifier used to associate the nonce exchange with
+   the subsequent CSR exchange.
 
    In the event of an error, or if the server is unable to provide the
    requested nonce, the CMC Server MAY return status information about
@@ -1073,6 +1104,12 @@ Table of Contents
               the Secure Constrained Application Protocol", RFC 9148,
               DOI 10.17487/RFC9148, April 2022,
               <https://www.rfc-editor.org/rfc/rfc9148>.
+
+   [RFC9175]  Amsüss, C., Preuß Mattsson, J., and G. Selander,
+              "Constrained Application Protocol (CoAP): Echo, Request-
+              Tag, and Token Processing", RFC 9175,
+              DOI 10.17487/RFC9175, February 2022,
+              <https://www.rfc-editor.org/rfc/rfc9175>.
 
    [RFC9482]  Sahni, M., Ed. and S. Tripathi, Ed., "Constrained
               Application Protocol (CoAP) Transfer for the Certificate

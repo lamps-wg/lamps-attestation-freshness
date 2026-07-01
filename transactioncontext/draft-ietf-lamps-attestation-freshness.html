@@ -1458,7 +1458,10 @@ Environment IDs and Claim Selection.<a href="#section-3-7" class="pilcrow">¶</a
 PKI management operation context provided by the certificate lifecycle management
 protocol being used, just as the certificate request and response messages are,
 so that the RA/CA can unambiguously associate the provided nonce with the evidence
-in the CSR.<a href="#section-3-10" class="pilcrow">¶</a></p>
+in the CSR.
+This association is required because the RA/CA treats the Evidence carried in the
+CSR as opaque and therefore cannot rely on inspecting the Evidence to determine
+which previously issued nonce applies to that CSR.<a href="#section-3-10" class="pilcrow">¶</a></p>
 <p id="section-3-11">The nonce request and nonce response messages allow the end entity to request
 only one nonce and one <code>respInfo</code> structure from the RA/CA. If the end entity
 wants to include multiple Evidence statements in a CSR, it can use the
@@ -2030,7 +2033,13 @@ Content-Type: application/est-attestation-freshness+json
 </pre><a href="#section-5.1-13" class="pilcrow">¶</a>
 </div>
 <p id="section-5.1-14">To ensure that the nonce request and response messages are associated with the subsequent
-request and response messages used to transmit the CSR, the same (D)TLS session SHOULD be used.<a href="#section-5.1-14" class="pilcrow">¶</a></p>
+request and response messages used to transmit the CSR, the EST server MUST use a
+session-maintenance mechanism that binds the nonce request and response messages to the
+subsequent request and response messages used to transmit the CSR. This can be achieved
+by using the same (D)TLS session or by using an HTTP state mechanism, such as cookies,
+when EST is transferred over HTTP. If the EST server cannot associate the CSR request
+with the prior nonce request and response messages, it MUST NOT treat the CSR as
+associated with the previously provided nonce.<a href="#section-5.1-14" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="EST-coaps">
@@ -2094,6 +2103,16 @@ Content-Format and Accept options as specified in <span>[<a href="#RFC9148" clas
             </tr>
           </tbody>
         </table>
+<p id="section-5.2-9">To ensure that the nonce request and response messages are associated with the subsequent
+request and response messages used to transmit the CSR, the EST-coaps server MUST use a
+session-maintenance mechanism that binds the nonce request and response messages to the
+subsequent request and response messages used to transmit the CSR. CoAP does not define
+HTTP cookies. This association can be achieved by using the same secure CoAP security
+association, such as the same DTLS connection, or by using an integrity-protected CoAP
+mechanism that carries server-generated opaque state, such as the Echo option defined in
+<span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>. If the EST-coaps server cannot associate the CSR request with the prior
+nonce request and response messages, it MUST NOT treat the CSR as associated with the
+previously provided nonce.<a href="#section-5.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2140,7 +2159,12 @@ ContentInfo.content
 </div>
 <p id="section-6-6">To ensure that the nonce request and response messages are associated with the subsequent
 request and response messages used to transmit the CSR, the transaction identifier specified in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11#section-6.6" class="relref">Section 6.6</a> of [<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span> SCHOULD be used.<a href="#section-6-6" class="pilcrow">¶</a></p>
+<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11#section-6.6" class="relref">Section 6.6</a> of [<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span> MUST be used. The same transaction identifier
+MUST be used for the nonce request and response messages and for the subsequent request and
+response messages used to transmit the CSR. The senderNonce and recipientNonce controls
+specified in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11#section-6.6" class="relref">Section 6.6</a> of [<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span> can be used to pair each CMC
+request with its corresponding response, but they do not replace the transaction identifier
+used to associate the nonce exchange with the subsequent CSR exchange.<a href="#section-6-6" class="pilcrow">¶</a></p>
 <p id="section-6-7">In the event of an error, or if the server is unable to provide the requested nonce,
 the CMC Server MAY return status information about the request using either an
 Extended CMC Status Info Control or a CMC Status Info Control, as defined in
@@ -2721,6 +2745,10 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-10
 <dt id="RFC9148">[RFC9148]</dt>
         <dd>
 <span class="refAuthor">van der Stok, P.</span>, <span class="refAuthor">Kampanakis, P.</span>, <span class="refAuthor">Richardson, M.</span>, and <span class="refAuthor">S. Raza</span>, <span class="refTitle">"EST-coaps: Enrollment over Secure Transport with the Secure Constrained Application Protocol"</span>, <span class="seriesInfo">RFC 9148</span>, <span class="seriesInfo">DOI 10.17487/RFC9148</span>, <time datetime="2022-04" class="refDate">April 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9148">https://www.rfc-editor.org/rfc/rfc9148</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9175">[RFC9175]</dt>
+        <dd>
+<span class="refAuthor">Amsüss, C.</span>, <span class="refAuthor">Preuß Mattsson, J.</span>, and <span class="refAuthor">G. Selander</span>, <span class="refTitle">"Constrained Application Protocol (CoAP): Echo, Request-Tag, and Token Processing"</span>, <span class="seriesInfo">RFC 9175</span>, <span class="seriesInfo">DOI 10.17487/RFC9175</span>, <time datetime="2022-02" class="refDate">February 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9175">https://www.rfc-editor.org/rfc/rfc9175</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9482">[RFC9482]</dt>
         <dd>
