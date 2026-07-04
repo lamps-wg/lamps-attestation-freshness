@@ -1250,24 +1250,27 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-example-tpm-20-pcr-selectio" class="internal xref">Example: TPM 2.0 PCR Selection for <code>reqInfo</code> and <code>respInfo</code></a></p>
+</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-asn1-module-2" class="internal xref">ASN.1 Module</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-asn1-module-2" class="internal xref">ASN.1 Module</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1342,13 +1345,18 @@ to be included in the CSR.<a href="#section-3-1" class="pilcrow">¶</a></p>
 the requested nonce in bytes as a value between 8 and 64.<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.2">
-          <p id="section-3-3.2.1"><code>type</code>: In this OPTIONAL field, the end entity can specify the type of the
-reqInfo structure.<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.2.1"><code>reqTypeInfo</code>: This OPTIONAL structure groups the type-specific information
+for the nonce request. It contains:<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-3.2.2.1">
+              <p id="section-3-3.2.2.1.1"><code>type</code>: The end entity can specify the type of the reqInfo structure.<a href="#section-3-3.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-3.3">
-          <p id="section-3-3.3.1"><code>reqInfo</code>: If type is set, this OPTIONAL field MUST contain the type-specific
+            <li class="normal" id="section-3-3.2.2.2">
+              <p id="section-3-3.2.2.2.1"><code>reqInfo</code>: If type is set, this OPTIONAL field MUST contain the type-specific
 content that the RA/CA requires to generate respInfo. If type is not set,
-<code>reqInfo</code> MUST also be omitted.<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
+<code>reqInfo</code> MUST also be omitted.<a href="#section-3-3.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </li>
       </ul>
 <p id="section-3-4">The RA/CA can return the requested nonce in a nonce response message together
@@ -1367,14 +1375,20 @@ the nonce in seconds as an integer value. The nonce can be used during this
 period; the response therefore needs to be conveyed promptly.<a href="#section-3-6.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-6.3">
-          <p id="section-3-6.3.1"><code>type</code>: In this OPTIONAL field, the RA/CA can specify the type of the <code>respInfo</code>
-structure. The type in the nonce response message is defined by the type in
-the nonce request message.<a href="#section-3-6.3.1" class="pilcrow">¶</a></p>
+          <p id="section-3-6.3.1"><code>respTypeInfo</code>: This OPTIONAL structure groups the type-specific information
+for the nonce response. It contains:<a href="#section-3-6.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-6.3.2.1">
+              <p id="section-3-6.3.2.1.1"><code>type</code>: The RA/CA can specify the type of the <code>respInfo</code> structure. The type
+in the nonce response message is defined by the type in the nonce request
+message.<a href="#section-3-6.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-3-6.4">
-          <p id="section-3-6.4.1"><code>respInfo</code>: If type is set, this OPTIONAL field MUST contain the type-specific
+            <li class="normal" id="section-3-6.3.2.2">
+              <p id="section-3-6.3.2.2.1"><code>respInfo</code>: If type is set, this OPTIONAL field MUST contain the type-specific
 content requested by the end entity for generating the Evidence. If type is
-not set, <code>respInfo</code> MUST also be omitted.<a href="#section-3-6.4.1" class="pilcrow">¶</a></p>
+not set, <code>respInfo</code> MUST also be omitted.<a href="#section-3-6.3.2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </li>
       </ul>
 <p id="section-3-7">This document does not further specify the content of the <code>reqInfo</code> and <code>respInfo</code>
@@ -1388,7 +1402,8 @@ provide the required information to the Relying Party to route the nonce request
 to the appropriate Verifier when multiple verifiers are supported. The <code>respInfo</code>
 structure may be used to convey Generic Information Elements
 (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-17#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-reference-interaction-models" class="cite xref">I-D.ietf-rats-reference-interaction-models</a>]</span>) such as Attesting
-Environment IDs and Claim Selection.<a href="#section-3-7" class="pilcrow">¶</a></p>
+Environment IDs and Claim Selection. <a href="#appx-tpm-pcr-example" class="auto internal xref">Appendix A</a> provides an
+informative example using a TPM PCR selection.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">The generic message flow between the end entity and the RA/CA is shown in
 <a href="#fig-msgFlow" class="auto internal xref">Figure 1</a>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <span id="name-message-flow-in-background-"></span><div id="fig-msgFlow">
@@ -1718,34 +1733,42 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
    ... -- None defined in this document --
 }
 
-NonceRequest ::= SEQUENCE {
-   len INTEGER (8..64) OPTIONAL,
-   -- Indicates the required length of the requested nonce
-   type ATTESTATION-NONCE-REQUEST.&amp;id(
-      {AttestationNonceRequestSet}) OPTIONAL,
-   -- Identifies the nonce-request syntax for the
-   --   selected Attestation statement type
-   reqInfo ATTESTATION-NONCE-REQUEST.&amp;Type(
-      {AttestationNonceRequestSet}{@type}) OPTIONAL
-   -- Contains type-specific nonce-request information
+NonceRequestTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-REQUEST.&amp;id(
+                 {AttestationNonceRequestSet}),
+    -- identifies the nonce-request syntax for the selected
+    --   attestation statement type
+    reqInfo  ATTESTATION-NONCE-REQUEST.&amp;Type(
+                 {AttestationNonceRequestSet}{@type}) OPTIONAL
+    -- contains type-specific nonce-request information
 }
 
-NonceResponse ::= SEQUENCE {
-   nonce OCTET STRING (SIZE(0 | 8..64)),
-   -- Contains the nonce of length len
-   -- A zero-length OCTET STRING indicates that no freshness
-   -- proof is required
-   expiry INTEGER OPTIONAL,
-   -- Indicates how long in seconds the nonce issuer
-   --   considers the nonce valid
-   type ATTESTATION-NONCE-RESPONSE.&amp;id(
-      {AttestationNonceResponseSet}) OPTIONAL,
-   -- Identifies the nonce-response syntax for the
-   --   selected Attestation statement type
-   respInfo ATTESTATION-NONCE-RESPONSE.&amp;Type(
-      {AttestationNonceResponseSet}{@type}) OPTIONAL
-   -- Contains type-specific nonce-response information
+NonceResponseTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-RESPONSE.&amp;id(
+                 {AttestationNonceResponseSet}),
+    -- identifies the nonce-response syntax for the selected
+    --   attestation statement type
+    respInfo ATTESTATION-NONCE-RESPONSE.&amp;Type(
+                 {AttestationNonceResponseSet}{@type}) OPTIONAL
+    -- contains type-specific nonce-response information
 }
+
+ NonceRequest ::= SEQUENCE {
+    len      INTEGER (8..64) OPTIONAL,
+    -- indicates the required length of the requested nonce
+    reqTypeInfo NonceRequestTypeInfo OPTIONAL
+ }
+
+ NonceResponse ::= SEQUENCE {
+    nonce    OCTET STRING (SIZE(0 | 8..64)),
+    -- contains the nonce of length len
+    -- a zero-length OCTET STRING indicates that no freshness
+    --   proof is required
+    expiry   INTEGER OPTIONAL,
+    -- indicates how long in seconds the nonce issuer considers
+    --   the nonce valid
+    respTypeInfo NonceResponseTypeInfo OPTIONAL
+ }
 </pre><a href="#section-3.1-2" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1765,21 +1788,33 @@ decoded nonce length requirements are specified in <a href="#EST-https" class="a
 <pre>
 nonce-request = {
   ? "len": nonce-length,
-  ? "type": dotted-decimal-oid,
+  ? "reqTypeInfo": nonce-request-type-info
+}
+
+nonce-request-type-info = {
+  "type": dotted-decimal-oid,
   ? "reqInfo": any
 }
 
 nonce-response-json = {
     "nonce": json-nonce,
   ? "expiry": uint,
-  ? "type": dotted-decimal-oid,
+  ? "respTypeInfo": nonce-response-type-info-json
+}
+
+nonce-response-type-info-json = {
+  "type": dotted-decimal-oid,
   ? "respInfo": any
 }
 
 nonce-response-cbor = {
     "nonce": cbor-nonce,
   ? "expiry": uint,
-  ? "type": dotted-decimal-oid,
+  ? "respTypeInfo": nonce-response-type-info-cbor
+}
+
+nonce-response-type-info-cbor = {
+  "type": dotted-decimal-oid,
   ? "respInfo": any
 }
 
@@ -1941,13 +1976,19 @@ the unpadded base64url encoding, as specified in <span><a href="https://rfc-edit
 Such encodings are between 11 and 86 characters in length.<a href="#section-5.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-4.3">
-            <p id="section-5.1-4.3.1">The OPTIONAL "type" member, if present, MUST be a text string containing the
-object identifier as a dotted-decimal OID.<a href="#section-5.1-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-4.3.1">The OPTIONAL "reqTypeInfo" member (in requests) and "respTypeInfo" member
+(in responses) are JSON objects that group the type-specific information.
+Each object contains:<a href="#section-5.1-4.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-4.3.2.1">
+                <p id="section-5.1-4.3.2.1.1">A "type" member, which MUST be a text string containing the object
+identifier as a dotted-decimal OID.<a href="#section-5.1-4.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-4.4">
-            <p id="section-5.1-4.4.1">The OPTIONAL "reqInfo" and "respInfo" members MUST only be included if the
-corresponding "type" member contains an OID. Their contents are defined by
-that OID.<a href="#section-5.1-4.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-5.1-4.3.2.2">
+                <p id="section-5.1-4.3.2.2.1">An OPTIONAL "reqInfo" or "respInfo" member whose contents are defined
+by the OID in the corresponding "type" member.<a href="#section-5.1-4.3.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
         </ul>
 <p id="section-5.1-5">If the nonce request message was successful, the EST server MUST respond with an HTTP 200
@@ -2003,20 +2044,14 @@ Content-Type: application/est-attestation-freshness+json
 }
 </pre><a href="#section-5.1-11" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-12">The following example shows a nonce request and nonce response message exchange
-transmitting optional parameters in the request:<a href="#section-5.1-12" class="pilcrow">¶</a></p>
+<p id="section-5.1-12">The following example shows a nonce request and nonce response message exchange:<a href="#section-5.1-12" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-13">
 <pre>
 POST /.well-known/est/nonce HTTP/1.1
 Content-Type: application/est-attestation-freshness+json
 
 {
-  "len": 32,
-  "type": "1.2.3.4.5",
-  "reqInfo": {
-    "pcr-index": [0, 1, 2, 3],
-    "certificate-name": ["aik-1"]
-  }
+  "len": 32
 }
 
 HTTP/1.1 200 OK
@@ -2024,11 +2059,7 @@ Content-Type: application/est-attestation-freshness+json
 
 {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
-  "expiry": 600,
-  "type": "1.2.3.4.6",
-  "respInfo": {
-    "certificate-name": "aik-1"
-  }
+  "expiry": 600
 }
 </pre><a href="#section-5.1-13" class="pilcrow">¶</a>
 </div>
@@ -2062,13 +2093,20 @@ nonce-response-cbor CDDL rule in <a href="#CDDL" class="auto internal xref">Sect
 value between 8 and 64 bytes in length conveyed as a CBOR byte string.<a href="#section-5.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-4.3">
-            <p id="section-5.2-4.3.1">The OPTIONAL dotted-decimal-oid "type" member denotes a text string containing
-an object identifier in dotted-decimal notation.<a href="#section-5.2-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-4.3.1">The OPTIONAL "reqTypeInfo" member (in requests) and "respTypeInfo" member
+(in responses) are CBOR maps that group the type-specific information.
+Each map contains:<a href="#section-5.2-4.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-4.3.2.1">
+                <p id="section-5.2-4.3.2.1.1">A "type" member, which is a text string containing the object identifier
+in dotted-decimal notation.<a href="#section-5.2-4.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.2-4.4">
-            <p id="section-5.2-4.4.1">The OPTIONAL "reqInfo" and "respInfo" members contain type-specific CBOR
-values. They MUST only be included if the corresponding "type" member contains
-an OID. Their CBOR encoding is defined by that OID.<a href="#section-5.2-4.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-5.2-4.3.2.2">
+                <p id="section-5.2-4.3.2.2.1">An OPTIONAL "reqInfo" or "respInfo" member containing type-specific CBOR
+values. Their CBOR encoding is defined by the OID in the corresponding
+"type" member.<a href="#section-5.2-4.3.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
         </ul>
 <p id="section-5.2-5">If the nonce request was successful, the EST server MUST respond to a GET
@@ -2552,7 +2590,7 @@ defined for that registry.<a href="#section-7.2.3-1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-7.4-1">IANA is requested to register the following ASN.1 <span>[<a href="#X.680" class="cite xref">X.680</a>]</span> module OID in the
 "SMI Security for PKIX Module Identifier" registry (1.3.6.1.5.5.7.0). This
-OID is defined in <a href="#asn1" class="auto internal xref">Appendix A</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+OID is defined in <a href="#asn1" class="auto internal xref">Appendix B</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-10">
           <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
 <thead>
@@ -2678,24 +2716,15 @@ the enrollment protocol when confidentiality is required by deployment
 policy or by the attestation technology specification.<a href="#section-9-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="acknowledgments">
-<section id="section-10">
-      <h2 id="name-acknowledgments">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
-      </h2>
-<p id="section-10-1">We would like to thank Russ Housley, Thomas Fossati, Watson Ladd, Ionut Mihalcea,
-Carl Wallace, and Michael StJohns for their review comments.<a href="#section-10-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="sec-combined-references">
-<section id="section-11">
+<section id="section-10">
       <h2 id="name-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-11.1">
+<section id="section-10.1">
         <h3 id="name-normative-references">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="I-D.ietf-lamps-csr-attestation">[I-D.ietf-lamps-csr-attestation]</dt>
@@ -2774,9 +2803,9 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-10
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-11.2">
+<section id="section-10.2">
         <h3 id="name-informative-references">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="I-D.ietf-rats-msg-wrap">[I-D.ietf-rats-msg-wrap]</dt>
@@ -2807,6 +2836,10 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-10
         <dd>
 <span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, and <span class="refAuthor">S. Fries</span>, <span class="refTitle">"Lightweight Certificate Management Protocol (CMP) Profile"</span>, <span class="seriesInfo">RFC 9483</span>, <span class="seriesInfo">DOI 10.17487/RFC9483</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9483">https://www.rfc-editor.org/rfc/rfc9483</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC9684">[RFC9684]</dt>
+        <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Eckel, M.</span>, <span class="refAuthor">Bhandari, S.</span>, <span class="refAuthor">Voit, E.</span>, <span class="refAuthor">Sulzen, B.</span>, <span class="refAuthor">Xia, L.</span>, <span class="refAuthor">Laffey, T.</span>, and <span class="refAuthor">G. C. Fedorkow</span>, <span class="refTitle">"A YANG Data Model for Challenge-Response-Based Remote Attestation (CHARRA) Procedures Using Trusted Platform Modules (TPMs)"</span>, <span class="seriesInfo">RFC 9684</span>, <span class="seriesInfo">DOI 10.17487/RFC9684</span>, <time datetime="2024-12" class="refDate">December 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9684">https://www.rfc-editor.org/rfc/rfc9684</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC9711">[RFC9711]</dt>
         <dd>
 <span class="refAuthor">Lundblade, L.</span>, <span class="refAuthor">Mandyam, G.</span>, <span class="refAuthor">O'Donoghue, J.</span>, and <span class="refAuthor">C. Wallace</span>, <span class="refTitle">"The Entity Attestation Token (EAT)"</span>, <span class="seriesInfo">RFC 9711</span>, <span class="seriesInfo">DOI 10.17487/RFC9711</span>, <time datetime="2025-04" class="refDate">April 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9711">https://www.rfc-editor.org/rfc/rfc9711</a>&gt;</span>. </dd>
@@ -2820,18 +2853,90 @@ Carl Wallace, and Michael StJohns for their review comments.<a href="#section-10
 </div>
 </section>
 </div>
-<div id="asn1">
+<div id="appx-tpm-pcr-example">
 <section id="appendix-A">
-      <h2 id="name-asn1-module-2">
-<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-asn1-module-2" class="section-name selfRef">ASN.1 Module</a>
+      <h2 id="name-example-tpm-20-pcr-selectio">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-example-tpm-20-pcr-selectio" class="section-name selfRef">Example: TPM 2.0 PCR Selection for <code>reqInfo</code> and <code>respInfo</code></a>
       </h2>
-<p id="appendix-A-1">The following module adheres to ASN.1 specifications <span>[<a href="#X.680" class="cite xref">X.680</a>]</span> and
-<span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<div class="breakable lang-asn1 sourcecode" id="appendix-A-2">
+<p id="appendix-A-1">This appendix provides an informative example showing how <code>reqInfo</code> and
+<code>respInfo</code> can be used with a TPM 2.0-based attestation procedure such as the
+challenge-response exchange described in <span><a href="https://rfc-editor.org/rfc/rfc9684#section-2.1.1.3.2" class="relref">Section 2.1.1.3.2</a> of [<a href="#RFC9684" class="cite xref">RFC9684</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">In this example, the end entity wants to obtain a nonce for use with a TPM 2.0
+attestation statement. The end entity first requests a nonce from the
+Relying Party or Verifier. The <code>reqInfo</code> field can carry optional information
+from the Attester side that helps the Verifier prepare the TPM 2.0 challenge,
+such as which Attestation Key certificates are available.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">The resulting <code>NonceResponse</code> corresponds to the TPM 2.0 challenge parameters
+from <span>[<a href="#RFC9684" class="cite xref">RFC9684</a>]</span>, with one exception: the <code>nonce-value</code> from the RFC 9684
+challenge is conveyed in this document's top-level <code>nonce</code> field rather than
+inside <code>respInfo</code>. The remaining challenge parameters, such as the selected PCR
+bank, PCR indices, and the selected Attestation Key certificate, are conveyed
+in <code>respInfo</code>.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">The exact syntax of <code>reqInfo</code> and <code>respInfo</code> is defined by the nonce-exchange
+type identified in the <code>type</code> field. The JSON objects below are only examples
+used to explain the role of these fields:<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A-5">
+<pre>
+NonceRequest = {
+  "len": 32,
+  "type": "1.2.3.4.5",
+  "reqInfo": {
+    "certificate-name": ["aik-1", "aik-2"],
+    "supported-hash-algo": ["TPM_ALG_SHA256"]
+  }
+}
+
+NonceResponse = {
+  "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
+  "expiry": 600,
+  "type": "1.2.3.4.6",
+  "respInfo": {
+    "tpm20-pcr-selection": [
+      {
+        "tpm20-hash-algo": "TPM_ALG_SHA256",
+        "pcr-index": [0, 1, 2, 3]
+      }
+    ],
+    "certificate-name": "aik-1"
+  }
+}
+</pre><a href="#appendix-A-5" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A-6">In this example:<a href="#appendix-A-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-7.1">
+          <p id="appendix-A-7.1.1"><code>reqInfo.certificate-name</code> lets the Attester indicate more than one available
+Attestation Key certificate when multiple TPM attestation keys are present.<a href="#appendix-A-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-7.2">
+          <p id="appendix-A-7.2.1"><code>respInfo.tpm20-pcr-selection</code> identifies the PCR bank and PCR indices that
+the Attester is expected to include in the TPM quote or equivalent Evidence.<a href="#appendix-A-7.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-7.3">
+          <p id="appendix-A-7.3.1"><code>respInfo.certificate-name</code> identifies which Attestation Key certificate the
+Attester is to use when generating the fresh Evidence associated with the
+returned nonce.<a href="#appendix-A-7.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-8">This example is intended only to explain the purpose of <code>reqInfo</code> and
+<code>respInfo</code>. It does not define a new nonce-exchange type, a new OID, or a TPM
+attestation profile. The TPM quote itself, its signature, and any optional
+unsigned PCR values are conveyed later as Evidence and are not part of
+<code>respInfo</code>.<a href="#appendix-A-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="asn1">
+<section id="appendix-B">
+      <h2 id="name-asn1-module-2">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-asn1-module-2" class="section-name selfRef">ASN.1 Module</a>
+      </h2>
+<p id="appendix-B-1">The following module adheres to ASN.1 specifications <span>[<a href="#X.680" class="cite xref">X.680</a>]</span> and
+<span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<div class="breakable lang-asn1 sourcecode" id="appendix-B-2">
 <pre>
 &lt;CODE BEGINS&gt;
 
-att-fresh-req
+Att-Fresh-Req
   { iso(1) identified-organization(3) dod(6) internet(1)
   security(5) mechanisms(5) pkix(7) id-mod(0)
   id-mod-att-fresh-req (TBDMOD) }
@@ -2841,7 +2946,7 @@ BEGIN
 EXPORTS ALL;
 IMPORTS
 
-id-it, InfoTypeAndValue{}
+id-it
   FROM PKIXCMP-2023
     { iso(1) identified-organization(3) dod(6) internet(1)
       security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -2871,35 +2976,42 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
    ... -- None defined in this document --
 }
 
- NonceRequest ::= SEQUENCE {
-    len    INTEGER (8..64) OPTIONAL,
-    -- indicates the required length of the requested nonce
-    type   ATTESTATION-NONCE-REQUEST.&amp;id(
-              {AttestationNonceRequestSet}) OPTIONAL,
+NonceRequestTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-REQUEST.&amp;id(
+                 {AttestationNonceRequestSet}),
     -- identifies the nonce-request syntax for the selected
     --   attestation statement type
-    reqInfo ATTESTATION-NONCE-REQUEST.&amp;Type(
-              {AttestationNonceRequestSet}{@type}) OPTIONAL
+    reqInfo  ATTESTATION-NONCE-REQUEST.&amp;Type(
+                 {AttestationNonceRequestSet}{@type}) OPTIONAL
     -- contains type-specific nonce-request information
- }
+}
 
- NonceResponse ::= SEQUENCE {
-    nonce  OCTET STRING (SIZE(0 | 8..64)),
-    -- contains the nonce of length len
-    -- a zero-length OCTET STRING indicates that no freshness
-    --   proof is required
-    expiry INTEGER OPTIONAL,
-    -- indicates how long in seconds the nonce issuer considers
-    --   the nonce valid
-    type   ATTESTATION-NONCE-RESPONSE.&amp;id(
-              {AttestationNonceResponseSet}) OPTIONAL,
+NonceResponseTypeInfo ::= SEQUENCE {
+    type ATTESTATION-NONCE-RESPONSE.&amp;id(
+                 {AttestationNonceResponseSet}),
     -- identifies the nonce-response syntax for the selected
     --   attestation statement type
     respInfo ATTESTATION-NONCE-RESPONSE.&amp;Type(
-               {AttestationNonceResponseSet}{@type}) OPTIONAL
+                 {AttestationNonceResponseSet}{@type}) OPTIONAL
     -- contains type-specific nonce-response information
+}
+
+ NonceRequest ::= SEQUENCE {
+    len      INTEGER (8..64) OPTIONAL,
+    -- indicates the required length of the requested nonce
+    reqTypeInfo NonceRequestTypeInfo OPTIONAL
  }
 
+ NonceResponse ::= SEQUENCE {
+    nonce    OCTET STRING (SIZE(0 | 8..64)),
+    -- contains the nonce of length len
+    -- a zero-length OCTET STRING indicates that no freshness
+    --   proof is required
+    expiry   INTEGER OPTIONAL,
+    -- indicates how long in seconds the nonce issuer considers
+    --   the nonce valid
+    respTypeInfo NonceResponseTypeInfo OPTIONAL
+ }
  id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
     NonceRequestValue ::= NonceRequest
 
@@ -2916,12 +3028,21 @@ AttestationNonceResponseSet ATTESTATION-NONCE-RESPONSE ::= {
 
 END
 &lt;CODE ENDS&gt;
-</pre><a href="#appendix-A-2" class="pilcrow">¶</a>
+</pre><a href="#appendix-B-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
+<div id="acknowledgments">
+<section id="appendix-C">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-C-1">We would like to thank Russ Housley, Thomas Fossati, Watson Ladd, Ionut Mihalcea,
+Carl Wallace, and Michael StJohns for their review comments.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 <div id="authors-addresses">
-<section id="appendix-B">
+<section id="appendix-D">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>

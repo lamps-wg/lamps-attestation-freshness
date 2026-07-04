@@ -89,11 +89,13 @@ Table of Contents
      7.4.  ASN.1 Module
    8.  Operational Considerations
    9.  Security Considerations
-   10. Acknowledgments
-   11. References
-     11.1.  Normative References
-     11.2.  Informative References
-   Appendix A.  ASN.1 Module
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
+   Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and
+           respInfo
+   Appendix B.  ASN.1 Module
+   Acknowledgments
    Authors' Addresses
 
 1.  Introduction
@@ -159,12 +161,15 @@ Table of Contents
       desired length of the requested nonce in bytes as a value between
       8 and 64.
 
-   *  type: In this OPTIONAL field, the end entity can specify the type
-      of the reqInfo structure.
+   *  reqTypeInfo: This OPTIONAL structure groups the type-specific
+      information for the nonce request.  It contains:
 
-   *  reqInfo: If type is set, this OPTIONAL field MUST contain the
-      type-specific content that the RA/CA requires to generate
-      respInfo.  If type is not set, reqInfo MUST also be omitted.
+      -  type: The end entity can specify the type of the reqInfo
+         structure.
+
+      -  reqInfo: If type is set, this OPTIONAL field MUST contain the
+         type-specific content that the RA/CA requires to generate
+         respInfo.  If type is not set, reqInfo MUST also be omitted.
 
    The RA/CA can return the requested nonce in a nonce response message
    together with information specific to the generation of the Evidence.
@@ -182,13 +187,17 @@ Table of Contents
       be used during this period; the response therefore needs to be
       conveyed promptly.
 
-   *  type: In this OPTIONAL field, the RA/CA can specify the type of
-      the respInfo structure.  The type in the nonce response message is
-      defined by the type in the nonce request message.
+   *  respTypeInfo: This OPTIONAL structure groups the type-specific
+      information for the nonce response.  It contains:
 
-   *  respInfo: If type is set, this OPTIONAL field MUST contain the
-      type-specific content requested by the end entity for generating
-      the Evidence.  If type is not set, respInfo MUST also be omitted.
+      -  type: The RA/CA can specify the type of the respInfo structure.
+         The type in the nonce response message is defined by the type
+         in the nonce request message.
+
+      -  respInfo: If type is set, this OPTIONAL field MUST contain the
+         type-specific content requested by the end entity for
+         generating the Evidence.  If type is not set, respInfo MUST
+         also be omitted.
 
    This document does not further specify the content of the reqInfo and
    respInfo structures; those structures must be defined elsewhere.
@@ -203,7 +212,8 @@ Table of Contents
    appropriate Verifier when multiple verifiers are supported.  The
    respInfo structure may be used to convey Generic Information Elements
    (Section 6 of [I-D.ietf-rats-reference-interaction-models]) such as
-   Attesting Environment IDs and Claim Selection.
+   Attesting Environment IDs and Claim Selection.  Appendix A provides
+   an informative example using a TPM PCR selection.
 
    The generic message flow between the end entity and the RA/CA is
    shown in Figure 1.
@@ -355,34 +365,42 @@ Table of Contents
       ... -- None defined in this document --
    }
 
-   NonceRequest ::= SEQUENCE {
-      len INTEGER (8..64) OPTIONAL,
-      -- Indicates the required length of the requested nonce
-      type ATTESTATION-NONCE-REQUEST.&id(
-         {AttestationNonceRequestSet}) OPTIONAL,
-      -- Identifies the nonce-request syntax for the
-      --   selected Attestation statement type
-      reqInfo ATTESTATION-NONCE-REQUEST.&Type(
-         {AttestationNonceRequestSet}{@type}) OPTIONAL
-      -- Contains type-specific nonce-request information
+   NonceRequestTypeInfo ::= SEQUENCE {
+       type ATTESTATION-NONCE-REQUEST.&id(
+                    {AttestationNonceRequestSet}),
+       -- identifies the nonce-request syntax for the selected
+       --   attestation statement type
+       reqInfo  ATTESTATION-NONCE-REQUEST.&Type(
+                    {AttestationNonceRequestSet}{@type}) OPTIONAL
+       -- contains type-specific nonce-request information
    }
 
-   NonceResponse ::= SEQUENCE {
-      nonce OCTET STRING (SIZE(0 | 8..64)),
-      -- Contains the nonce of length len
-      -- A zero-length OCTET STRING indicates that no freshness
-      -- proof is required
-      expiry INTEGER OPTIONAL,
-      -- Indicates how long in seconds the nonce issuer
-      --   considers the nonce valid
-      type ATTESTATION-NONCE-RESPONSE.&id(
-         {AttestationNonceResponseSet}) OPTIONAL,
-      -- Identifies the nonce-response syntax for the
-      --   selected Attestation statement type
-      respInfo ATTESTATION-NONCE-RESPONSE.&Type(
-         {AttestationNonceResponseSet}{@type}) OPTIONAL
-      -- Contains type-specific nonce-response information
+   NonceResponseTypeInfo ::= SEQUENCE {
+       type ATTESTATION-NONCE-RESPONSE.&id(
+                    {AttestationNonceResponseSet}),
+       -- identifies the nonce-response syntax for the selected
+       --   attestation statement type
+       respInfo ATTESTATION-NONCE-RESPONSE.&Type(
+                    {AttestationNonceResponseSet}{@type}) OPTIONAL
+       -- contains type-specific nonce-response information
    }
+
+    NonceRequest ::= SEQUENCE {
+       len      INTEGER (8..64) OPTIONAL,
+       -- indicates the required length of the requested nonce
+       reqTypeInfo NonceRequestTypeInfo OPTIONAL
+    }
+
+    NonceResponse ::= SEQUENCE {
+       nonce    OCTET STRING (SIZE(0 | 8..64)),
+       -- contains the nonce of length len
+       -- a zero-length OCTET STRING indicates that no freshness
+       --   proof is required
+       expiry   INTEGER OPTIONAL,
+       -- indicates how long in seconds the nonce issuer considers
+       --   the nonce valid
+       respTypeInfo NonceResponseTypeInfo OPTIONAL
+    }
 
 3.2.  CDDL Representation
 
@@ -396,21 +414,33 @@ Table of Contents
 
    nonce-request = {
      ? "len": nonce-length,
-     ? "type": dotted-decimal-oid,
+     ? "reqTypeInfo": nonce-request-type-info
+   }
+
+   nonce-request-type-info = {
+     "type": dotted-decimal-oid,
      ? "reqInfo": any
    }
 
    nonce-response-json = {
        "nonce": json-nonce,
      ? "expiry": uint,
-     ? "type": dotted-decimal-oid,
+     ? "respTypeInfo": nonce-response-type-info-json
+   }
+
+   nonce-response-type-info-json = {
+     "type": dotted-decimal-oid,
      ? "respInfo": any
    }
 
    nonce-response-cbor = {
        "nonce": cbor-nonce,
      ? "expiry": uint,
-     ? "type": dotted-decimal-oid,
+     ? "respTypeInfo": nonce-response-type-info-cbor
+   }
+
+   nonce-response-type-info-cbor = {
+     "type": dotted-decimal-oid,
      ? "respInfo": any
    }
 
@@ -522,12 +552,15 @@ Table of Contents
       Section 5 of [RFC4648].  Such encodings are between 11 and 86
       characters in length.
 
-   *  The OPTIONAL "type" member, if present, MUST be a text string
-      containing the object identifier as a dotted-decimal OID.
+   *  The OPTIONAL "reqTypeInfo" member (in requests) and "respTypeInfo"
+      member (in responses) are JSON objects that group the type-
+      specific information.  Each object contains:
 
-   *  The OPTIONAL "reqInfo" and "respInfo" members MUST only be
-      included if the corresponding "type" member contains an OID.
-      Their contents are defined by that OID.
+      -  A "type" member, which MUST be a text string containing the
+         object identifier as a dotted-decimal OID.
+
+      -  An OPTIONAL "reqInfo" or "respInfo" member whose contents are
+         defined by the OID in the corresponding "type" member.
 
    If the nonce request message was successful, the EST server MUST
    respond with an HTTP 200 status code and the nonce response message
@@ -576,18 +609,13 @@ Table of Contents
    }
 
    The following example shows a nonce request and nonce response
-   message exchange transmitting optional parameters in the request:
+   message exchange:
 
    POST /.well-known/est/nonce HTTP/1.1
    Content-Type: application/est-attestation-freshness+json
 
    {
-     "len": 32,
-     "type": "1.2.3.4.5",
-     "reqInfo": {
-       "pcr-index": [0, 1, 2, 3],
-       "certificate-name": ["aik-1"]
-     }
+     "len": 32
    }
 
    HTTP/1.1 200 OK
@@ -595,11 +623,7 @@ Table of Contents
 
    {
      "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
-     "expiry": 600,
-     "type": "1.2.3.4.6",
-     "respInfo": {
-       "certificate-name": "aik-1"
-     }
+     "expiry": 600
    }
 
    To ensure that the nonce request and response messages are associated
@@ -631,13 +655,16 @@ Table of Contents
       or the nonce value between 8 and 64 bytes in length conveyed as a
       CBOR byte string.
 
-   *  The OPTIONAL dotted-decimal-oid "type" member denotes a text
-      string containing an object identifier in dotted-decimal notation.
+   *  The OPTIONAL "reqTypeInfo" member (in requests) and "respTypeInfo"
+      member (in responses) are CBOR maps that group the type-specific
+      information.  Each map contains:
 
-   *  The OPTIONAL "reqInfo" and "respInfo" members contain type-
-      specific CBOR values.  They MUST only be included if the
-      corresponding "type" member contains an OID.  Their CBOR encoding
-      is defined by that OID.
+      -  A "type" member, which is a text string containing the object
+         identifier in dotted-decimal notation.
+
+      -  An OPTIONAL "reqInfo" or "respInfo" member containing type-
+         specific CBOR values.  Their CBOR encoding is defined by the
+         OID in the corresponding "type" member.
 
    If the nonce request was successful, the EST server MUST respond to a
    GET request with a code 2.05 and to a POST request with code 2.04 and
@@ -907,7 +934,7 @@ Table of Contents
 
    IANA is requested to register the following ASN.1 [X.680] module OID
    in the "SMI Security for PKIX Module Identifier" registry
-   (1.3.6.1.5.5.7.0).  This OID is defined in Appendix A.
+   (1.3.6.1.5.5.7.0).  This OID is defined in Appendix B.
 
               +=========+======================+============+
               | Decimal | Description          | References |
@@ -1030,15 +1057,9 @@ Table of Contents
    confidentiality is required by deployment policy or by the
    attestation technology specification.
 
-10.  Acknowledgments
+10.  References
 
-   We would like to thank Russ Housley, Thomas Fossati, Watson Ladd,
-   Ionut Mihalcea, Carl Wallace, and Michael StJohns for their review
-   comments.
-
-11.  References
-
-11.1.  Normative References
+10.1.  Normative References
 
    [I-D.ietf-lamps-csr-attestation]
               Ounsworth, M., Tschofenig, H., Birkholz, H., Wiseman, M.,
@@ -1139,7 +1160,7 @@ Table of Contents
               (DER)", ITU-T Recommendation X.690 , February 2021,
               <https://www.itu.int/rec/T-REC.X.690>.
 
-11.2.  Informative References
+10.2.  Informative References
 
    [I-D.ietf-rats-msg-wrap]
               Birkholz, H., Smith, N., Fossati, T., Tschofenig, H., and
@@ -1184,6 +1205,13 @@ Table of Contents
               DOI 10.17487/RFC9483, November 2023,
               <https://www.rfc-editor.org/rfc/rfc9483>.
 
+   [RFC9684]  Birkholz, H., Eckel, M., Bhandari, S., Voit, E., Sulzen,
+              B., Xia, L., Laffey, T., and G. C. Fedorkow, "A YANG Data
+              Model for Challenge-Response-Based Remote Attestation
+              (CHARRA) Procedures Using Trusted Platform Modules
+              (TPMs)", RFC 9684, DOI 10.17487/RFC9684, December 2024,
+              <https://www.rfc-editor.org/rfc/rfc9684>.
+
    [RFC9711]  Lundblade, L., Mandyam, G., O'Donoghue, J., and C.
               Wallace, "The Entity Attestation Token (EAT)", RFC 9711,
               DOI 10.17487/RFC9711, April 2025,
@@ -1194,14 +1222,83 @@ Table of Contents
               Attestation Token", RFC 9783, DOI 10.17487/RFC9783, June
               2025, <https://www.rfc-editor.org/rfc/rfc9783>.
 
-Appendix A.  ASN.1 Module
+Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
+
+   This appendix provides an informative example showing how reqInfo and
+   respInfo can be used with a TPM 2.0-based attestation procedure such
+   as the challenge-response exchange described in Section 2.1.1.3.2 of
+   [RFC9684].
+
+   In this example, the end entity wants to obtain a nonce for use with
+   a TPM 2.0 attestation statement.  The end entity first requests a
+   nonce from the Relying Party or Verifier.  The reqInfo field can
+   carry optional information from the Attester side that helps the
+   Verifier prepare the TPM 2.0 challenge, such as which Attestation Key
+   certificates are available.
+
+   The resulting NonceResponse corresponds to the TPM 2.0 challenge
+   parameters from [RFC9684], with one exception: the nonce-value from
+   the RFC 9684 challenge is conveyed in this document's top-level nonce
+   field rather than inside respInfo.  The remaining challenge
+   parameters, such as the selected PCR bank, PCR indices, and the
+   selected Attestation Key certificate, are conveyed in respInfo.
+
+   The exact syntax of reqInfo and respInfo is defined by the nonce-
+   exchange type identified in the type field.  The JSON objects below
+   are only examples used to explain the role of these fields:
+
+   NonceRequest = {
+     "len": 32,
+     "type": "1.2.3.4.5",
+     "reqInfo": {
+       "certificate-name": ["aik-1", "aik-2"],
+       "supported-hash-algo": ["TPM_ALG_SHA256"]
+     }
+   }
+
+   NonceResponse = {
+     "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
+     "expiry": 600,
+     "type": "1.2.3.4.6",
+     "respInfo": {
+       "tpm20-pcr-selection": [
+         {
+           "tpm20-hash-algo": "TPM_ALG_SHA256",
+           "pcr-index": [0, 1, 2, 3]
+         }
+       ],
+       "certificate-name": "aik-1"
+     }
+   }
+
+   In this example:
+
+   *  reqInfo.certificate-name lets the Attester indicate more than one
+      available Attestation Key certificate when multiple TPM
+      attestation keys are present.
+
+   *  respInfo.tpm20-pcr-selection identifies the PCR bank and PCR
+      indices that the Attester is expected to include in the TPM quote
+      or equivalent Evidence.
+
+   *  respInfo.certificate-name identifies which Attestation Key
+      certificate the Attester is to use when generating the fresh
+      Evidence associated with the returned nonce.
+
+   This example is intended only to explain the purpose of reqInfo and
+   respInfo.  It does not define a new nonce-exchange type, a new OID,
+   or a TPM attestation profile.  The TPM quote itself, its signature,
+   and any optional unsigned PCR values are conveyed later as Evidence
+   and are not part of respInfo.
+
+Appendix B.  ASN.1 Module
 
    The following module adheres to ASN.1 specifications [X.680] and
    [X.690].
 
    <CODE BEGINS>
 
-   att-fresh-req
+   Att-Fresh-Req
      { iso(1) identified-organization(3) dod(6) internet(1)
      security(5) mechanisms(5) pkix(7) id-mod(0)
      id-mod-att-fresh-req (TBDMOD) }
@@ -1211,7 +1308,7 @@ Appendix A.  ASN.1 Module
    EXPORTS ALL;
    IMPORTS
 
-   id-it, InfoTypeAndValue{}
+   id-it
      FROM PKIXCMP-2023
        { iso(1) identified-organization(3) dod(6) internet(1)
          security(5) mechanisms(5) pkix(7) id-mod(0)
@@ -1241,35 +1338,42 @@ Appendix A.  ASN.1 Module
       ... -- None defined in this document --
    }
 
-    NonceRequest ::= SEQUENCE {
-       len    INTEGER (8..64) OPTIONAL,
-       -- indicates the required length of the requested nonce
-       type   ATTESTATION-NONCE-REQUEST.&id(
-                 {AttestationNonceRequestSet}) OPTIONAL,
+   NonceRequestTypeInfo ::= SEQUENCE {
+       type ATTESTATION-NONCE-REQUEST.&id(
+                    {AttestationNonceRequestSet}),
        -- identifies the nonce-request syntax for the selected
        --   attestation statement type
-       reqInfo ATTESTATION-NONCE-REQUEST.&Type(
-                 {AttestationNonceRequestSet}{@type}) OPTIONAL
+       reqInfo  ATTESTATION-NONCE-REQUEST.&Type(
+                    {AttestationNonceRequestSet}{@type}) OPTIONAL
        -- contains type-specific nonce-request information
-    }
+   }
 
-    NonceResponse ::= SEQUENCE {
-       nonce  OCTET STRING (SIZE(0 | 8..64)),
-       -- contains the nonce of length len
-       -- a zero-length OCTET STRING indicates that no freshness
-       --   proof is required
-       expiry INTEGER OPTIONAL,
-       -- indicates how long in seconds the nonce issuer considers
-       --   the nonce valid
-       type   ATTESTATION-NONCE-RESPONSE.&id(
-                 {AttestationNonceResponseSet}) OPTIONAL,
+   NonceResponseTypeInfo ::= SEQUENCE {
+       type ATTESTATION-NONCE-RESPONSE.&id(
+                    {AttestationNonceResponseSet}),
        -- identifies the nonce-response syntax for the selected
        --   attestation statement type
        respInfo ATTESTATION-NONCE-RESPONSE.&Type(
-                  {AttestationNonceResponseSet}{@type}) OPTIONAL
+                    {AttestationNonceResponseSet}{@type}) OPTIONAL
        -- contains type-specific nonce-response information
+   }
+
+    NonceRequest ::= SEQUENCE {
+       len      INTEGER (8..64) OPTIONAL,
+       -- indicates the required length of the requested nonce
+       reqTypeInfo NonceRequestTypeInfo OPTIONAL
     }
 
+    NonceResponse ::= SEQUENCE {
+       nonce    OCTET STRING (SIZE(0 | 8..64)),
+       -- contains the nonce of length len
+       -- a zero-length OCTET STRING indicates that no freshness
+       --   proof is required
+       expiry   INTEGER OPTIONAL,
+       -- indicates how long in seconds the nonce issuer considers
+       --   the nonce valid
+       respTypeInfo NonceResponseTypeInfo OPTIONAL
+    }
     id-it-nonceRequest OBJECT IDENTIFIER ::= { id-it TBD1 }
        NonceRequestValue ::= NonceRequest
 
@@ -1286,6 +1390,12 @@ Appendix A.  ASN.1 Module
 
    END
    <CODE ENDS>
+
+Acknowledgments
+
+   We would like to thank Russ Housley, Thomas Fossati, Watson Ladd,
+   Ionut Mihalcea, Carl Wallace, and Michael StJohns for their review
+   comments.
 
 Authors' Addresses
 
