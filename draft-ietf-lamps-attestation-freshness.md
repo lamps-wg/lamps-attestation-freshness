@@ -1030,25 +1030,29 @@ used to explain the role of these fields:
 ~~~
 NonceRequest = {
   "len": 32,
-  "type": "1.2.3.4.5",
-  "reqInfo": {
-    "certificate-name": ["aik-1", "aik-2"],
-    "supported-hash-algo": ["TPM_ALG_SHA256"]
+  "reqTypeInfo": {
+    "type": "1.2.3.4.5",
+    "reqInfo": {
+      "certificate-name": ["aik-1", "aik-2"],
+      "supported-hash-algo": ["TPM_ALG_SHA256"]
+    }
   }
 }
 
 NonceResponse = {
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": 600,
-  "type": "1.2.3.4.6",
-  "respInfo": {
-    "tpm20-pcr-selection": [
-      {
-        "tpm20-hash-algo": "TPM_ALG_SHA256",
-        "pcr-index": [0, 1, 2, 3]
-      }
-    ],
-    "certificate-name": "aik-1"
+  "respTypeInfo": {
+    "type": "1.2.3.4.6",
+    "respInfo": {
+      "tpm20-pcr-selection": [
+        {
+          "tpm20-hash-algo": "TPM_ALG_SHA256",
+          "pcr-index": [0, 1, 2, 3]
+        }
+      ],
+      "certificate-name": "aik-1"
+    }
   }
 }
 ~~~
