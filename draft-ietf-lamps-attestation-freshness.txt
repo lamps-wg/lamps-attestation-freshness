@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 5 January 2027                                        J. Mandel
+Expires: 7 January 2027                                        J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                             4 July 2026
+                                                             6 July 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 January 2027.
+   This Internet-Draft will expire on 7 January 2027.
 
 Copyright Notice
 
@@ -1249,25 +1249,29 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
 
    NonceRequest = {
      "len": 32,
-     "type": "1.2.3.4.5",
-     "reqInfo": {
-       "certificate-name": ["aik-1", "aik-2"],
-       "supported-hash-algo": ["TPM_ALG_SHA256"]
+     "reqTypeInfo": {
+       "type": "1.2.3.4.5",
+       "reqInfo": {
+         "certificate-name": ["aik-1", "aik-2"],
+         "supported-hash-algo": ["TPM_ALG_SHA256"]
+       }
      }
    }
 
    NonceResponse = {
      "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
      "expiry": 600,
-     "type": "1.2.3.4.6",
-     "respInfo": {
-       "tpm20-pcr-selection": [
-         {
-           "tpm20-hash-algo": "TPM_ALG_SHA256",
-           "pcr-index": [0, 1, 2, 3]
-         }
-       ],
-       "certificate-name": "aik-1"
+     "respTypeInfo": {
+       "type": "1.2.3.4.6",
+       "respInfo": {
+         "tpm20-pcr-selection": [
+           {
+             "tpm20-hash-algo": "TPM_ALG_SHA256",
+             "pcr-index": [0, 1, 2, 3]
+           }
+         ],
+         "certificate-name": "aik-1"
+       }
      }
    }
 
