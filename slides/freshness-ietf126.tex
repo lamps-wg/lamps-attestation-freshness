@@ -2,49 +2,52 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
+\usepackage[scaled=.96]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
 \usepackage{booktabs}
 \usepackage{listings}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
-\definecolor{ietfblue}{HTML}{0B5FA5}
-\definecolor{ietfnavy}{HTML}{17324D}
-\definecolor{lightblue}{HTML}{EAF3FA}
-\definecolor{softgray}{HTML}{F3F5F7}
-\definecolor{darkgray}{HTML}{3D4650}
+% Colours and typography follow the restrained IETF 124 slide deck.
+\definecolor{ietfteal}{HTML}{003B49}
+\definecolor{ietfblue}{HTML}{176B87}
+\definecolor{ietfnavy}{HTML}{003B49}
+\definecolor{lightblue}{HTML}{EAF2F4}
+\definecolor{softgray}{HTML}{F4F4F4}
+\definecolor{darkgray}{HTML}{444444}
+\definecolor{pagenumbergray}{HTML}{8C8C8C}
 \definecolor{accent}{HTML}{D95F02}
 \definecolor{good}{HTML}{2B7A3D}
 
-\setbeamercolor{normal text}{fg=ietfnavy,bg=white}
-\setbeamercolor{structure}{fg=ietfblue}
-\setbeamercolor{frametitle}{fg=white,bg=ietfblue}
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=black}
+\setbeamercolor{frametitle}{fg=black,bg=white}
 \setbeamercolor{title}{fg=white}
 \setbeamercolor{subtitle}{fg=lightblue}
 \setbeamercolor{author}{fg=white}
 \setbeamercolor{date}{fg=lightblue}
-\setbeamercolor{block title}{fg=white,bg=ietfblue}
-\setbeamercolor{block body}{fg=ietfnavy,bg=lightblue}
+\setbeamercolor{block title}{fg=black,bg=softgray}
+\setbeamercolor{block body}{fg=black,bg=softgray}
 \setbeamercolor{alerted text}{fg=accent}
-\setbeamercolor{footline}{fg=darkgray,bg=softgray}
+\setbeamercolor{footline}{fg=pagenumbergray,bg=white}
+
+\setbeamerfont{frametitle}{size=\LARGE,series=\mdseries}
+\setbeamerfont{block title}{series=\bfseries}
+\setbeamersize{text margin left=.9cm,text margin right=.9cm}
 
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{itemize item}{\color{ietfblue}\raise0.15ex\hbox{\scriptsize$\blacktriangleright$}}
-\setbeamertemplate{itemize subitem}{\color{ietfblue}\raise0.15ex\hbox{\tiny$\bullet$}}
+\setbeamertemplate{itemize item}{\raise0.1ex\hbox{\small$\bullet$}}
+\setbeamertemplate{itemize subitem}{\raise0.1ex\hbox{\scriptsize$\bullet$}}
 \setbeamertemplate{footline}{
   \leavevmode%
-  \hbox{%
-    \begin{beamercolorbox}[wd=.79\paperwidth,ht=2.7ex,dp=1.1ex,leftskip=1em]{footline}%
-      draft-ietf-lamps-attestation-freshness-08
-    \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.21\paperwidth,ht=2.7ex,dp=1.1ex,rightskip=1em plus1fil]{footline}%
-      IETF LAMPS \hfill \insertframenumber/\inserttotalframenumber
-    \end{beamercolorbox}%
-  }%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.2ex,rightskip=.85cm]{footline}%
+    \hfill\insertframenumber
+  \end{beamercolorbox}%
 }
 \setbeamertemplate{frametitle}{
   \nointerlineskip
-  \begin{beamercolorbox}[wd=\paperwidth,ht=3.4ex,dp=1.25ex,leftskip=.6cm]{frametitle}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.1ex,dp=.85ex,leftskip=.9cm,rightskip=.9cm]{frametitle}
     \usebeamerfont{frametitle}\insertframetitle
   \end{beamercolorbox}
 }
@@ -81,18 +84,29 @@
 \begin{document}
 
 {
-\setbeamercolor{background canvas}{bg=ietfnavy}
+\setbeamercolor{background canvas}{bg=white}
 \begin{frame}[plain]
-  \vspace{0.55cm}
-  {\usebeamerfont{title}\usebeamercolor[fg]{title}\LARGE\bfseries\inserttitle\par}
-  \vspace{0.35cm}
-  {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\large\insertsubtitle\par}
+  % Dark upper field and white logo band as in ietf124_slides_lamps.pdf.
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[ietfteal]
+      (current page.north west) rectangle
+      ([yshift=-.80\paperheight]current page.north east);
+    \node[anchor=south east,inner sep=0pt]
+      at ([xshift=-.72cm,yshift=.23cm]current page.south east)
+      {\includegraphics[width=2.15cm]{ietf-logo.png}};
+  \end{tikzpicture}
+
+  \vspace{.28cm}
+  {\color{white}\fontsize{24}{27}\selectfont\bfseries\inserttitle\par}
+  \vspace{.14cm}
+  {\color{white}\fontsize{12}{14}\selectfont\bfseries\insertsubtitle\par}
+  \vspace{.55cm}
+  {\color{white}\fontsize{10.5}{12}\selectfont\insertauthor\par}
   \vfill
-  {\usebeamerfont{author}\usebeamercolor[fg]{author}\small\insertauthor\par}
-  \vspace{0.15cm}
-  {\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate\par}
-  \vspace{0.35cm}
-  {\color{lightblue}\footnotesize -05: 19 October 2025 \hspace{0.7em}$\longrightarrow$\hspace{0.7em} -08: 4 July 2026}
+  {\color{white}\fontsize{12}{14}\selectfont\bfseries\insertdate\par}
+  \vspace{.12cm}
+  {\color{white}\footnotesize -05: 19 October 2025 \hspace{0.7em}$\longrightarrow$\hspace{0.7em} -08: 4 July 2026}
+  \vspace{1.12cm}
 \end{frame}
 }
 
@@ -128,7 +142,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{The document is now more precise about its job}
+\begin{frame}{Changes from -05 to -08}
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.47\textwidth}
       \textbf{\color{darkgray}-05}
@@ -163,7 +177,7 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Common architecture and exchange}
+\begin{frame}{Architecture}
   \centering
   \begin{tikzpicture}[
     x=1cm,y=1cm,
@@ -189,11 +203,14 @@
     \draw[msg] (10.4,-5.0) -- node[label,above]{Attestation Result} (5.2,-5.0);
   \end{tikzpicture}
 
-  \vspace{0.15cm}
-  \small The RA/CA may generate the nonce locally or obtain it from the Verifier.
+  \vspace{0.08cm}
+  \small
+  \textbf{In scope:} the interface between the End Entity and the Relying Party
+  (RA/CA). \textbf{Out of scope:} the interface between the Relying Party and
+  the Verifier.
 \end{frame}
 
-\begin{frame}{One extensible message model}
+\begin{frame}{Extensibility}
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.47\textwidth}
       \begin{block}{NonceRequest}
@@ -295,7 +312,7 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Multiple Attesters without positional coupling}
+\begin{frame}{Multiple Attesters}
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.52\textwidth}
       \begin{tikzpicture}[
@@ -334,7 +351,7 @@
   This follows the composite Attester model instead of inventing protocol-specific correlation.
 \end{frame}
 
-\begin{frame}{Operational and security requirements were strengthened}
+\begin{frame}{Operational and Security Requirements}
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.49\textwidth}
       \textbf{Nonce handling}
@@ -408,7 +425,7 @@
       Two Attestation Keys are available; SHA-256 is supported.
     \end{column}
     \begin{column}{0.475\textwidth}
-      \textbf{\color{accent}2. RA/CA selects challenge parameters}
+      \textbf{\color{ietfblue}2. RA/CA selects challenge parameters}
 \begin{lstlisting}[style=json]
 {
   "nonce": "<32-byte nonce, base64url>",
@@ -429,22 +446,22 @@
       Use \texttt{aik-1}; quote PCRs 0--3 from the SHA-256 bank.
     \end{column}
   \end{columns}
-  \vspace{0.16cm}
-  \begin{block}{Then}
+  \vspace{0cm}
     The Attester creates a TPM quote using these selections and the nonce.
     The quote is carried later as Evidence in the CSR---not in
     \texttt{respInfo}.
-  \end{block}
   \scriptsize\centering
   Informative example only; the OIDs are placeholders and no TPM profile is defined.
 \end{frame}
 
 \begin{frame}{Summary}
-  \begin{block}{Summary}
-    -08 is an architectural alignment with CSR Attestation: one extensible
-    nonce exchange, consistent protocol bindings, and explicit support for
-    type-specific and composite-Attester use cases.
-  \end{block}
+
+  \begin{itemize}
+    \item -08 is an architectural alignment with CSR Attestation
+    \item one extensible nonce exchange
+    \item consistent protocol bindings
+    \item explicit support for composite-Attester use cases.
+  \end{itemize}
 
   \vspace{0.3cm}
   \textbf{Currently no open issues.}
