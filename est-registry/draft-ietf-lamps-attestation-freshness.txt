@@ -727,9 +727,11 @@ Table of Contents
    (https://www.iana.org/assignments/est)) with a new "EST Well-Known
    URI Path Segments" registry containing three columns: Path Segment,
    Description, and Reference.  New items can be added using the
-   Specification Required [RFC8615] process.  The initial entry of this
-   registry contains the path segments defined by [RFC7030] and
-   [RFC9148] and additional two path segments defined by this document:
+   Specification Required [RFC8615] process.
+
+   The initial entry of this registry contains the path segments defined
+   by [RFC7030] and [RFC9148] and additional two path segments defined
+   by this document:
 
     +================+===================================+===========+
     | Path Segment   | Description                       | Reference |
