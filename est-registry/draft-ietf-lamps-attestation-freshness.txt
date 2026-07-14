@@ -731,52 +731,48 @@ Table of Contents
    registry contains the path segments defined by [RFC7030] and
    [RFC9148] and additional two path segments defined by this document:
 
-   +================+===================================+==============+
-   | Path Segment   | Description                       | Reference    |
-   +================+===================================+==============+
-   | cacerts        | Distribution of CA                | [RFC7030]    |
-   |                | Certificates over HTTP            |              |
-   +----------------+-----------------------------------+--------------+
-   | simpleenroll   | Enrollment of Clients over        | [RFC7030]    |
-   |                | HTTP                              |              |
-   +----------------+-----------------------------------+--------------+
-   | simplereenroll | Re-enrollment of Clients          | [RFC7030]    |
-   |                | over HTTP                         |              |
-   +----------------+-----------------------------------+--------------+
-   | fullcmc        | Full CMC over HTTP                | Section 4.3  |
-   |                |                                   | of [RFC7030] |
-   +----------------+-----------------------------------+--------------+
-   | serverkeygen   | Server-Side Key Generation        | [RFC7030]    |
-   |                | over HTTP                         |              |
-   +----------------+-----------------------------------+--------------+
-   | CSR Attributes | CSR Attributes                    | [RFC7030]    |
-   +----------------+-----------------------------------+--------------+
-   | crts           | Distribution of CA                | [RFC9148]    |
-   |                | Certificates over HTTP            |              |
-   +----------------+-----------------------------------+--------------+
-   | sen            | Enrollment of Clients over        | [RFC9148]    |
-   |                | HTTP                              |              |
-   +----------------+-----------------------------------+--------------+
-   | sren           | Re-enrollment of Clients          | [RFC9148]    |
-   |                | over HTTP                         |              |
-   +----------------+-----------------------------------+--------------+
-   | skg            | Server-Side Key Generation        | [RFC9148]    |
-   |                | (PKCS #7) over HTTP               |              |
-   +----------------+-----------------------------------+--------------+
-   | skc            | Server-Side Key Generation        | [RFC9148]    |
-   |                | (application/pkix-cert)           |              |
-   |                | over HTTP                         |              |
-   +----------------+-----------------------------------+--------------+
-   | att            | CSR Attributes                    | [RFC9148]    |
-   +----------------+-----------------------------------+--------------+
-   | getnonce       | Get Attestation Freshness         | This-RFC     |
-   |                | Nonce over HTTP                   |              |
-   +----------------+-----------------------------------+--------------+
-   | nonce          | Get Attestation Freshness         | This-RFC     |
-   |                | Nonce over CoAP                   |              |
-   +----------------+-----------------------------------+--------------+
+    +================+===================================+===========+
+    | Path Segment   | Description                       | Reference |
+    +================+===================================+===========+
+    | cacerts        | Distribution of CA Certificates   | [RFC7030] |
+    |                | over HTTP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | simpleenroll   | Enrollment of Clients over HTTP   | [RFC7030] |
+    +----------------+-----------------------------------+-----------+
+    | simplereenroll | Re-enrollment of Clients over     | [RFC7030] |
+    |                | HTTP                              |           |
+    +----------------+-----------------------------------+-----------+
+    | fullcmc        | Full CMC over HTTP                | [RFC7030] |
+    +----------------+-----------------------------------+-----------+
+    | serverkeygen   | Server-Side Key Generation over   | [RFC7030] |
+    |                | HTTP                              |           |
+    +----------------+-----------------------------------+-----------+
+    | CSR Attributes | CSR Attributes over HTTP          | [RFC7030] |
+    +----------------+-----------------------------------+-----------+
+    | crts           | Distribution of CA Certificates   | [RFC9148] |
+    |                | over CoAP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | sen            | Enrollment of Clients over CoAP   | [RFC9148] |
+    +----------------+-----------------------------------+-----------+
+    | sren           | Re-enrollment of Clients over     | [RFC9148] |
+    |                | CoAP                              |           |
+    +----------------+-----------------------------------+-----------+
+    | skg            | Server-Side Key Generation (PKCS  | [RFC9148] |
+    |                | #7) over CoAP                     |           |
+    +----------------+-----------------------------------+-----------+
+    | skc            | Server-Side Key Generation        | [RFC9148] |
+    |                | (application/pkix-cert) over CoAP |           |
+    +----------------+-----------------------------------+-----------+
+    | att            | CSR Attributes over CoAP          | [RFC9148] |
+    +----------------+-----------------------------------+-----------+
+    | getnonce       | Get Attestation Freshness Nonce   | This-RFC  |
+    |                | over HTTP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | nonce          | Get Attestation Freshness Nonce   | This-RFC  |
+    |                | over CoAP                         |           |
+    +----------------+-----------------------------------+-----------+
 
-                                  Table 8
+                                 Table 8
 
 7.2.2.  JSON Media Type
 
