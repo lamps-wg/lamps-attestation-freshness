@@ -2362,6 +2362,99 @@ and <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span> and addition
               </tr>
             </tbody>
           </table>
+<p id="section-7.2.1-4">--&gt; Alternative layout based on the proposal from Michael and Esko for discussion:<a href="#section-7.2.1-4" class="pilcrow">¶</a></p>
+<table class="center" id="table-9">
+            <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">Path Segment<br>use with HTTP</th>
+                <th class="text-left" rowspan="1" colspan="1">Path Segment<br>use with CoAP</th>
+                <th class="text-left" rowspan="1" colspan="1">Description</th>
+                <th class="text-left" rowspan="1" colspan="1">Reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>cacerts</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>crts</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Distribution of CA Certificates</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>simpleenroll</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>sen</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Enrollment of Clients</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>simplereenroll</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>sren</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Re-enrollment of Clients</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>fullcmc</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">N/A</td>
+                <td class="text-left" rowspan="1" colspan="1">Full CMC</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>serverkeygen</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>skg</code> (PKCS #7)<br><code>skc</code> (application/pkix-cert)</td>
+                <td class="text-left" rowspan="1" colspan="1">Server-Side Key Generation</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>csrattrs</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>att</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">CSR Attributes over HTTP</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>getnonce</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>nonce</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Get Attestation Freshness Nonce</td>
+                <td class="text-left" rowspan="1" colspan="1">This-RFC</td>
+              </tr>
+            </tbody>
+          </table>
 </section>
 </div>
 <div id="json-media-type">
@@ -2591,8 +2684,8 @@ identification syntax is defined for "application/cbor".<a href="#section-7.2.3-
 Content-Formats" subregistry within the "CoRE Parameters" registry
 <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>. This registration uses the IETF Review or IESG Approval range
 defined for that registry.<a href="#section-7.2.4-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-9">
-            <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
+<table class="center" id="table-10">
+            <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Media Type</th>
@@ -2624,8 +2717,8 @@ defined for that registry.<a href="#section-7.2.4-1" class="pilcrow">¶</a></p>
           </h4>
 <p id="section-7.3.1-1">IANA is requested to register the following object identifier in the
 "SMI Security for PKIX CMC Controls" registry (1.3.6.1.5.5.7.7):<a href="#section-7.3.1-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-10">
-            <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
+<table class="center" id="table-11">
+            <caption><a href="#table-11" class="selfRef">Table 11</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Decimal</th>
@@ -2662,8 +2755,8 @@ defined for that registry.<a href="#section-7.2.4-1" class="pilcrow">¶</a></p>
 <p id="section-7.4-1">IANA is requested to register the following ASN.1 <span>[<a href="#X.680" class="cite xref">X.680</a>]</span> module OID in the
 "SMI Security for PKIX Module Identifier" registry (1.3.6.1.5.5.7.0). This
 OID is defined in <a href="#asn1" class="auto internal xref">Appendix A</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-11">
-          <caption><a href="#table-11" class="selfRef">Table 11</a></caption>
+<table class="center" id="table-12">
+          <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Decimal</th>

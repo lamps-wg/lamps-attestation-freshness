@@ -776,6 +776,38 @@ Table of Contents
 
                                  Table 8
 
+   --> Alternative layout based on the proposal from Michael and Esko
+   for discussion:
+
+   +================+===================+=================+===========+
+   | Path Segment   | Path Segment      | Description     | Reference |
+   | use with HTTP  | use with CoAP     |                 |           |
+   +================+===================+=================+===========+
+   | cacerts        | crts              | Distribution of | [RFC7030] |
+   |                |                   | CA Certificates | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | simpleenroll   | sen               | Enrollment of   | [RFC7030] |
+   |                |                   | Clients         | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | simplereenroll | sren              | Re-enrollment   | [RFC7030] |
+   |                |                   | of Clients      | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | fullcmc        | N/A               | Full CMC        | [RFC7030] |
+   |                |                   |                 | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | serverkeygen   | skg (PKCS #7)     | Server-Side Key | [RFC7030] |
+   |                | skc (application/ | Generation      | [RFC9148] |
+   |                | pkix-cert)        |                 |           |
+   +----------------+-------------------+-----------------+-----------+
+   | csrattrs       | att               | CSR Attributes  | [RFC7030] |
+   |                |                   | over HTTP       | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | getnonce       | nonce             | Get Attestation | This-RFC  |
+   |                |                   | Freshness Nonce |           |
+   +----------------+-------------------+-----------------+-----------+
+
+                                 Table 9
+
 7.2.2.  JSON Media Type
 
    IANA is requested to register the following media types in the "Media
@@ -888,7 +920,7 @@ Table of Contents
      | application/est-attestation-freshness+cbor | TBD3 | This-RFC  |
      +--------------------------------------------+------+-----------+
 
-                                  Table 9
+                                  Table 10
 
 7.3.  CMC
 
@@ -905,7 +937,7 @@ Table of Contents
                 | TBD5    | id-cmc-nonceResp | This-RFC  |
                 +---------+------------------+-----------+
 
-                                 Table 10
+                                 Table 11
 
 7.4.  ASN.1 Module
 
@@ -919,7 +951,7 @@ Table of Contents
               | TBDMOD  | id-mod-att-fresh-req | This-RFC   |
               +---------+----------------------+------------+
 
-                                  Table 11
+                                  Table 12
 
 8.  Operational Considerations
 
