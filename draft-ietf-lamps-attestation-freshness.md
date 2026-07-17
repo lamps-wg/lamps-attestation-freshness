@@ -706,6 +706,31 @@ and {{RFC9148}} and additional two path segments defined by this document:
 | `getnonce` | Get Attestation Freshness Nonce over HTTP | This-RFC |
 | `nonce` | Get Attestation Freshness Nonce over CoAP | This-RFC |
 
+--> Alternative layout based on the proposal from Michael and Esko for discussion:
+
+This document defines a new protocol registry group entitled "Enrollment over Secure
+Transport (EST)" (at <https://www.iana.org/assignments/est>) with a new "EST
+Well-Known URI Path Segments" registry containing four columns: Path Segment,
+Short Path Segment, Description, and Reference. New items can be added using the
+Specification Required {{RFC8615}} process.
+
+The new "Short Path Segment" entry denotes a shorter alternative to Path Segment for
+the resource that can be used by a client in a CoAP request on a well-known EST resource.
+A value "N/A" can be registered to denote that there is no short path segment defined.
+
+The initial entry of this registry contains the path segments defined by {{RFC7030}}
+and {{RFC9148}} and additional set of two path segments defined by this document:
+
+| Path Segment | Short Path Segment | Description | Reference |
+| --- | --- | --- | --- |
+| `cacerts` | `crts` | Distribution of CA Certificates | {{RFC7030}} {{RFC9148}} |
+| `simpleenroll` | `sen` | Enrollment of Clients | {{RFC7030}} {{RFC9148}} |
+| `simplereenroll` | `sren` | Re-enrollment of Clients | {{RFC7030}} {{RFC9148}} |
+| `fullcmc` | N/A | Full CMC | {{RFC7030}} {{RFC9148}} |
+| `serverkeygen` | `skg` (PKCS #7)<br/>`skc` (application/pkix-cert) | Server-Side Key Generation | {{RFC7030}} {{RFC9148}} |
+| `csrattrs` | `att` | CSR Attributes over HTTP | {{RFC7030}} {{RFC9148}} |
+| `getnonce` | `nonce` | Get Attestation Freshness Nonce | This-RFC |
+
 ### JSON Media Type
 
 IANA is requested to register the following media types in the "Media Types"
