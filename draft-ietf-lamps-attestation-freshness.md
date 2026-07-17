@@ -696,7 +696,7 @@ and {{RFC9148}} and additional two path segments defined by this document:
 | `simplereenroll` | Re-enrollment of Clients over HTTP | {{RFC7030}} |
 | `fullcmc` | Full CMC over HTTP | {{RFC7030}} |
 | `serverkeygen` | Server-Side Key Generation over HTTP | {{RFC7030}} |
-| `CSR Attributes` | CSR Attributes over HTTP | {{RFC7030}} |
+| `csrattrs` | CSR Attributes over HTTP | {{RFC7030}} |
 | `crts` | Distribution of CA Certificates over CoAP  | {{RFC9148}} |
 | `sen` | Enrollment of Clients over CoAP | {{RFC9148}} |
 | `sren` | Re-enrollment of Clients over CoAP | {{RFC9148}} |
