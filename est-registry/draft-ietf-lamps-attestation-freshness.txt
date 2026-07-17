@@ -779,9 +779,22 @@ Table of Contents
    --> Alternative layout based on the proposal from Michael and Esko
    for discussion:
 
+   This document defines a new protocol registry group entitled
+   "Enrollment over Secure Transport (EST)" (at
+   https://www.iana.org/assignments/est
+   (https://www.iana.org/assignments/est)) with a new "EST Well-Known
+   URI Path Segments" registry containing four columns: Path Segment,
+   Short Path Segment, Description, and Reference.  The path segment is
+   to be used with HTTP and the short path segment with CoAP.  New items
+   can be added using the Specification Required [RFC8615] process.
+
+   The initial entry of this registry contains the path segments defined
+   by [RFC7030] and [RFC9148] and additional set of two path segments
+   defined by this document:
+
    +================+===================+=================+===========+
-   | Path Segment   | Path Segment      | Description     | Reference |
-   | use with HTTP  | use with CoAP     |                 |           |
+   | Path Segment   | Short Path        | Description     | Reference |
+   |                | Segment           |                 |           |
    +================+===================+=================+===========+
    | cacerts        | crts              | Distribution of | [RFC7030] |
    |                |                   | CA Certificates | [RFC9148] |
