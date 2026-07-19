@@ -222,7 +222,7 @@
           \item The RP or Verifier provides an unpredictable challenge;
                 the Attester binds it to the Claims in protected Evidence.
           \item A match proves that the Evidence was produced after the
-                challenge; the Attester needs no synchronized clock.
+                challenge.
           \item An extra exchange and typically per-nonce state are required.
         \end{itemize}
         \vspace{0.08cm}
@@ -234,12 +234,11 @@
       \begin{block}{Freshness data in Claims}
         \begin{itemize}
           \setlength{\itemsep}{2pt}
-          \item The Attester has no clock and therefore cannot add collection
-                timestamps to the Claims.
-          \item When the Claim values were collected is therefore unknown.
+          \item The time when the Claim values were collected by the
+                Attesting Environment is, in general, unknown.
           \item Claim values may have changed between their collection and the
                 production of the Evidence.
-          \item Fresh Evidence does not by itself prove that individual Claim
+          \item Freshly signed Evidence does not by itself prove that individual Claim
                 values were freshly collected.
         \end{itemize}
         \vspace{0.08cm}
