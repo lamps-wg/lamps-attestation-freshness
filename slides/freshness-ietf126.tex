@@ -93,7 +93,9 @@
       ([yshift=-.80\paperheight]current page.north east);
     \node[anchor=south east,inner sep=0pt]
       at ([xshift=-.72cm,yshift=.23cm]current page.south east)
-      {\includegraphics[width=2.15cm]{ietf-logo.png}};
+      {\IfFileExists{ietf-logo.png}
+        {\includegraphics[width=2.15cm]{ietf-logo.png}}
+        {\color{ietfteal}\fontsize{22}{22}\selectfont\bfseries ietf}};
   \end{tikzpicture}
 
   \vspace{.28cm}
@@ -208,6 +210,48 @@
   \textbf{In scope:} the interface between the End Entity and the Relying Party
   (RA/CA). \textbf{Out of scope:} the interface between the Relying Party and
   the Verifier.
+\end{frame}
+
+\begin{frame}{Freshness: nonce vs. claim data}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Nonce-based freshness}
+        \begin{itemize}
+          \setlength{\itemsep}{2pt}
+          \item The RP or Verifier provides an unpredictable challenge;
+                the Attester binds it to the Claims in protected Evidence.
+          \item A match proves that the Evidence was produced after the
+                challenge; the Attester needs no synchronized clock.
+          \item An extra exchange and typically per-nonce state are required.
+        \end{itemize}
+        \vspace{0.08cm}
+        \textcolor{good}{\bfseries In scope:} This document specifies the
+        nonce exchange.
+      \end{block}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Freshness data in Claims}
+        \begin{itemize}
+          \setlength{\itemsep}{2pt}
+          \item The Attester has no clock and therefore cannot add collection
+                timestamps to the Claims.
+          \item When the Claim values were collected is therefore unknown.
+          \item Claim values may have changed between their collection and the
+                production of the Evidence.
+          \item Fresh Evidence does not by itself prove that individual Claim
+                values were freshly collected.
+        \end{itemize}
+        \vspace{0.08cm}
+        \textcolor{accent}{\bfseries Out of scope:} This document neither
+        defines nor evaluates freshness data in Claims.
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.08cm}
+  \begin{center}
+    \alert{\bfseries Nonce freshness of Evidence $\neq$ freshness of individual Claim values.}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Extensibility}
@@ -454,17 +498,22 @@
   Informative example only; the OIDs are placeholders and no TPM profile is defined.
 \end{frame}
 
-\begin{frame}{Summary}
+\begin{frame}{Summary and next steps}
 
   \begin{itemize}
     \item -08 is an architectural alignment with CSR Attestation
     \item one extensible nonce exchange
     \item consistent protocol bindings
-    \item explicit support for composite-Attester use cases.
+    \item explicit support for composite-Attester use cases
+    \item open-source implementation:
+          \href{https://github.com/Guiliano99/RAT-E2E}{\texttt{Guiliano99/RAT-E2E}}.
   \end{itemize}
 
   \vspace{0.3cm}
-  \textbf{Currently no open issues.}
+  \begin{block}{One open issue}
+    Establish an IANA registry for EST path segments; addressed by
+    \href{https://github.com/lamps-wg/lamps-attestation-freshness/pull/38}{PR \#38}.
+  \end{block}
 
 \end{frame}
 
