@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 20 January 2027                                       J. Mandel
+Expires: 21 January 2027                                       J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                            19 July 2026
+                                                            20 July 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2027.
+   This Internet-Draft will expire on 21 January 2027.
 
 Copyright Notice
 
@@ -110,10 +110,10 @@ Table of Contents
    Evidence by the Attester.
 
    When the CSR is conveyed using a certificate lifecycle management
-   protocol, such as CMP [RFC9810], EST [RFC7030], or CMC
-   [I-D.ietf-lamps-rfc5272bis], the end entity can request the required
-   nonce from the RA/CA in a prior message exchange and pass it to the
-   Attester to produce fresh Evidence.
+   protocol, such as CMP [RFC9810], EST [RFC7030], or CMC [RFC10002],
+   the end entity can request the required nonce from the RA/CA in a
+   prior message exchange and pass it to the Attester to produce fresh
+   Evidence.
 
    This document describes how an end entity can request a nonce from an
    RA/CA using CMP, EST, and CMC.
@@ -711,8 +711,8 @@ Table of Contents
 
    The nonce request and nonce response message content is conveyed as
    ASN.1, see Section 3.1, as CMC Controls in a Full PKI Request, see
-   Section 6 of [I-D.ietf-lamps-rfc5272bis].  The received nonce can be
-   used for a CSR to be transferred in a Simple or Full PKI request.
+   Section 6 of [RFC10002].  The received nonce can be used for a CSR to
+   be transferred in a Simple or Full PKI request.
 
    To transfer the controls, the content type id-data SHOULD be used.
 
@@ -745,20 +745,19 @@ Table of Contents
    To ensure that the nonce request and response messages are associated
    with the subsequent request and response messages used to transmit
    the CSR, the transaction identifier specified in Section 6.6 of
-   [I-D.ietf-lamps-rfc5272bis] MUST be used.  The same transaction
-   identifier MUST be used for the nonce request and response messages
-   and for the subsequent request and response messages used to transmit
-   the CSR.  The senderNonce and recipientNonce controls specified in
-   Section 6.6 of [I-D.ietf-lamps-rfc5272bis] can be used to pair each
-   CMC request with its corresponding response, but they do not replace
-   the transaction identifier used to associate the nonce exchange with
-   the subsequent CSR exchange.
+   [RFC10002] MUST be used.  The same transaction identifier MUST be
+   used for the nonce request and response messages and for the
+   subsequent request and response messages used to transmit the CSR.
+   The senderNonce and recipientNonce controls specified in Section 6.6
+   of [RFC10002] can be used to pair each CMC request with its
+   corresponding response, but they do not replace the transaction
+   identifier used to associate the nonce exchange with the subsequent
+   CSR exchange.
 
    In the event of an error, or if the server is unable to provide the
    requested nonce, the CMC Server MAY return status information about
    the request using either an Extended CMC Status Info Control or a CMC
-   Status Info Control, as defined in Section 6.1 of
-   [I-D.ietf-lamps-rfc5272bis].
+   Status Info Control, as defined in Section 6.1 of [RFC10002].
 
 7.  IANA Considerations
 
@@ -1069,13 +1068,6 @@ Table of Contents
               June 2026, <https://datatracker.ietf.org/doc/html/draft-
               ietf-lamps-csr-attestation-28>.
 
-   [I-D.ietf-lamps-rfc5272bis]
-              Mandel, J. and S. Turner, "Certificate Management over CMS
-              (CMC)", Work in Progress, Internet-Draft, draft-ietf-
-              lamps-rfc5272bis-11, 26 February 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              rfc5272bis-11>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -1148,6 +1140,11 @@ Table of Contents
               for the Certificate Management Protocol (CMP)", RFC 9811,
               DOI 10.17487/RFC9811, July 2025,
               <https://www.rfc-editor.org/rfc/rfc9811>.
+
+   [RFC10002] Mandel, J., Ed. and S. Turner, Ed., "Certificate
+              Management over CMS (CMC)", RFC 10002,
+              DOI 10.17487/RFC10002, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc10002>.
 
    [X.680]    ITU-T, "Information Technology - Abstract Syntax Notation
               One (ASN.1): Specification of basic notation", ITU-T
@@ -1321,10 +1318,8 @@ Appendix B.  ASN.1 Module
    id-cmc, CMC-CONTROL
    FROM EnrollmentMessageSyntax-2025
       { iso(1) identified-organization(3) dod(6) internet(1)
-      security(5) mechanisms(5) pkix(7) id-mod(0)
-      id-mod-enrollMsgSyntax-2025(TBDCMC) }
-   -- RFC Editor: TBDCMC shall be TBD1 as defined by
-   --   Section 11 of draft-ietf-lamps-rfc5272bis
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-mod-enrollMsgSyntax-2025(124) }
 
    ;
 

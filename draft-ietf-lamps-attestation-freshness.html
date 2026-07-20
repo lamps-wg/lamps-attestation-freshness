@@ -1065,7 +1065,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tschofenig, et al.</td>
-<td class="center">Expires 20 January 2027</td>
+<td class="center">Expires 21 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1078,12 +1078,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lamps-attestation-freshness-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-19" class="published">19 July 2026</time>
+<time datetime="2026-07-20" class="published">20 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-20">20 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-21">21 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1139,7 +1139,7 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1289,7 +1289,7 @@ Architecture calls for establishing the freshness of Evidence, see
 use of nonces. Such nonces must be provided by the Relying Party or Verifier
 and included in the Evidence by the Attester.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">When the CSR is conveyed using a certificate lifecycle management protocol, such
-as CMP <span>[<a href="#RFC9810" class="cite xref">RFC9810</a>]</span>, EST <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>, or CMC <span>[<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span>, the
+as CMP <span>[<a href="#RFC9810" class="cite xref">RFC9810</a>]</span>, EST <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>, or CMC <span>[<a href="#RFC10002" class="cite xref">RFC10002</a>]</span>, the
 end entity can request the required nonce from the RA/CA in a prior message
 exchange and pass it to the Attester to produce fresh Evidence.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This document describes how an end entity can request a nonce from an RA/CA
@@ -2162,7 +2162,7 @@ previously provided nonce.<a href="#section-5.2-9" class="pilcrow">¶</a></p>
       </h2>
 <p id="section-6-1">The nonce request and nonce response message content is conveyed as ASN.1,
 see <a href="#ASN.1" class="auto internal xref">Section 3.1</a>, as CMC Controls in a Full PKI Request, see
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span>. The received nonce can be
+<span><a href="https://rfc-editor.org/rfc/rfc10002#section-6" class="relref">Section 6</a> of [<a href="#RFC10002" class="cite xref">RFC10002</a>]</span>. The received nonce can be
 used for a CSR to be transferred in a Simple or Full PKI request.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">To transfer the controls, the content type <code>id-data</code> SHOULD be used.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6-3">
@@ -2197,16 +2197,16 @@ ContentInfo.content
 </div>
 <p id="section-6-6">To ensure that the nonce request and response messages are associated with the subsequent
 request and response messages used to transmit the CSR, the transaction identifier specified in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11#section-6.6" class="relref">Section 6.6</a> of [<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span> MUST be used. The same transaction identifier
+<span><a href="https://rfc-editor.org/rfc/rfc10002#section-6.6" class="relref">Section 6.6</a> of [<a href="#RFC10002" class="cite xref">RFC10002</a>]</span> MUST be used. The same transaction identifier
 MUST be used for the nonce request and response messages and for the subsequent request and
 response messages used to transmit the CSR. The senderNonce and recipientNonce controls
-specified in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11#section-6.6" class="relref">Section 6.6</a> of [<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span> can be used to pair each CMC
+specified in <span><a href="https://rfc-editor.org/rfc/rfc10002#section-6.6" class="relref">Section 6.6</a> of [<a href="#RFC10002" class="cite xref">RFC10002</a>]</span> can be used to pair each CMC
 request with its corresponding response, but they do not replace the transaction identifier
 used to associate the nonce exchange with the subsequent CSR exchange.<a href="#section-6-6" class="pilcrow">¶</a></p>
 <p id="section-6-7">In the event of an error, or if the server is unable to provide the requested nonce,
 the CMC Server MAY return status information about the request using either an
 Extended CMC Status Info Control or a CMC Status Info Control, as defined in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11#section-6.1" class="relref">Section 6.1</a> of [<a href="#I-D.ietf-lamps-rfc5272bis" class="cite xref">I-D.ietf-lamps-rfc5272bis</a>]</span>.<a href="#section-6-7" class="pilcrow">¶</a></p>
+<span><a href="https://rfc-editor.org/rfc/rfc10002#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC10002" class="cite xref">RFC10002</a>]</span>.<a href="#section-6-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
@@ -2731,10 +2731,6 @@ policy or by the attestation technology specification.<a href="#section-9-5" cla
         <dd>
 <span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-28</span>, <time datetime="2026-06-16" class="refDate">16 June 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-28">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-28</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-lamps-rfc5272bis">[I-D.ietf-lamps-rfc5272bis]</dt>
-        <dd>
-<span class="refAuthor">Mandel, J.</span> and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Certificate Management over CMS (CMC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc5272bis-11</span>, <time datetime="2026-02-26" class="refDate">26 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc5272bis-11</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
@@ -2790,6 +2786,10 @@ policy or by the attestation technology specification.<a href="#section-9-5" cla
 <dt id="RFC9811">[RFC9811]</dt>
         <dd>
 <span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, <span class="refAuthor">Ounsworth, M.</span>, and <span class="refAuthor">J. Gray</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure -- HTTP Transfer for the Certificate Management Protocol (CMP)"</span>, <span class="seriesInfo">RFC 9811</span>, <span class="seriesInfo">DOI 10.17487/RFC9811</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9811">https://www.rfc-editor.org/rfc/rfc9811</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC10002">[RFC10002]</dt>
+        <dd>
+<span class="refAuthor">Mandel, J., Ed.</span> and <span class="refAuthor">S. Turner, Ed.</span>, <span class="refTitle">"Certificate Management over CMS (CMC)"</span>, <span class="seriesInfo">RFC 10002</span>, <span class="seriesInfo">DOI 10.17487/RFC10002</span>, <time datetime="2026-07" class="refDate">July 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc10002">https://www.rfc-editor.org/rfc/rfc10002</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X.680">[X.680]</dt>
         <dd>
@@ -2959,10 +2959,8 @@ id-it
 id-cmc, CMC-CONTROL
 FROM EnrollmentMessageSyntax-2025
    { iso(1) identified-organization(3) dod(6) internet(1)
-   security(5) mechanisms(5) pkix(7) id-mod(0)
-   id-mod-enrollMsgSyntax-2025(TBDCMC) }
--- RFC Editor: TBDCMC shall be TBD1 as defined by
---   Section 11 of draft-ietf-lamps-rfc5272bis
+     security(5) mechanisms(5) pkix(7) id-mod(0)
+     id-mod-enrollMsgSyntax-2025(124) }
 
 ;
 
