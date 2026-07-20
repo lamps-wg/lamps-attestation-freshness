@@ -63,7 +63,6 @@ author:
 normative:
   RFC2119:
   I-D.ietf-lamps-csr-attestation:
-  I-D.ietf-lamps-rfc5272bis:
   RFC9810:
   RFC7030:
   RFC7252:
@@ -77,6 +76,7 @@ normative:
   RFC8949:
   RFC9482:
   RFC9811:
+  RFC10002:
   X.680:
     target: https://www.itu.int/rec/T-REC.X.680
     title: >
@@ -140,7 +140,7 @@ use of nonces. Such nonces must be provided by the Relying Party or Verifier
 and included in the Evidence by the Attester.
 
 When the CSR is conveyed using a certificate lifecycle management protocol, such
-as CMP {{RFC9810}}, EST {{RFC7030}}, or CMC {{I-D.ietf-lamps-rfc5272bis}}, the
+as CMP {{RFC9810}}, EST {{RFC7030}}, or CMC {{RFC10002}}, the
 end entity can request the required nonce from the RA/CA in a prior message
 exchange and pass it to the Attester to produce fresh Evidence.
 
@@ -669,7 +669,7 @@ previously provided nonce.
 
 The nonce request and nonce response message content is conveyed as ASN.1,
 see {{ASN.1}}, as CMC Controls in a Full PKI Request, see
-{{Section 6 of I-D.ietf-lamps-rfc5272bis}}. The received nonce can be
+{{Section 6 of RFC10002}}. The received nonce can be
 used for a CSR to be transferred in a Simple or Full PKI request.
 
 
@@ -707,17 +707,17 @@ ContentInfo.content
 
 To ensure that the nonce request and response messages are associated with the subsequent
 request and response messages used to transmit the CSR, the transaction identifier specified in
-{{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} MUST be used. The same transaction identifier
+{{Section 6.6 of RFC10002}} MUST be used. The same transaction identifier
 MUST be used for the nonce request and response messages and for the subsequent request and
 response messages used to transmit the CSR. The senderNonce and recipientNonce controls
-specified in {{Section 6.6 of I-D.ietf-lamps-rfc5272bis}} can be used to pair each CMC
+specified in {{Section 6.6 of RFC10002}} can be used to pair each CMC
 request with its corresponding response, but they do not replace the transaction identifier
 used to associate the nonce exchange with the subsequent CSR exchange.
 
 In the event of an error, or if the server is unable to provide the requested nonce,
 the CMC Server MAY return status information about the request using either an
 Extended CMC Status Info Control or a CMC Status Info Control, as defined in
-{{Section 6.1 of I-D.ietf-lamps-rfc5272bis}}.
+{{Section 6.1 of RFC10002}}.
 
 # IANA Considerations {#iana}
 
@@ -1100,10 +1100,8 @@ id-it
 id-cmc, CMC-CONTROL
 FROM EnrollmentMessageSyntax-2025
    { iso(1) identified-organization(3) dod(6) internet(1)
-   security(5) mechanisms(5) pkix(7) id-mod(0)
-   id-mod-enrollMsgSyntax-2025(TBDCMC) }
--- RFC Editor: TBDCMC shall be TBD1 as defined by
---   Section 11 of draft-ietf-lamps-rfc5272bis
+     security(5) mechanisms(5) pkix(7) id-mod(0)
+     id-mod-enrollMsgSyntax-2025(124) }
 
 ;
 
