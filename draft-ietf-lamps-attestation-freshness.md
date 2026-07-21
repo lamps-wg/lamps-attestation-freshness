@@ -746,10 +746,63 @@ IANA is requested to register the following object identifier in the
 
 ## EST
 
-IANA is requested to register the following media types in the "Media Types"
-registry {{RFC6838}}:
+### Well-Known URI Path Segment
+
+This document defines a new protocol registry group entitled "Enrollment over Secure
+Transport (EST)" (at <https://www.iana.org/assignments/est>) with a new "EST
+Well-Known URI Path Segments" registry containing three columns: Path Segment,
+Description, and Reference. New items can be added using the Specification Required
+{{RFC8615}} process.
+
+The initial entry of this registry contains the path segments defined by {{RFC7030}}
+and {{RFC9148}} and additional two path segments defined by this document:
+
+| Path Segment | Description | Reference |
+| --- | --- | --- |
+| `cacerts` | Distribution of CA Certificates over HTTP  | {{RFC7030}} |
+| `simpleenroll` | Enrollment of Clients over HTTP | {{RFC7030}} |
+| `simplereenroll` | Re-enrollment of Clients over HTTP | {{RFC7030}} |
+| `fullcmc` | Full CMC over HTTP | {{RFC7030}} |
+| `serverkeygen` | Server-Side Key Generation over HTTP | {{RFC7030}} |
+| `csrattrs` | CSR Attributes over HTTP | {{RFC7030}} |
+| `crts` | Distribution of CA Certificates over CoAP  | {{RFC9148}} |
+| `sen` | Enrollment of Clients over CoAP | {{RFC9148}} |
+| `sren` | Re-enrollment of Clients over CoAP | {{RFC9148}} |
+| `skg` | Server-Side Key Generation (PKCS #7) over CoAP | {{RFC9148}} |
+| `skc` | Server-Side Key Generation (application/pkix-cert) over CoAP | {{RFC9148}} |
+| `att` | CSR Attributes over CoAP | {{RFC9148}} |
+| `getnonce` | Get Attestation Freshness Nonce over HTTP | This-RFC |
+| `nonce` | Get Attestation Freshness Nonce over CoAP | This-RFC |
+
+--> Alternative layout based on the proposal from Michael and Esko for discussion:
+
+This document defines a new protocol registry group entitled "Enrollment over Secure
+Transport (EST)" (at <https://www.iana.org/assignments/est>) with a new "EST
+Well-Known URI Path Segments" registry containing four columns: Path Segment,
+Short Path Segment, Description, and Reference. New items can be added using the
+Specification Required {{RFC8615}} process.
+
+The new "Short Path Segment" entry denotes a shorter alternative to Path Segment for
+the resource that can be used by a client in a CoAP request on a well-known EST resource.
+A value "N/A" can be registered to denote that there is no short path segment defined.
+
+The initial entry of this registry contains the path segments defined by {{RFC7030}}
+and {{RFC9148}} and additional set of two path segments defined by this document:
+
+| Path Segment | Short Path Segment | Description | Reference |
+| --- | --- | --- | --- |
+| `cacerts` | `crts` | Distribution of CA Certificates | {{RFC7030}} {{RFC9148}} |
+| `simpleenroll` | `sen` | Enrollment of Clients | {{RFC7030}} {{RFC9148}} |
+| `simplereenroll` | `sren` | Re-enrollment of Clients | {{RFC7030}} {{RFC9148}} |
+| `fullcmc` | N/A | Full CMC | {{RFC7030}} {{RFC9148}} |
+| `serverkeygen` | `skg` (PKCS #7)<br/>`skc` (application/pkix-cert) | Server-Side Key Generation | {{RFC7030}} {{RFC9148}} |
+| `csrattrs` | `att` | CSR Attributes over HTTP | {{RFC7030}} {{RFC9148}} |
+| `getnonce` | `nonce` | Get Attestation Freshness Nonce | This-RFC |
 
 ### JSON Media Type
+
+IANA is requested to register the following media types in the "Media Types"
+registry {{RFC6838}}:
 
 Type name:
 : application
