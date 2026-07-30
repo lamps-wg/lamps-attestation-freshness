@@ -104,6 +104,7 @@ informative:
   I-D.ietf-rats-reference-interaction-models:
   RFC2986:
   RFC4211:
+  RFC8295:
   RFC9334:
   RFC9483:
   RFC9783:
@@ -686,8 +687,8 @@ Well-Known URI Path Segments" registry containing three columns: Path Segment,
 Description, and Reference. New items can be added using the Specification Required
 {{RFC8615}} process.
 
-The initial entry of this registry contains the path segments defined by {{RFC7030}}
-and {{RFC9148}} and additional two path segments defined by this document:
+The initial entry of this registry contains the path segments defined by {{RFC7030}},
+{{RFC9148}}, and {{RFC8295}} and additional two path segments defined by this document:
 
 | Path Segment | Description | Reference |
 | --- | --- | --- |
@@ -695,8 +696,18 @@ and {{RFC9148}} and additional two path segments defined by this document:
 | `simpleenroll` | Enrollment of Clients over HTTP | {{RFC7030}} |
 | `simplereenroll` | Re-enrollment of Clients over HTTP | {{RFC7030}} |
 | `fullcmc` | Full CMC over HTTP | {{RFC7030}} |
-| `serverkeygen` | Server-Side Key Generation over HTTP | {{RFC7030}} |
+| `serverkeygen` | Server-Side Key Generation over HTTP | {{RFC7030}} {{RFC8295}} |
+| `serverkeygen\return` | Server-Side Key Generation over HTTP Receipts & Errors | {{RFC8295}} |
 | `csrattrs` | CSR Attributes over HTTP | {{RFC7030}} |
+| `pal` | Package Availability List | {{RFC8295}} |
+| `eecerts` | Distribution of End-Entity Certificates | {{RFC8295}} |
+| `crls` | Distribution of CRLs | {{RFC8295}} |
+| `symmetrickeys` | Distribution of Symmetric Keys | {{RFC8295}} |
+| `symmetrickeys\return` | Return of Symmetric Keys Receipts & Errors | {{RFC8295}} |
+| `firmware` | Distribution of Firmware | {{RFC8295}} |
+| `firmware\return` | Return of Firmware Receipts  & Errors | {{RFC8295}} |
+| `tamp` | Distribution of TAMP Messages | {{RFC8295}} |
+| `tamp\return` | Return of Tamp Receipts & Errors | {{RFC8295}} |
 | `crts` | Distribution of CA Certificates over CoAP  | {{RFC9148}} |
 | `sen` | Enrollment of Clients over CoAP | {{RFC9148}} |
 | `sren` | Re-enrollment of Clients over CoAP | {{RFC9148}} |
