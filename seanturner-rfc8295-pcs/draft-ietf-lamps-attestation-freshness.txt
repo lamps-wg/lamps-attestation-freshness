@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 25 December 2026                                      J. Mandel
+Expires: 31 January 2027                                       J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                            23 June 2026
+                                                            30 July 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 December 2026.
+   This Internet-Draft will expire on 31 January 2027.
 
 Copyright Notice
 
@@ -81,9 +81,10 @@ Table of Contents
        7.1.1.  Well-Known URI Path Segment
        7.1.2.  Information Type
      7.2.  EST
-       7.2.1.  JSON Media Type
-       7.2.2.  CBOR Media Type
-       7.2.3.  CoAP Content-Format
+       7.2.1.  Well-Known URI Path Segment
+       7.2.2.  JSON Media Type
+       7.2.3.  CBOR Media Type
+       7.2.4.  CoAP Content-Format
      7.3.  CMC
        7.3.1.  Control
      7.4.  ASN.1 Module
@@ -673,6 +674,12 @@ Table of Contents
          {102, id-cmc-recipientNonce, 10001}
          {103, id-cmc-nonceResp, <NonceResponse>}
 
+   In the event of an error, or if the server is unable to provide the
+   requested nonce, the CMC Server MAY return status information about
+   the request using either an Extended CMC Status Info Control or a CMC
+   Status Info Control, as defined in Section 6.1 of
+   [I-D.ietf-lamps-rfc5272bis].
+
 7.  IANA Considerations
 
 7.1.  CMP
@@ -712,10 +719,146 @@ Table of Contents
 
 7.2.  EST
 
+7.2.1.  Well-Known URI Path Segment
+
+   This document defines a new protocol registry group entitled
+   "Enrollment over Secure Transport (EST)" (at
+   https://www.iana.org/assignments/est
+   (https://www.iana.org/assignments/est)) with a new "EST Well-Known
+   URI Path Segments" registry containing three columns: Path Segment,
+   Description, and Reference.  New items can be added using the
+   Specification Required [RFC8615] process.
+
+   The initial entry of this registry contains the path segments defined
+   by [RFC7030], [RFC9148], and [RFC8295] and additional two path
+   segments defined by this document:
+
+    +======================+=============================+===========+
+    | Path Segment         | Description                 | Reference |
+    +======================+=============================+===========+
+    | cacerts              | Distribution of CA          | [RFC7030] |
+    |                      | Certificates over HTTP      |           |
+    +----------------------+-----------------------------+-----------+
+    | simpleenroll         | Enrollment of Clients over  | [RFC7030] |
+    |                      | HTTP                        |           |
+    +----------------------+-----------------------------+-----------+
+    | simplereenroll       | Re-enrollment of Clients    | [RFC7030] |
+    |                      | over HTTP                   |           |
+    +----------------------+-----------------------------+-----------+
+    | fullcmc              | Full CMC over HTTP          | [RFC7030] |
+    +----------------------+-----------------------------+-----------+
+    | serverkeygen         | Server-Side Key Generation  | [RFC7030] |
+    |                      | over HTTP                   | [RFC8295] |
+    +----------------------+-----------------------------+-----------+
+    | serverkeygen\return  | Server-Side Key Generation  | [RFC8295] |
+    |                      | over HTTP Receipts & Errors |           |
+    +----------------------+-----------------------------+-----------+
+    | csrattrs             | CSR Attributes over HTTP    | [RFC7030] |
+    +----------------------+-----------------------------+-----------+
+    | pal                  | Package Availability List   | [RFC8295] |
+    +----------------------+-----------------------------+-----------+
+    | eecerts              | Distribution of End-Entity  | [RFC8295] |
+    |                      | Certificates                |           |
+    +----------------------+-----------------------------+-----------+
+    | crls                 | Distribution of CRLs        | [RFC8295] |
+    +----------------------+-----------------------------+-----------+
+    | symmetrickeys        | Distribution of Symmetric   | [RFC8295] |
+    |                      | Keys                        |           |
+    +----------------------+-----------------------------+-----------+
+    | symmetrickeys\return | Return of Symmetric Keys    | [RFC8295] |
+    |                      | Receipts & Errors           |           |
+    +----------------------+-----------------------------+-----------+
+    | firmware             | Distribution of Firmware    | [RFC8295] |
+    +----------------------+-----------------------------+-----------+
+    | firmware\return      | Return of Firmware Receipts | [RFC8295] |
+    |                      | & Errors                    |           |
+    +----------------------+-----------------------------+-----------+
+    | tamp                 | Distribution of TAMP        | [RFC8295] |
+    |                      | Messages                    |           |
+    +----------------------+-----------------------------+-----------+
+    | tamp\return          | Return of Tamp Receipts &   | [RFC8295] |
+    |                      | Errors                      |           |
+    +----------------------+-----------------------------+-----------+
+    | crts                 | Distribution of CA          | [RFC9148] |
+    |                      | Certificates over CoAP      |           |
+    +----------------------+-----------------------------+-----------+
+    | sen                  | Enrollment of Clients over  | [RFC9148] |
+    |                      | CoAP                        |           |
+    +----------------------+-----------------------------+-----------+
+    | sren                 | Re-enrollment of Clients    | [RFC9148] |
+    |                      | over CoAP                   |           |
+    +----------------------+-----------------------------+-----------+
+    | skg                  | Server-Side Key Generation  | [RFC9148] |
+    |                      | (PKCS #7) over CoAP         |           |
+    +----------------------+-----------------------------+-----------+
+    | skc                  | Server-Side Key Generation  | [RFC9148] |
+    |                      | (application/pkix-cert)     |           |
+    |                      | over CoAP                   |           |
+    +----------------------+-----------------------------+-----------+
+    | att                  | CSR Attributes over CoAP    | [RFC9148] |
+    +----------------------+-----------------------------+-----------+
+    | getnonce             | Get Attestation Freshness   | This-RFC  |
+    |                      | Nonce over HTTP             |           |
+    +----------------------+-----------------------------+-----------+
+    | nonce                | Get Attestation Freshness   | This-RFC  |
+    |                      | Nonce over CoAP             |           |
+    +----------------------+-----------------------------+-----------+
+
+                                 Table 8
+
+   --> Alternative layout based on the proposal from Michael and Esko
+   for discussion:
+
+   This document defines a new protocol registry group entitled
+   "Enrollment over Secure Transport (EST)" (at
+   https://www.iana.org/assignments/est
+   (https://www.iana.org/assignments/est)) with a new "EST Well-Known
+   URI Path Segments" registry containing four columns: Path Segment,
+   Short Path Segment, Description, and Reference.  New items can be
+   added using the Specification Required [RFC8615] process.
+
+   The new "Short Path Segment" entry denotes a shorter alternative to
+   Path Segment for the resource that can be used by a client in a CoAP
+   request on a well-known EST resource.  A value "N/A" can be
+   registered to denote that there is no short path segment defined.
+
+   The initial entry of this registry contains the path segments defined
+   by [RFC7030] and [RFC9148] and additional set of two path segments
+   defined by this document:
+
+   +================+===================+=================+===========+
+   | Path Segment   | Short Path        | Description     | Reference |
+   |                | Segment           |                 |           |
+   +================+===================+=================+===========+
+   | cacerts        | crts              | Distribution of | [RFC7030] |
+   |                |                   | CA Certificates | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | simpleenroll   | sen               | Enrollment of   | [RFC7030] |
+   |                |                   | Clients         | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | simplereenroll | sren              | Re-enrollment   | [RFC7030] |
+   |                |                   | of Clients      | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | fullcmc        | N/A               | Full CMC        | [RFC7030] |
+   |                |                   |                 | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | serverkeygen   | skg (PKCS #7)     | Server-Side Key | [RFC7030] |
+   |                | skc (application/ | Generation      | [RFC9148] |
+   |                | pkix-cert)        |                 |           |
+   +----------------+-------------------+-----------------+-----------+
+   | csrattrs       | att               | CSR Attributes  | [RFC7030] |
+   |                |                   | over HTTP       | [RFC9148] |
+   +----------------+-------------------+-----------------+-----------+
+   | getnonce       | nonce             | Get Attestation | This-RFC  |
+   |                |                   | Freshness Nonce |           |
+   +----------------+-------------------+-----------------+-----------+
+
+                                 Table 9
+
+7.2.2.  JSON Media Type
+
    IANA is requested to register the following media types in the "Media
    Types" registry [RFC6838]:
-
-7.2.1.  JSON Media Type
 
    Type name:  application
 
@@ -763,7 +906,7 @@ Table of Contents
 
    Change controller:  IETF
 
-7.2.2.  CBOR Media Type
+7.2.3.  CBOR Media Type
 
    Type name:  application
 
@@ -811,7 +954,7 @@ Table of Contents
 
    Change controller:  IETF
 
-7.2.3.  CoAP Content-Format
+7.2.4.  CoAP Content-Format
 
    IANA is requested to register the following Content-Format in the
    "CoAP Content-Formats" subregistry within the "CoRE Parameters"
@@ -824,7 +967,7 @@ Table of Contents
      | application/est-attestation-freshness+cbor | TBD3 | This-RFC  |
      +--------------------------------------------+------+-----------+
 
-                                  Table 8
+                                  Table 10
 
 7.3.  CMC
 
@@ -841,7 +984,7 @@ Table of Contents
                 | TBD5    | id-cmc-nonceResp | This-RFC  |
                 +---------+------------------+-----------+
 
-                                 Table 9
+                                 Table 11
 
 7.4.  ASN.1 Module
 
@@ -855,7 +998,7 @@ Table of Contents
               | TBDMOD  | id-mod-att-fresh-req | This-RFC   |
               +---------+----------------------+------------+
 
-                                  Table 10
+                                  Table 12
 
 8.  Operational Considerations
 
@@ -1107,6 +1250,10 @@ Table of Contents
               Certificate Request Message Format (CRMF)", RFC 4211,
               DOI 10.17487/RFC4211, September 2005,
               <https://www.rfc-editor.org/rfc/rfc4211>.
+
+   [RFC8295]  Turner, S., "EST (Enrollment over Secure Transport)
+              Extensions", RFC 8295, DOI 10.17487/RFC8295, January 2018,
+              <https://www.rfc-editor.org/rfc/rfc8295>.
 
    [RFC9334]  Birkholz, H., Thaler, D., Richardson, M., Smith, N., and
               W. Pan, "Remote ATtestation procedureS (RATS)
