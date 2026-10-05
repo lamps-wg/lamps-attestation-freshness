@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 31 January 2027                                       J. Mandel
+Expires: 8 April 2027                                          J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                            30 July 2026
+                                                          5 October 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 January 2027.
+   This Internet-Draft will expire on 8 April 2027.
 
 Copyright Notice
 
@@ -751,33 +751,36 @@ Table of Contents
     |                      | over HTTP                   | [RFC8295] |
     +----------------------+-----------------------------+-----------+
     | serverkeygen\return  | Server-Side Key Generation  | [RFC8295] |
-    |                      | over HTTP Receipts & Errors |           |
+    |                      | Receipts & Errors over HTTP |           |
     +----------------------+-----------------------------+-----------+
     | csrattrs             | CSR Attributes over HTTP    | [RFC7030] |
     +----------------------+-----------------------------+-----------+
     | pal                  | Package Availability List   | [RFC8295] |
+    |                      | over HTTP                   |           |
     +----------------------+-----------------------------+-----------+
     | eecerts              | Distribution of End-Entity  | [RFC8295] |
-    |                      | Certificates                |           |
+    |                      | Certificates over HTTP      |           |
     +----------------------+-----------------------------+-----------+
-    | crls                 | Distribution of CRLs        | [RFC8295] |
+    | crls                 | Distribution of CRLs over   | [RFC8295] |
+    |                      | HTTP                        |           |
     +----------------------+-----------------------------+-----------+
     | symmetrickeys        | Distribution of Symmetric   | [RFC8295] |
-    |                      | Keys                        |           |
+    |                      | Keys over HTTP              |           |
     +----------------------+-----------------------------+-----------+
     | symmetrickeys\return | Return of Symmetric Keys    | [RFC8295] |
-    |                      | Receipts & Errors           |           |
+    |                      | Receipts & Errors over HTTP |           |
     +----------------------+-----------------------------+-----------+
     | firmware             | Distribution of Firmware    | [RFC8295] |
+    |                      | over HTTP                   |           |
     +----------------------+-----------------------------+-----------+
     | firmware\return      | Return of Firmware Receipts | [RFC8295] |
-    |                      | & Errors                    |           |
+    |                      | & Errors over HTTP          |           |
     +----------------------+-----------------------------+-----------+
     | tamp                 | Distribution of TAMP        | [RFC8295] |
-    |                      | Messages                    |           |
+    |                      | Messages over HTTP          |           |
     +----------------------+-----------------------------+-----------+
     | tamp\return          | Return of Tamp Receipts &   | [RFC8295] |
-    |                      | Errors                      |           |
+    |                      | Errors over HTTP            |           |
     +----------------------+-----------------------------+-----------+
     | crts                 | Distribution of CA          | [RFC9148] |
     |                      | Certificates over CoAP      |           |
@@ -1127,9 +1130,9 @@ Table of Contents
               Ounsworth, M., Tschofenig, H., Birkholz, H., Wiseman, M.,
               and N. Smith, "Use of Remote Attestation with
               Certification Signing Requests", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-csr-attestation-28, 16
-              June 2026, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-lamps-csr-attestation-28>.
+              Internet-Draft, draft-ietf-lamps-csr-attestation-29, 2
+              September 2026, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lamps-csr-attestation-29>.
 
    [I-D.ietf-lamps-rfc5272bis]
               Mandel, J. and S. Turner, "Certificate Management over CMS
@@ -1229,17 +1232,17 @@ Table of Contents
               Birkholz, H., Eckel, M., Pan, W., and E. Voit, "Reference
               Interaction Models for Remote Attestation Procedures",
               Work in Progress, Internet-Draft, draft-ietf-rats-
-              reference-interaction-models-17, 2 April 2026,
+              reference-interaction-models-18, 17 September 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
-              reference-interaction-models-17>.
+              reference-interaction-models-18>.
 
    [I-D.richardson-rats-composite-attesters]
               Richardson, M., Birkholz, H., Deshpande, Y., and T.
               Fossati, "Taxonomy of Composite Attesters", Work in
               Progress, Internet-Draft, draft-richardson-rats-composite-
-              attesters-04, 2 March 2026,
+              attesters-05, 31 August 2026,
               <https://datatracker.ietf.org/doc/html/draft-richardson-
-              rats-composite-attesters-04>.
+              rats-composite-attesters-05>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
