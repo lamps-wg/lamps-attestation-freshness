@@ -775,7 +775,7 @@ The initial entry of this registry contains the path segments defined by {{RFC70
 | `firmware` | Distribution of Firmware over HTTP | {{RFC8295}} |
 | `firmware\return` | Return of Firmware Receipts  & Errors over HTTP | {{RFC8295}} |
 | `tamp` | Distribution of TAMP Messages over HTTP | {{RFC8295}} |
-| `tamp\return` | Return of Tamp Receipts & Errors over HTTP | {{RFC8295}} |
+| `tamp\return` | Return of TAMP Receipts & Errors over HTTP | {{RFC8295}} |
 | `crts` | Distribution of CA Certificates over CoAP  | {{RFC9148}} |
 | `sen` | Enrollment of Clients over CoAP | {{RFC9148}} |
 | `sren` | Re-enrollment of Clients over CoAP | {{RFC9148}} |
@@ -807,7 +807,7 @@ and {{RFC9148}} and additional set of two path segments defined by this document
 | `simplereenroll` | `sren` | Re-enrollment of Clients | {{RFC7030}} {{RFC9148}} |
 | `fullcmc` | N/A | Full CMC | {{RFC7030}} {{RFC9148}} |
 | `serverkeygen` | `skg` (PKCS #7)<br/>`skc` (application/pkix-cert) | Server-Side Key Generation | {{RFC7030}} {{RFC9148}} |
-| `csrattrs` | `att` | CSR Attributes over HTTP | {{RFC7030}} {{RFC9148}} |
+| `csrattrs` | `att` | CSR Attributes | {{RFC7030}} {{RFC9148}} |
 | `getnonce` | `nonce` | Get Attestation Freshness Nonce | This-RFC |
 
 ### JSON Media Type
