@@ -38,11 +38,11 @@ Evidence for inclusion in a CSR.
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.12.2
+    platformdirs 4.13.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.9.1
+    wcwidth 0.9.2
 -->
 <link href="draft-ietf-lamps-attestation-freshness.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1062,7 +1062,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tschofenig, et al.</td>
-<td class="center">Expires 20 April 2027</td>
+<td class="center">Expires 1 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1075,12 +1075,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lamps-attestation-freshness-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-17" class="published">17 October 2026</time>
+<time datetime="2026-10-28" class="published">28 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-20">20 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1136,7 +1136,7 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1324,7 +1324,7 @@ and the RA/CA acts as a Relying Party that communicates with one or more Verifie
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span>.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">This document uses RATS and PKIX terminology as described in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-29#section-3" class="relref">Section 3</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. It also uses terminology from
+<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-32#section-3" class="relref">Section 3</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. It also uses terminology from
 the applicable certificate lifecycle management protocols: CMP, EST, and CMC.<a href="#section-2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1401,7 +1401,7 @@ can use different encodings. For example, an ASN.1 message can contain <code>req
 provide the required information to the Relying Party to route the nonce request
 to the appropriate Verifier when multiple verifiers are supported. The <code>respInfo</code>
 structure may be used to convey Generic Information Elements
-(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-18#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-reference-interaction-models" class="cite xref">I-D.ietf-rats-reference-interaction-models</a>]</span>) such as Attesting
+(<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-20#section-6" class="relref">Section 6</a> of [<a href="#I-D.ietf-rats-reference-interaction-models" class="cite xref">I-D.ietf-rats-reference-interaction-models</a>]</span>) such as Attesting
 Environment IDs and Claim Selection. <a href="#appx-tpm-pcr-example" class="auto internal xref">Appendix A</a> provides an
 informative example using a TPM PCR selection.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">The generic message flow between the end entity and the RA/CA is shown in
@@ -1483,7 +1483,7 @@ wants to include multiple Evidence statements in a CSR, it can use the
 composite Attester model described in <span><a href="https://rfc-editor.org/rfc/rfc9334#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> and
 <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span>, i.e., together with a conceptual
 message wrapper (CMW) <span>[<a href="#I-D.ietf-rats-msg-wrap" class="cite xref">I-D.ietf-rats-msg-wrap</a>]</span> structure, as described in
-<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-29#section-4.3" class="relref">Section 4.3</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. The lead Attester
+<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-32#section-4.3" class="relref">Section 4.3</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. The lead Attester
 should then pass the nonce to the sub-Attesters. Based on Figure 2 of
 <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span>, <a href="#fig-lead-Attester" class="auto internal xref">Figure 2</a> shows an
 example of how a nonce can be distributed among several Attesters in an end
@@ -2454,7 +2454,7 @@ Description, and Reference. New items can be added using the Specification Requi
                 <td class="text-left" rowspan="1" colspan="1">
                   <code>tamp\return</code>
 </td>
-                <td class="text-left" rowspan="1" colspan="1">Return of Tamp Receipts &amp; Errors over HTTP</td>
+                <td class="text-left" rowspan="1" colspan="1">Return of TAMP Receipts &amp; Errors over HTTP</td>
                 <td class="text-left" rowspan="1" colspan="1">
                   <span>[<a href="#RFC8295" class="cite xref">RFC8295</a>]</span>
 </td>
@@ -2615,7 +2615,7 @@ and <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span> and addition
                 <td class="text-left" rowspan="1" colspan="1">
                   <code>att</code>
 </td>
-                <td class="text-left" rowspan="1" colspan="1">CSR Attributes over HTTP</td>
+                <td class="text-left" rowspan="1" colspan="1">CSR Attributes</td>
                 <td class="text-left" rowspan="1" colspan="1">
                   <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
 </td>
@@ -3070,7 +3070,7 @@ policy or by the attestation technology specification.<a href="#section-9-5" cla
 <dl class="references">
 <dt id="I-D.ietf-lamps-csr-attestation">[I-D.ietf-lamps-csr-attestation]</dt>
         <dd>
-<span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-29</span>, <time datetime="2026-09-02" class="refDate">2 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-29">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-29</a>&gt;</span>. </dd>
+<span class="refAuthor">Ounsworth, M.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Wiseman, M.</span>, and <span class="refAuthor">N. Smith</span>, <span class="refTitle">"Use of Remote Attestation with Certification Signing Requests"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-csr-attestation-32</span>, <time datetime="2026-10-22" class="refDate">22 October 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-32">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-32</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
@@ -3155,7 +3155,7 @@ policy or by the attestation technology specification.<a href="#section-9-5" cla
 <dd class="break"></dd>
 <dt id="I-D.ietf-rats-reference-interaction-models">[I-D.ietf-rats-reference-interaction-models]</dt>
         <dd>
-<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Eckel, M.</span>, <span class="refAuthor">Pan, W.</span>, and <span class="refAuthor">E. Voit</span>, <span class="refTitle">"Reference Interaction Models for Remote Attestation Procedures"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-reference-interaction-models-18</span>, <time datetime="2026-09-17" class="refDate">17 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-18">https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Eckel, M.</span>, <span class="refAuthor">Pan, W.</span>, and <span class="refAuthor">E. Voit</span>, <span class="refTitle">"Reference Interaction Models for Remote Attestation Procedures"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-reference-interaction-models-20</span>, <time datetime="2026-10-28" class="refDate">28 October 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-20">https://datatracker.ietf.org/doc/html/draft-ietf-rats-reference-interaction-models-20</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.richardson-rats-composite-attesters">[I-D.richardson-rats-composite-attesters]</dt>
         <dd>
