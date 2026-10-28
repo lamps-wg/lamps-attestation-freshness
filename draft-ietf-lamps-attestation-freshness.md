@@ -403,7 +403,7 @@ NonceResponseTypeInfo ::= SEQUENCE {
     -- contains the nonce of length len
     -- a zero-length OCTET STRING indicates that no freshness
     --   proof is required
-    expiry   INTEGER OPTIONAL,
+    expiry   INTEGER (0..MAX) OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
     --   the nonce valid
     respTypeInfo NonceResponseTypeInfo OPTIONAL
@@ -765,17 +765,17 @@ The initial entry of this registry contains the path segments defined by {{RFC70
 | `simplereenroll` | Re-enrollment of Clients over HTTP | {{RFC7030}} |
 | `fullcmc` | Full CMC over HTTP | {{RFC7030}} |
 | `serverkeygen` | Server-Side Key Generation over HTTP | {{RFC7030}} {{RFC8295}} |
-| `serverkeygen\return` | Server-Side Key Generation Receipts & Errors over HTTP | {{RFC8295}} |
+| `serverkeygen/return` | Server-Side Key Generation Receipts & Errors over HTTP | {{RFC8295}} |
 | `csrattrs` | CSR Attributes over HTTP | {{RFC7030}} |
 | `pal` | Package Availability List over HTTP | {{RFC8295}} |
 | `eecerts` | Distribution of End-Entity Certificates over HTTP | {{RFC8295}} |
 | `crls` | Distribution of CRLs over HTTP | {{RFC8295}} |
 | `symmetrickeys` | Distribution of Symmetric Keys over HTTP | {{RFC8295}} |
-| `symmetrickeys\return` | Return of Symmetric Keys Receipts & Errors over HTTP | {{RFC8295}} |
+| `symmetrickeys/return` | Return of Symmetric Keys Receipts & Errors over HTTP | {{RFC8295}} |
 | `firmware` | Distribution of Firmware over HTTP | {{RFC8295}} |
-| `firmware\return` | Return of Firmware Receipts  & Errors over HTTP | {{RFC8295}} |
+| `firmware/return` | Return of Firmware Receipts  & Errors over HTTP | {{RFC8295}} |
 | `tamp` | Distribution of TAMP Messages over HTTP | {{RFC8295}} |
-| `tamp\return` | Return of TAMP Receipts & Errors over HTTP | {{RFC8295}} |
+| `tamp/return` | Return of TAMP Receipts & Errors over HTTP | {{RFC8295}} |
 | `crts` | Distribution of CA Certificates over CoAP  | {{RFC9148}} |
 | `sen` | Enrollment of Clients over CoAP | {{RFC9148}} |
 | `sren` | Re-enrollment of Clients over CoAP | {{RFC9148}} |
@@ -969,11 +969,14 @@ with the Verifier. According to the IETF RATS architecture {{RFC9334}},
 the Verifier is responsible for validating Evidence about an Attester
 and generating Attestation Results for use by a Relying Party.
 
-The nonce value MUST contain a random byte sequence with at least 64 bits
-of entropy. The RA/CA MUST ensure that a nonce it generates is unique and
-MUST NOT be reused. If the RA/CA obtains a nonce from the Verifier, it
-MUST ensure that the Verifier utilizes the same policy for uniqueness and
-non-reuse properties. The length of the nonce depends on the remote
+For non-empty nonce values, the following entropy, uniqueness, and
+non-reuse requirements apply. The nonce value MUST contain a random byte
+sequence with at least 64 bits of entropy. The RA/CA MUST ensure that a
+nonce it generates is unique and MUST NOT reuse it. If the RA/CA obtains
+a nonce from the Verifier, it MUST ensure that the Verifier utilizes the
+same policy for uniqueness and non-reuse properties.
+
+The length of the nonce depends on the remote
 attestation technology in use, as specific nonce
 lengths may be required by the end entity. This specification assumes
 that the RA/CA possesses knowledge, either out-of-band or through the
@@ -1214,7 +1217,7 @@ NonceResponseTypeInfo ::= SEQUENCE {
     -- contains the nonce of length len
     -- a zero-length OCTET STRING indicates that no freshness
     --   proof is required
-    expiry   INTEGER OPTIONAL,
+    expiry   INTEGER (0..MAX) OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
     --   the nonce valid
     respTypeInfo NonceResponseTypeInfo OPTIONAL
