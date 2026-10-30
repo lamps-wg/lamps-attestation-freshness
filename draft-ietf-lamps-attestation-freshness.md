@@ -572,7 +572,7 @@ transmitting optional parameters in the request:
 
 
 ~~~
-GET /.well-known/est/nonce HTTP/1.1
+GET /.well-known/est/getnonce HTTP/1.1
 
 HTTP/1.1 200 OK
 Content-Type: application/est-attestation-freshness+json
@@ -586,7 +586,7 @@ Content-Type: application/est-attestation-freshness+json
 The following example shows a nonce request and nonce response message exchange:
 
 ~~~
-POST /.well-known/est/nonce HTTP/1.1
+POST /.well-known/est/getnonce HTTP/1.1
 Content-Type: application/est-attestation-freshness+json
 
 {
