@@ -200,7 +200,12 @@ The nonce response message has the following fields:
   MUST be an empty or zero-length string.
 - `expiry`: In this OPTIONAL field, the RA/CA can specify the validity period of
   the nonce in seconds as an integer value. The nonce can be used during this
-  period; the response therefore needs to be conveyed promptly.
+  period and therefore the response therefore needs to be conveyed promptly. The
+  field is, however, only a hint to the end entity about how long the RA/CA (and
+  possibly the Verifier) anticipate to store state. If this field is absent,
+  no indication about the expected lifetime of the nonce is provided. An end entity
+  MAY send Evidence containing this nonce even if the nonce expired. It
+  is then up to the RA/CA to decide whether to accept the Evidence.
 - `respTypeInfo`: This OPTIONAL structure groups the type-specific information
   for the nonce response. It contains:
   - `type`: The RA/CA can specify the type of the `respInfo` structure. The type
