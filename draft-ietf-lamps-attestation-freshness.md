@@ -550,6 +550,11 @@ If the nonce request message was successful, the EST server MUST respond with an
 status code and the nonce response message content MUST be encoded as a JSON object.
 The HTTP 200 status code MUST also be used if the nonce is an empty string.
 
+The HTTP nonce request MUST use the Cache-Control response
+   directive "no-cache" to disable HTTP-level caching even by caches
+   that have been configured to return stale responses to client
+   requests.
+
 In the event of a possible error, the EST server MUST respond with an HTTP
 status code 400 (Bad Request) and MUST omit the nonce response message content. If the
 nonce request message has been made correctly, but the EST server is unable or unwilling
@@ -639,6 +644,9 @@ request with a code 2.05 and to a POST request with code 2.04 and the
 nonce response message content MUST be encoded as a CBOR object.
 The code 2.05 or code 2.04 MUST also be used if the nonce is a zero-length
 byte string.
+
+The CoAP nonce request MUST use an explicit Max-Age: 0 in the response
+   to disable CoAP-level caching.
 
 In the event of a possible error, the EST server MUST respond with a code
 4.00 (Bad Request) and MUST omit the nonce response message content. If the
