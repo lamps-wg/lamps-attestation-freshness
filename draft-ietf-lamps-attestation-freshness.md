@@ -185,9 +185,9 @@ The end entity sends a nonce request message with the following fields:
 - `reqTypeInfo`: This OPTIONAL structure groups the type-specific information
   for the nonce request. It contains:
   - `type`: The end entity can specify the type of the reqInfo structure.
-  - `reqInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
-    content that the RA/CA requires to generate respInfo. If type is not set,
-    `reqInfo` MUST also be omitted.
+  - `reqInfo`: If type is set, this OPTIONAL field contains the type-specific
+    content that the RA/CA requires to generate respInfo. If type is
+    not set, `reqInfo` MUST be omitted.
 
 The RA/CA can return the requested nonce in a nonce response message together
 with information specific to the generation of the Evidence.
@@ -206,9 +206,9 @@ The nonce response message has the following fields:
   - `type`: The RA/CA can specify the type of the `respInfo` structure. The type
     in the nonce response message is defined by the type in the nonce request
     message.
-  - `respInfo`: If type is set, this OPTIONAL field MUST contain the type-specific
+  - `respInfo`: If type is set, this OPTIONAL field contains the type-specific
     content requested by the end entity for generating the Evidence. If type is
-    not set, `respInfo` MUST also be omitted.
+    not set, `respInfo` MUST be omitted.
 
 This document does not further specify the content of the `reqInfo` and `respInfo`
 structures; those structures must be defined elsewhere. Each definition must
