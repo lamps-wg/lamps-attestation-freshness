@@ -2001,15 +2001,19 @@ by the OID in the corresponding "type" member.<a href="#section-5.1-4.3.2.2.1" c
 <p id="section-5.1-5">If the nonce request message was successful, the EST server MUST respond with an HTTP 200
 status code and the nonce response message content MUST be encoded as a JSON object.
 The HTTP 200 status code MUST also be used if the nonce is an empty string.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
-<p id="section-5.1-6">In the event of a possible error, the EST server MUST respond with an HTTP
+<p id="section-5.1-6">The HTTP nonce request MUST use the Cache-Control response
+   directive "no-cache" to disable HTTP-level caching even by caches
+   that have been configured to return stale responses to client
+   requests.<a href="#section-5.1-6" class="pilcrow">¶</a></p>
+<p id="section-5.1-7">In the event of a possible error, the EST server MUST respond with an HTTP
 status code 400 (Bad Request) and MUST omit the nonce response message content. If the
 nonce request message has been made correctly, but the EST server is unable or unwilling
 to deliver the requested nonce, it MUST respond with an HTTP 503 (Service
-Unavailable).<a href="#section-5.1-6" class="pilcrow">¶</a></p>
-<p id="section-5.1-7">The EST server MAY request HTTP-based client authentication as described in
-<span><a href="https://rfc-editor.org/rfc/rfc7030#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>.<a href="#section-5.1-7" class="pilcrow">¶</a></p>
-<p id="section-5.1-8">The following media types MUST be used as the Content-Type of the <code>POST</code> request
-and the response.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
+Unavailable).<a href="#section-5.1-7" class="pilcrow">¶</a></p>
+<p id="section-5.1-8">The EST server MAY request HTTP-based client authentication as described in
+<span><a href="https://rfc-editor.org/rfc/rfc7030#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
+<p id="section-5.1-9">The following media types MUST be used as the Content-Type of the <code>POST</code> request
+and the response.<a href="#section-5.1-9" class="pilcrow">¶</a></p>
 <table class="center" id="table-4">
           <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
 <thead>
@@ -2036,9 +2040,9 @@ and the response.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
             </tr>
           </tbody>
         </table>
-<p id="section-5.1-10">The following example shows a nonce request and nonce response message exchange without
-transmitting optional parameters in the request:<a href="#section-5.1-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-11">
+<p id="section-5.1-11">The following example shows a nonce request and nonce response message exchange without
+transmitting optional parameters in the request:<a href="#section-5.1-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-12">
 <pre>
 GET /.well-known/est/getnonce HTTP/1.1
 
@@ -2049,10 +2053,10 @@ Content-Type: application/est-attestation-freshness+json
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": 600
 }
-</pre><a href="#section-5.1-11" class="pilcrow">¶</a>
+</pre><a href="#section-5.1-12" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-12">The following example shows a nonce request and nonce response message exchange:<a href="#section-5.1-12" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-13">
+<p id="section-5.1-13">The following example shows a nonce request and nonce response message exchange:<a href="#section-5.1-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-14">
 <pre>
 POST /.well-known/est/getnonce HTTP/1.1
 Content-Type: application/est-attestation-freshness+json
@@ -2068,16 +2072,16 @@ Content-Type: application/est-attestation-freshness+json
   "nonce": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI",
   "expiry": 600
 }
-</pre><a href="#section-5.1-13" class="pilcrow">¶</a>
+</pre><a href="#section-5.1-14" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-14">To ensure that the nonce request and response messages are associated with the subsequent
+<p id="section-5.1-15">To ensure that the nonce request and response messages are associated with the subsequent
 request and response messages used to transmit the CSR, the EST server MUST use a
 session-maintenance mechanism that binds the nonce request and response messages to the
 subsequent request and response messages used to transmit the CSR. This can be achieved
 by using the same (D)TLS session or by using an HTTP state mechanism, such as cookies,
 when EST is transferred over HTTP. If the EST server cannot associate the CSR request
 with the prior nonce request and response messages, it MUST NOT treat the CSR as
-associated with the previously provided nonce.<a href="#section-5.1-14" class="pilcrow">¶</a></p>
+associated with the previously provided nonce.<a href="#section-5.1-15" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="EST-coaps">
@@ -2121,14 +2125,16 @@ request with a code 2.05 and to a POST request with code 2.04 and the
 nonce response message content MUST be encoded as a CBOR object.
 The code 2.05 or code 2.04 MUST also be used if the nonce is a zero-length
 byte string.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
-<p id="section-5.2-6">In the event of a possible error, the EST server MUST respond with a code
+<p id="section-5.2-6">The CoAP nonce request MUST use an explicit Max-Age: 0 in the response
+   to disable CoAP-level caching.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+<p id="section-5.2-7">In the event of a possible error, the EST server MUST respond with a code
 4.00 (Bad Request) and MUST omit the nonce response message content. If the
 nonce request has been made correctly, but the EST server is unable or
 unwilling to deliver the requested nonce, it MUST respond with a code 5.03
-(Service Unavailable).<a href="#section-5.2-6" class="pilcrow">¶</a></p>
-<p id="section-5.2-7">The following media type MUST be used for nonce request and nonce response message
+(Service Unavailable).<a href="#section-5.2-7" class="pilcrow">¶</a></p>
+<p id="section-5.2-8">The following media type MUST be used for nonce request and nonce response message
 content. The corresponding CoAP Content-Format value is used in the CoAP
-Content-Format and Accept options as specified in <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>.<a href="#section-5.2-7" class="pilcrow">¶</a></p>
+Content-Format and Accept options as specified in <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>.<a href="#section-5.2-8" class="pilcrow">¶</a></p>
 <table class="center" id="table-5">
           <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
 <thead>
@@ -2148,7 +2154,7 @@ Content-Format and Accept options as specified in <span>[<a href="#RFC9148" clas
             </tr>
           </tbody>
         </table>
-<p id="section-5.2-9">To ensure that the nonce request and response messages are associated with the subsequent
+<p id="section-5.2-10">To ensure that the nonce request and response messages are associated with the subsequent
 request and response messages used to transmit the CSR, the EST-coaps server MUST use a
 session-maintenance mechanism that binds the nonce request and response messages to the
 subsequent request and response messages used to transmit the CSR. CoAP does not define
@@ -2157,7 +2163,7 @@ association, such as the same DTLS connection, or by using an integrity-protecte
 mechanism that carries server-generated opaque state, such as the Echo option defined in
 <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>. If the EST-coaps server cannot associate the CSR request with the prior
 nonce request and response messages, it MUST NOT treat the CSR as associated with the
-previously provided nonce.<a href="#section-5.2-9" class="pilcrow">¶</a></p>
+previously provided nonce.<a href="#section-5.2-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
