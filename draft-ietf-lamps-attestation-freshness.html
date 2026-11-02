@@ -1352,9 +1352,9 @@ for the nonce request. It contains:<a href="#section-3-3.2.1" class="pilcrow">¶
               <p id="section-3-3.2.2.1.1"><code>type</code>: The end entity can specify the type of the reqInfo structure.<a href="#section-3-3.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3-3.2.2.2">
-              <p id="section-3-3.2.2.2.1"><code>reqInfo</code>: If type is set, this OPTIONAL field MUST contain the type-specific
-content that the RA/CA requires to generate respInfo. If type is not set,
-<code>reqInfo</code> MUST also be omitted.<a href="#section-3-3.2.2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3-3.2.2.2.1"><code>reqInfo</code>: If type is set, this OPTIONAL field contains the type-specific
+content that the RA/CA requires to generate respInfo. If type is
+not set, <code>reqInfo</code> MUST be omitted.<a href="#section-3-3.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
@@ -1384,9 +1384,9 @@ in the nonce response message is defined by the type in the nonce request
 message.<a href="#section-3-6.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3-6.3.2.2">
-              <p id="section-3-6.3.2.2.1"><code>respInfo</code>: If type is set, this OPTIONAL field MUST contain the type-specific
+              <p id="section-3-6.3.2.2.1"><code>respInfo</code>: If type is set, this OPTIONAL field contains the type-specific
 content requested by the end entity for generating the Evidence. If type is
-not set, <code>respInfo</code> MUST also be omitted.<a href="#section-3-6.3.2.2.1" class="pilcrow">¶</a></p>
+not set, <code>respInfo</code> MUST be omitted.<a href="#section-3-6.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
