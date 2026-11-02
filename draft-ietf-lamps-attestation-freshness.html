@@ -2040,7 +2040,7 @@ and the response.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
 transmitting optional parameters in the request:<a href="#section-5.1-10" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-11">
 <pre>
-GET /.well-known/est/nonce HTTP/1.1
+GET /.well-known/est/getnonce HTTP/1.1
 
 HTTP/1.1 200 OK
 Content-Type: application/est-attestation-freshness+json
@@ -2054,7 +2054,7 @@ Content-Type: application/est-attestation-freshness+json
 <p id="section-5.1-12">The following example shows a nonce request and nonce response message exchange:<a href="#section-5.1-12" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-13">
 <pre>
-POST /.well-known/est/nonce HTTP/1.1
+POST /.well-known/est/getnonce HTTP/1.1
 Content-Type: application/est-attestation-freshness+json
 
 {
