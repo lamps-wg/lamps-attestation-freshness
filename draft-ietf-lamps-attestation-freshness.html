@@ -2081,7 +2081,10 @@ subsequent request and response messages used to transmit the CSR. This can be a
 by using the same (D)TLS session or by using an HTTP state mechanism, such as cookies,
 when EST is transferred over HTTP. If the EST server cannot associate the CSR request
 with the prior nonce request and response messages, it MUST NOT treat the CSR as
-associated with the previously provided nonce.<a href="#section-5.1-15" class="pilcrow">¶</a></p>
+associated with the previously provided nonce. In case an end entity wants to request
+multiple certificates and therefore needs multiple nonces, the end entity needs to
+ensure that a new nonce is only requested once the previous CSR has been
+progressed. Concurrent, inter-leaved transactions are not supported.<a href="#section-5.1-15" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="EST-coaps">
@@ -2163,7 +2166,10 @@ association, such as the same DTLS connection, or by using an integrity-protecte
 mechanism that carries server-generated opaque state, such as the Echo option defined in
 <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>. If the EST-coaps server cannot associate the CSR request with the prior
 nonce request and response messages, it MUST NOT treat the CSR as associated with the
-previously provided nonce.<a href="#section-5.2-10" class="pilcrow">¶</a></p>
+previously provided nonce. In case an end entity wants to request
+multiple certificates and therefore needs multiple nonces, the end entity needs to
+ensure that a new nonce is only requested once the previous CSR has been
+progressed.<a href="#section-5.2-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

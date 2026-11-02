@@ -648,7 +648,11 @@ Table of Contents
    mechanism, such as cookies, when EST is transferred over HTTP.  If
    the EST server cannot associate the CSR request with the prior nonce
    request and response messages, it MUST NOT treat the CSR as
-   associated with the previously provided nonce.
+   associated with the previously provided nonce.  In case an end entity
+   wants to request multiple certificates and therefore needs multiple
+   nonces, the end entity needs to ensure that a new nonce is only
+   requested once the previous CSR has been progressed.  Concurrent,
+   inter-leaved transactions are not supported.
 
 5.2.  EST over Secure CoAP
 
@@ -721,7 +725,10 @@ Table of Contents
    defined in [RFC9175].  If the EST-coaps server cannot associate the
    CSR request with the prior nonce request and response messages, it
    MUST NOT treat the CSR as associated with the previously provided
-   nonce.
+   nonce.  In case an end entity wants to request multiple certificates
+   and therefore needs multiple nonces, the end entity needs to ensure
+   that a new nonce is only requested once the previous CSR has been
+   progressed.
 
 6.  Use with CMC
 
