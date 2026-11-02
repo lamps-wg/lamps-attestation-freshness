@@ -270,7 +270,9 @@ composite Attester model described in {{Section 3.3 of RFC9334}} and
 {{I-D.richardson-rats-composite-attesters}}, i.e., together with a conceptual
 message wrapper (CMW) {{I-D.ietf-rats-msg-wrap}} structure, as described in
 {{Section 4.3 of I-D.ietf-lamps-csr-attestation}}. The lead Attester
-should then pass the nonce to the sub-Attesters. Based on Figure 2 of
+should then pass the nonce, or a value derived from it if the selected
+attestation statement type defines a deterministic nonce transformation
+(see {{operations}}), to the sub-Attesters. Based on Figure 2 of
 {{I-D.richardson-rats-composite-attesters}}, {{fig-lead-Attester}} shows an
 example of how a nonce can be distributed among several Attesters in an end
 entity. If multiple `respInfo` structures are required, the `reqInfo` and `respInfo`
@@ -403,7 +405,7 @@ NonceResponseTypeInfo ::= SEQUENCE {
     -- contains the nonce of length len
     -- a zero-length OCTET STRING indicates that no freshness
     --   proof is required
-    expiry   INTEGER OPTIONAL,
+    expiry   INTEGER (0..MAX) OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
     --   the nonce valid
     respTypeInfo NonceResponseTypeInfo OPTIONAL
@@ -765,17 +767,17 @@ The initial entry of this registry contains the path segments defined by {{RFC70
 | `simplereenroll` | Re-enrollment of Clients over HTTP | {{RFC7030}} |
 | `fullcmc` | Full CMC over HTTP | {{RFC7030}} |
 | `serverkeygen` | Server-Side Key Generation over HTTP | {{RFC7030}} {{RFC8295}} |
-| `serverkeygen\return` | Server-Side Key Generation Receipts & Errors over HTTP | {{RFC8295}} |
+| `serverkeygen/return` | Server-Side Key Generation Receipts & Errors over HTTP | {{RFC8295}} |
 | `csrattrs` | CSR Attributes over HTTP | {{RFC7030}} |
 | `pal` | Package Availability List over HTTP | {{RFC8295}} |
 | `eecerts` | Distribution of End-Entity Certificates over HTTP | {{RFC8295}} |
 | `crls` | Distribution of CRLs over HTTP | {{RFC8295}} |
 | `symmetrickeys` | Distribution of Symmetric Keys over HTTP | {{RFC8295}} |
-| `symmetrickeys\return` | Return of Symmetric Keys Receipts & Errors over HTTP | {{RFC8295}} |
+| `symmetrickeys/return` | Return of Symmetric Keys Receipts & Errors over HTTP | {{RFC8295}} |
 | `firmware` | Distribution of Firmware over HTTP | {{RFC8295}} |
-| `firmware\return` | Return of Firmware Receipts  & Errors over HTTP | {{RFC8295}} |
+| `firmware/return` | Return of Firmware Receipts  & Errors over HTTP | {{RFC8295}} |
 | `tamp` | Distribution of TAMP Messages over HTTP | {{RFC8295}} |
-| `tamp\return` | Return of TAMP Receipts & Errors over HTTP | {{RFC8295}} |
+| `tamp/return` | Return of TAMP Receipts & Errors over HTTP | {{RFC8295}} |
 | `crts` | Distribution of CA Certificates over CoAP  | {{RFC9148}} |
 | `sen` | Enrollment of Clients over CoAP | {{RFC9148}} |
 | `sren` | Re-enrollment of Clients over CoAP | {{RFC9148}} |
@@ -944,24 +946,26 @@ with the Verifier. According to the IETF RATS architecture {{RFC9334}},
 the Verifier is responsible for validating Evidence about an Attester
 and generating Attestation Results for use by a Relying Party.
 
-The nonce value MUST contain a random byte sequence with at least 64 bits
-of entropy. The RA/CA MUST ensure that a nonce it generates is unique and
-MUST NOT be reused. If the RA/CA obtains a nonce from the Verifier, it
-MUST ensure that the Verifier utilizes the same policy for uniqueness and
-non-reuse properties. The length of the nonce depends on the remote
-attestation technology in use, as specific nonce
-lengths may be required by the end entity. This specification assumes
-that the RA/CA possesses knowledge, either out-of-band or through the
-len field in the nonce request message, regarding the required nonce length for
-the attestation technology. Nonces of incorrect length may cause the
-remote attestation protocol to fail.
+A non-empty nonce MUST contain a random byte sequence with at least 64
+bits of entropy. The RA/CA MUST ensure that a nonce it generates is
+unique and MUST NOT reuse it. If the RA/CA obtains a nonce from the
+Verifier, it MUST ensure that the Verifier uses the same policy for
+uniqueness and non-reuse properties.
+
+The length of the nonce depends on the remote attestation technology in
+use, as specific nonce lengths may be required by the end entity. This
+specification assumes that the RA/CA possesses knowledge, either
+out-of-band or through the len field in the nonce request message,
+regarding the required nonce length for the attestation technology.
+Nonces of incorrect length may cause the remote attestation protocol to
+fail.
 
 For instance, the PSA attestation token {{RFC9783}}
 supports nonce lengths of 32, 48, and 64 bytes. Other attestation
 technologies employ nonces of similar lengths.
 
 The end entity MUST use the received nonce if the remote attestation
-technology used supports the requested length. If the selected attestation
+technology supports the requested length. If the selected attestation
 statement type defines a deterministic nonce transformation for use by a
 specific Attester or sub-Attester, the end entity MUST apply only that
 transformation and only for the purpose defined by that specification.
@@ -1011,24 +1015,25 @@ the use of attestation statements in a CSR, the security considerations
 outlined in {{I-D.ietf-lamps-csr-attestation}} are pertinent to this
 specification.
 
-The nonce itself does not generally require confidentiality
-protection while maintaining the security properties of the remote
-attestation protocol. However, optional attestation-type-specific
-request or response information conveyed together with the nonce MAY
-reveal privacy-sensitive or deployment-sensitive information, such as
-platform topology, certificate identifiers, or measurement selections.
-{{RFC9334}} defines the IETF remote attestation architecture and
-extensively discusses nonce-based freshness.
+The security properties of remote attestation do not generally depend on
+the confidentiality of the nonce. However, optional
+attestation-type-specific request or response information conveyed
+together with the nonce can reveal privacy-sensitive or
+deployment-sensitive information, such as platform topology, certificate
+identifiers, or measurement selections.
 
-Specific attestation technology specifications such as {{RFC9711}} and
-{{RFC9783}} offer guidance on replay protection using nonces. This
-document defers specific recommendations to those specifications.
+{{RFC9334}} defines the IETF remote attestation architecture and
+extensively discusses nonce-based freshness. Specific attestation
+technology specifications such as {{RFC9711}} and {{RFC9783}} offer
+guidance on replay protection using nonces. This document defers specific
+recommendations to those specifications.
 
 If an attestation technology or Composite Attester profile transforms a
 received nonce before embedding it in Evidence, that transformation MUST
-be deterministic, MUST preserve at least the minimum entropy required by
-the attestation technology, and MUST provide the Verifier with enough
-information to reconstruct or validate the transformed value when needed.
+be deterministic and MUST preserve at least the minimum entropy required
+by the attestation technology. The defining specification MUST ensure
+that the Verifier has enough information to reconstruct or validate the
+transformed value.
 Specifications defining such transformations SHOULD use well-analyzed
 cryptographic mechanisms for nonce expansion or size adjustment to ensure
 that the resulting entropy and security properties remain acceptable.
@@ -1036,10 +1041,11 @@ that the resulting entropy and security properties remain acceptable.
 If attestation-type-specific nonce exchange information is used, the
 corresponding specification MUST define the syntax and semantics of that
 information, including any confidentiality requirements. Implementations
-SHOULD minimize the amount of such information returned by the RA/CA and
-SHOULD protect it using the message or transport security mechanisms of
-the enrollment protocol when confidentiality is required by deployment
-policy or by the attestation technology specification.
+SHOULD minimize the amount of such information returned by the RA/CA. When
+confidentiality is required by deployment policy or by the attestation
+technology specification, implementations MUST protect this information
+using the message or transport security mechanisms of the enrollment
+protocol.
 
 --- back
 
@@ -1051,7 +1057,7 @@ challenge-response exchange described in {{Section 2.1.1.3.2 of RFC9684}}.
 
 In this example, the end entity wants to obtain a nonce for use with a TPM 2.0
 attestation statement. The end entity first requests a nonce from the
-Relying Party or Verifier. The `reqInfo` field can carry optional information
+RA/CA. The `reqInfo` field can carry optional information
 from the Attester side that helps the Verifier prepare the TPM 2.0 challenge,
 such as which Attestation Key certificates are available.
 
@@ -1062,9 +1068,9 @@ inside `respInfo`. The remaining challenge parameters, such as the selected PCR
 bank, PCR indices, and the selected Attestation Key certificate, are conveyed
 in `respInfo`.
 
-The exact syntax of `reqInfo` and `respInfo` is defined by the nonce-exchange
-type identified in the `type` field. The JSON objects below are only examples
-used to explain the role of these fields:
+The exact syntax of `reqInfo` and `respInfo` is defined by the attestation
+statement type identified in the `type` field. The JSON-like notation below
+shows examples only and is used to explain the role of these fields:
 
 ~~~
 NonceRequest = {
@@ -1107,8 +1113,8 @@ In this example:
   returned nonce.
 
 This example is intended only to explain the purpose of `reqInfo` and
-`respInfo`. It does not define a new nonce-exchange type, a new OID, or a TPM
-attestation profile. The TPM quote itself, its signature, and any optional
+`respInfo`. It does not define a new attestation statement type, a new OID,
+or a TPM attestation profile. The TPM quote itself, its signature, and any optional
 unsigned PCR values are conveyed later as Evidence and are not part of
 `respInfo`.
 
@@ -1189,7 +1195,7 @@ NonceResponseTypeInfo ::= SEQUENCE {
     -- contains the nonce of length len
     -- a zero-length OCTET STRING indicates that no freshness
     --   proof is required
-    expiry   INTEGER OPTIONAL,
+    expiry   INTEGER (0..MAX) OPTIONAL,
     -- indicates how long in seconds the nonce issuer considers
     --   the nonce valid
     respTypeInfo NonceResponseTypeInfo OPTIONAL
