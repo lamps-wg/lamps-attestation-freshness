@@ -1058,11 +1058,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Freshness for Evidence in CSRs</td>
-<td class="right">October 2026</td>
+<td class="right">November 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tschofenig, et al.</td>
-<td class="center">Expires 1 May 2027</td>
+<td class="center">Expires 6 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1075,12 +1075,12 @@ svg {
 <dd class="internet-draft">draft-ietf-lamps-attestation-freshness-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-28" class="published">28 October 2026</time>
+<time datetime="2026-11-02" class="published">2 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-06">6 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1136,7 +1136,7 @@ Evidence for inclusion in a CSR.<a href="#section-abstract-2" class="pilcrow">¶
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1484,7 +1484,9 @@ composite Attester model described in <span><a href="https://rfc-editor.org/rfc/
 <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span>, i.e., together with a conceptual
 message wrapper (CMW) <span>[<a href="#I-D.ietf-rats-msg-wrap" class="cite xref">I-D.ietf-rats-msg-wrap</a>]</span> structure, as described in
 <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-csr-attestation-32#section-4.3" class="relref">Section 4.3</a> of [<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span>. The lead Attester
-should then pass the nonce to the sub-Attesters. Based on Figure 2 of
+should then pass the nonce, or a value derived from it if the selected
+attestation statement type defines a deterministic nonce transformation
+(see <a href="#operations" class="auto internal xref">Section 8</a>), to the sub-Attesters. Based on Figure 2 of
 <span>[<a href="#I-D.richardson-rats-composite-attesters" class="cite xref">I-D.richardson-rats-composite-attesters</a>]</span>, <a href="#fig-lead-Attester" class="auto internal xref">Figure 2</a> shows an
 example of how a nonce can be distributed among several Attesters in an end
 entity. If multiple <code>respInfo</code> structures are required, the <code>reqInfo</code> and <code>respInfo</code>
@@ -2529,109 +2531,6 @@ Description, and Reference. New items can be added using the Specification Requi
               </tr>
             </tbody>
           </table>
-<p id="section-7.2.1-4">--&gt; Alternative layout based on the proposal from Michael and Esko for discussion:<a href="#section-7.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-7.2.1-5">This document defines a new protocol registry group entitled "Enrollment over Secure
-Transport (EST)" (at <a href="https://www.iana.org/assignments/est">https://www.iana.org/assignments/est</a>) with a new "EST
-Well-Known URI Path Segments" registry containing four columns: Path Segment,
-Short Path Segment, Description, and Reference. New items can be added using the
-Specification Required <span>[<a href="#RFC8615" class="cite xref">RFC8615</a>]</span> process.<a href="#section-7.2.1-5" class="pilcrow">¶</a></p>
-<p id="section-7.2.1-6">The new "Short Path Segment" entry denotes a shorter alternative to Path Segment for
-the resource that can be used by a client in a CoAP request on a well-known EST resource.
-A value "N/A" can be registered to denote that there is no short path segment defined.<a href="#section-7.2.1-6" class="pilcrow">¶</a></p>
-<p id="section-7.2.1-7">The initial entry of this registry contains the path segments defined by <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>
-and <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span> and additional set of two path segments defined by this document:<a href="#section-7.2.1-7" class="pilcrow">¶</a></p>
-<table class="center" id="table-9">
-            <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
-<thead>
-              <tr>
-                <th class="text-left" rowspan="1" colspan="1">Path Segment</th>
-                <th class="text-left" rowspan="1" colspan="1">Short Path Segment</th>
-                <th class="text-left" rowspan="1" colspan="1">Description</th>
-                <th class="text-left" rowspan="1" colspan="1">Reference</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>cacerts</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>crts</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">Distribution of CA Certificates</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
-</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>simpleenroll</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>sen</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">Enrollment of Clients</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
-</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>simplereenroll</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>sren</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">Re-enrollment of Clients</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
-</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>fullcmc</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">N/A</td>
-                <td class="text-left" rowspan="1" colspan="1">Full CMC</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
-</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>serverkeygen</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>skg</code> (PKCS #7)<br><code>skc</code> (application/pkix-cert)</td>
-                <td class="text-left" rowspan="1" colspan="1">Server-Side Key Generation</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
-</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>csrattrs</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>att</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">CSR Attributes</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> <span>[<a href="#RFC9148" class="cite xref">RFC9148</a>]</span>
-</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>getnonce</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>nonce</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">Get Attestation Freshness Nonce</td>
-                <td class="text-left" rowspan="1" colspan="1">This-RFC</td>
-              </tr>
-            </tbody>
-          </table>
 </section>
 </div>
 <div id="json-media-type">
@@ -2861,8 +2760,8 @@ identification syntax is defined for "application/cbor".<a href="#section-7.2.3-
 Content-Formats" subregistry within the "CoRE Parameters" registry
 <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>. This registration uses the IETF Review or IESG Approval range
 defined for that registry.<a href="#section-7.2.4-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-10">
-            <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
+<table class="center" id="table-9">
+            <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Media Type</th>
@@ -2894,8 +2793,8 @@ defined for that registry.<a href="#section-7.2.4-1" class="pilcrow">¶</a></p>
           </h4>
 <p id="section-7.3.1-1">IANA is requested to register the following object identifier in the
 "SMI Security for PKIX CMC Controls" registry (1.3.6.1.5.5.7.7):<a href="#section-7.3.1-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-11">
-            <caption><a href="#table-11" class="selfRef">Table 11</a></caption>
+<table class="center" id="table-10">
+            <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Decimal</th>
@@ -2932,8 +2831,8 @@ defined for that registry.<a href="#section-7.2.4-1" class="pilcrow">¶</a></p>
 <p id="section-7.4-1">IANA is requested to register the following ASN.1 <span>[<a href="#X.680" class="cite xref">X.680</a>]</span> module OID in the
 "SMI Security for PKIX Module Identifier" registry (1.3.6.1.5.5.7.0). This
 OID is defined in <a href="#asn1" class="auto internal xref">Appendix B</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-12">
-          <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
+<table class="center" id="table-11">
+          <caption><a href="#table-11" class="selfRef">Table 11</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Decimal</th>
@@ -2965,24 +2864,23 @@ can generate the nonce locally or obtain it through an interaction
 with the Verifier. According to the IETF RATS architecture <span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span>,
 the Verifier is responsible for validating Evidence about an Attester
 and generating Attestation Results for use by a Relying Party.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">For non-empty nonce values, the following entropy, uniqueness, and
-non-reuse requirements apply. The nonce value MUST contain a random byte
-sequence with at least 64 bits of entropy. The RA/CA MUST ensure that a
-nonce it generates is unique and MUST NOT reuse it. If the RA/CA obtains
-a nonce from the Verifier, it MUST ensure that the Verifier utilizes the
-same policy for uniqueness and non-reuse properties.<a href="#section-8-2" class="pilcrow">¶</a></p>
-<p id="section-8-3">The length of the nonce depends on the remote
-attestation technology in use, as specific nonce
-lengths may be required by the end entity. This specification assumes
-that the RA/CA possesses knowledge, either out-of-band or through the
-len field in the nonce request message, regarding the required nonce length for
-the attestation technology. Nonces of incorrect length may cause the
-remote attestation protocol to fail.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-2">A non-empty nonce MUST contain a random byte sequence with at least 64
+bits of entropy. The RA/CA MUST ensure that a nonce it generates is
+unique and MUST NOT reuse it. If the RA/CA obtains a nonce from the
+Verifier, it MUST ensure that the Verifier uses the same policy for
+uniqueness and non-reuse properties.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">The length of the nonce depends on the remote attestation technology in
+use, as specific nonce lengths may be required by the end entity. This
+specification assumes that the RA/CA possesses knowledge, either
+out-of-band or through the len field in the nonce request message,
+regarding the required nonce length for the attestation technology.
+Nonces of incorrect length may cause the remote attestation protocol to
+fail.<a href="#section-8-3" class="pilcrow">¶</a></p>
 <p id="section-8-4">For instance, the PSA attestation token <span>[<a href="#RFC9783" class="cite xref">RFC9783</a>]</span>
 supports nonce lengths of 32, 48, and 64 bytes. Other attestation
 technologies employ nonces of similar lengths.<a href="#section-8-4" class="pilcrow">¶</a></p>
 <p id="section-8-5">The end entity MUST use the received nonce if the remote attestation
-technology used supports the requested length. If the selected attestation
+technology supports the requested length. If the selected attestation
 statement type defines a deterministic nonce transformation for use by a
 specific Attester or sub-Attester, the end entity MUST apply only that
 transformation and only for the purpose defined by that specification.<a href="#section-8-5" class="pilcrow">¶</a></p>
@@ -3031,32 +2929,34 @@ and CMC. Therefore, the security considerations of these protocols apply. Regard
 the use of attestation statements in a CSR, the security considerations
 outlined in <span>[<a href="#I-D.ietf-lamps-csr-attestation" class="cite xref">I-D.ietf-lamps-csr-attestation</a>]</span> are pertinent to this
 specification.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">The nonce itself does not generally require confidentiality
-protection while maintaining the security properties of the remote
-attestation protocol. However, optional attestation-type-specific
-request or response information conveyed together with the nonce MAY
-reveal privacy-sensitive or deployment-sensitive information, such as
-platform topology, certificate identifiers, or measurement selections.
-<span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> defines the IETF remote attestation architecture and
-extensively discusses nonce-based freshness.<a href="#section-9-2" class="pilcrow">¶</a></p>
-<p id="section-9-3">Specific attestation technology specifications such as <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span> and
-<span>[<a href="#RFC9783" class="cite xref">RFC9783</a>]</span> offer guidance on replay protection using nonces. This
-document defers specific recommendations to those specifications.<a href="#section-9-3" class="pilcrow">¶</a></p>
+<p id="section-9-2">The security properties of remote attestation do not generally depend on
+the confidentiality of the nonce. However, optional
+attestation-type-specific request or response information conveyed
+together with the nonce can reveal privacy-sensitive or
+deployment-sensitive information, such as platform topology, certificate
+identifiers, or measurement selections.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-3"><span>[<a href="#RFC9334" class="cite xref">RFC9334</a>]</span> defines the IETF remote attestation architecture and
+extensively discusses nonce-based freshness. Specific attestation
+technology specifications such as <span>[<a href="#RFC9711" class="cite xref">RFC9711</a>]</span> and <span>[<a href="#RFC9783" class="cite xref">RFC9783</a>]</span> offer
+guidance on replay protection using nonces. This document defers specific
+recommendations to those specifications.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">If an attestation technology or Composite Attester profile transforms a
 received nonce before embedding it in Evidence, that transformation MUST
-be deterministic, MUST preserve at least the minimum entropy required by
-the attestation technology, and MUST provide the Verifier with enough
-information to reconstruct or validate the transformed value when needed.
+be deterministic and MUST preserve at least the minimum entropy required
+by the attestation technology. The defining specification MUST ensure
+that the Verifier has enough information to reconstruct or validate the
+transformed value.
 Specifications defining such transformations SHOULD use well-analyzed
 cryptographic mechanisms for nonce expansion or size adjustment to ensure
 that the resulting entropy and security properties remain acceptable.<a href="#section-9-4" class="pilcrow">¶</a></p>
 <p id="section-9-5">If attestation-type-specific nonce exchange information is used, the
 corresponding specification MUST define the syntax and semantics of that
 information, including any confidentiality requirements. Implementations
-SHOULD minimize the amount of such information returned by the RA/CA and
-SHOULD protect it using the message or transport security mechanisms of
-the enrollment protocol when confidentiality is required by deployment
-policy or by the attestation technology specification.<a href="#section-9-5" class="pilcrow">¶</a></p>
+SHOULD minimize the amount of such information returned by the RA/CA. When
+confidentiality is required by deployment policy or by the attestation
+technology specification, implementations MUST protect this information
+using the message or transport security mechanisms of the enrollment
+protocol.<a href="#section-9-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -3210,7 +3110,7 @@ policy or by the attestation technology specification.<a href="#section-9-5" cla
 challenge-response exchange described in <span><a href="https://rfc-editor.org/rfc/rfc9684#section-2.1.1.3.2" class="relref">Section 2.1.1.3.2</a> of [<a href="#RFC9684" class="cite xref">RFC9684</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">In this example, the end entity wants to obtain a nonce for use with a TPM 2.0
 attestation statement. The end entity first requests a nonce from the
-Relying Party or Verifier. The <code>reqInfo</code> field can carry optional information
+RA/CA. The <code>reqInfo</code> field can carry optional information
 from the Attester side that helps the Verifier prepare the TPM 2.0 challenge,
 such as which Attestation Key certificates are available.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 <p id="appendix-A-3">The resulting <code>NonceResponse</code> corresponds to the TPM 2.0 challenge parameters
@@ -3219,9 +3119,9 @@ challenge is conveyed in this document's top-level <code>nonce</code> field rath
 inside <code>respInfo</code>. The remaining challenge parameters, such as the selected PCR
 bank, PCR indices, and the selected Attestation Key certificate, are conveyed
 in <code>respInfo</code>.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
-<p id="appendix-A-4">The exact syntax of <code>reqInfo</code> and <code>respInfo</code> is defined by the nonce-exchange
-type identified in the <code>type</code> field. The JSON objects below are only examples
-used to explain the role of these fields:<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">The exact syntax of <code>reqInfo</code> and <code>respInfo</code> is defined by the attestation
+statement type identified in the <code>type</code> field. The JSON-like notation below
+shows examples only and is used to explain the role of these fields:<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A-5">
 <pre>
 NonceRequest = {
@@ -3270,8 +3170,8 @@ returned nonce.<a href="#appendix-A-7.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="appendix-A-8">This example is intended only to explain the purpose of <code>reqInfo</code> and
-<code>respInfo</code>. It does not define a new nonce-exchange type, a new OID, or a TPM
-attestation profile. The TPM quote itself, its signature, and any optional
+<code>respInfo</code>. It does not define a new attestation statement type, a new OID,
+or a TPM attestation profile. The TPM quote itself, its signature, and any optional
 unsigned PCR values are conveyed later as Evidence and are not part of
 <code>respInfo</code>.<a href="#appendix-A-8" class="pilcrow">¶</a></p>
 </section>

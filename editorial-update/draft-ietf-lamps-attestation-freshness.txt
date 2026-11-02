@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 1 May 2027                                            J. Mandel
+Expires: 6 May 2027                                            J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                         28 October 2026
+                                                         2 November 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 May 2027.
+   This Internet-Draft will expire on 6 May 2027.
 
 Copyright Notice
 
@@ -263,7 +263,9 @@ Table of Contents
    together with a conceptual message wrapper (CMW)
    [I-D.ietf-rats-msg-wrap] structure, as described in Section 4.3 of
    [I-D.ietf-lamps-csr-attestation].  The lead Attester should then pass
-   the nonce to the sub-Attesters.  Based on Figure 2 of
+   the nonce, or a value derived from it if the selected attestation
+   statement type defines a deterministic nonce transformation (see
+   Section 8), to the sub-Attesters.  Based on Figure 2 of
    [I-D.richardson-rats-composite-attesters], Figure 2 shows an example
    of how a nonce can be distributed among several Attesters in an end
    entity.  If multiple respInfo structures are required, the reqInfo
@@ -885,55 +887,6 @@ Table of Contents
 
                                  Table 8
 
-   --> Alternative layout based on the proposal from Michael and Esko
-   for discussion:
-
-   This document defines a new protocol registry group entitled
-   "Enrollment over Secure Transport (EST)" (at
-   https://www.iana.org/assignments/est
-   (https://www.iana.org/assignments/est)) with a new "EST Well-Known
-   URI Path Segments" registry containing four columns: Path Segment,
-   Short Path Segment, Description, and Reference.  New items can be
-   added using the Specification Required [RFC8615] process.
-
-   The new "Short Path Segment" entry denotes a shorter alternative to
-   Path Segment for the resource that can be used by a client in a CoAP
-   request on a well-known EST resource.  A value "N/A" can be
-   registered to denote that there is no short path segment defined.
-
-   The initial entry of this registry contains the path segments defined
-   by [RFC7030] and [RFC9148] and additional set of two path segments
-   defined by this document:
-
-   +================+===================+=================+===========+
-   | Path Segment   | Short Path        | Description     | Reference |
-   |                | Segment           |                 |           |
-   +================+===================+=================+===========+
-   | cacerts        | crts              | Distribution of | [RFC7030] |
-   |                |                   | CA Certificates | [RFC9148] |
-   +----------------+-------------------+-----------------+-----------+
-   | simpleenroll   | sen               | Enrollment of   | [RFC7030] |
-   |                |                   | Clients         | [RFC9148] |
-   +----------------+-------------------+-----------------+-----------+
-   | simplereenroll | sren              | Re-enrollment   | [RFC7030] |
-   |                |                   | of Clients      | [RFC9148] |
-   +----------------+-------------------+-----------------+-----------+
-   | fullcmc        | N/A               | Full CMC        | [RFC7030] |
-   |                |                   |                 | [RFC9148] |
-   +----------------+-------------------+-----------------+-----------+
-   | serverkeygen   | skg (PKCS #7)     | Server-Side Key | [RFC7030] |
-   |                | skc (application/ | Generation      | [RFC9148] |
-   |                | pkix-cert)        |                 |           |
-   +----------------+-------------------+-----------------+-----------+
-   | csrattrs       | att               | CSR Attributes  | [RFC7030] |
-   |                |                   |                 | [RFC9148] |
-   +----------------+-------------------+-----------------+-----------+
-   | getnonce       | nonce             | Get Attestation | This-RFC  |
-   |                |                   | Freshness Nonce |           |
-   +----------------+-------------------+-----------------+-----------+
-
-                                 Table 9
-
 7.2.2.  JSON Media Type
 
    IANA is requested to register the following media types in the "Media
@@ -1046,7 +999,7 @@ Table of Contents
      | application/est-attestation-freshness+cbor | TBD3 | This-RFC  |
      +--------------------------------------------+------+-----------+
 
-                                  Table 10
+                                  Table 9
 
 7.3.  CMC
 
@@ -1063,7 +1016,7 @@ Table of Contents
                 | TBD5    | id-cmc-nonceResp | This-RFC  |
                 +---------+------------------+-----------+
 
-                                 Table 11
+                                 Table 10
 
 7.4.  ASN.1 Module
 
@@ -1077,7 +1030,7 @@ Table of Contents
               | TBDMOD  | id-mod-att-fresh-req | This-RFC   |
               +---------+----------------------+------------+
 
-                                  Table 12
+                                  Table 11
 
 8.  Operational Considerations
 
@@ -1088,13 +1041,11 @@ Table of Contents
    an Attester and generating Attestation Results for use by a Relying
    Party.
 
-   For non-empty nonce values, the following entropy, uniqueness, and
-   non-reuse requirements apply.  The nonce value MUST contain a random
-   byte sequence with at least 64 bits of entropy.  The RA/CA MUST
-   ensure that a nonce it generates is unique and MUST NOT reuse it.  If
-   the RA/CA obtains a nonce from the Verifier, it MUST ensure that the
-   Verifier utilizes the same policy for uniqueness and non-reuse
-   properties.
+   A non-empty nonce MUST contain a random byte sequence with at least
+   64 bits of entropy.  The RA/CA MUST ensure that a nonce it generates
+   is unique and MUST NOT reuse it.  If the RA/CA obtains a nonce from
+   the Verifier, it MUST ensure that the Verifier uses the same policy
+   for uniqueness and non-reuse properties.
 
    The length of the nonce depends on the remote attestation technology
    in use, as specific nonce lengths may be required by the end entity.
@@ -1109,7 +1060,7 @@ Table of Contents
    employ nonces of similar lengths.
 
    The end entity MUST use the received nonce if the remote attestation
-   technology used supports the requested length.  If the selected
+   technology supports the requested length.  If the selected
    attestation statement type defines a deterministic nonce
    transformation for use by a specific Attester or sub-Attester, the
    end entity MUST apply only that transformation and only for the
@@ -1164,37 +1115,37 @@ Table of Contents
    CSR, the security considerations outlined in
    [I-D.ietf-lamps-csr-attestation] are pertinent to this specification.
 
-   The nonce itself does not generally require confidentiality
-   protection while maintaining the security properties of the remote
-   attestation protocol.  However, optional attestation-type-specific
-   request or response information conveyed together with the nonce MAY
-   reveal privacy-sensitive or deployment-sensitive information, such as
-   platform topology, certificate identifiers, or measurement
-   selections.  [RFC9334] defines the IETF remote attestation
-   architecture and extensively discusses nonce-based freshness.
+   The security properties of remote attestation do not generally depend
+   on the confidentiality of the nonce.  However, optional attestation-
+   type-specific request or response information conveyed together with
+   the nonce can reveal privacy-sensitive or deployment-sensitive
+   information, such as platform topology, certificate identifiers, or
+   measurement selections.
 
-   Specific attestation technology specifications such as [RFC9711] and
-   [RFC9783] offer guidance on replay protection using nonces.  This
-   document defers specific recommendations to those specifications.
+   [RFC9334] defines the IETF remote attestation architecture and
+   extensively discusses nonce-based freshness.  Specific attestation
+   technology specifications such as [RFC9711] and [RFC9783] offer
+   guidance on replay protection using nonces.  This document defers
+   specific recommendations to those specifications.
 
    If an attestation technology or Composite Attester profile transforms
    a received nonce before embedding it in Evidence, that transformation
-   MUST be deterministic, MUST preserve at least the minimum entropy
-   required by the attestation technology, and MUST provide the Verifier
-   with enough information to reconstruct or validate the transformed
-   value when needed.  Specifications defining such transformations
-   SHOULD use well-analyzed cryptographic mechanisms for nonce expansion
-   or size adjustment to ensure that the resulting entropy and security
-   properties remain acceptable.
+   MUST be deterministic and MUST preserve at least the minimum entropy
+   required by the attestation technology.  The defining specification
+   MUST ensure that the Verifier has enough information to reconstruct
+   or validate the transformed value.  Specifications defining such
+   transformations SHOULD use well-analyzed cryptographic mechanisms for
+   nonce expansion or size adjustment to ensure that the resulting
+   entropy and security properties remain acceptable.
 
    If attestation-type-specific nonce exchange information is used, the
    corresponding specification MUST define the syntax and semantics of
    that information, including any confidentiality requirements.
    Implementations SHOULD minimize the amount of such information
-   returned by the RA/CA and SHOULD protect it using the message or
-   transport security mechanisms of the enrollment protocol when
-   confidentiality is required by deployment policy or by the
-   attestation technology specification.
+   returned by the RA/CA.  When confidentiality is required by
+   deployment policy or by the attestation technology specification,
+   implementations MUST protect this information using the message or
+   transport security mechanisms of the enrollment protocol.
 
 10.  References
 
@@ -1372,10 +1323,10 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
 
    In this example, the end entity wants to obtain a nonce for use with
    a TPM 2.0 attestation statement.  The end entity first requests a
-   nonce from the Relying Party or Verifier.  The reqInfo field can
-   carry optional information from the Attester side that helps the
-   Verifier prepare the TPM 2.0 challenge, such as which Attestation Key
-   certificates are available.
+   nonce from the RA/CA.  The reqInfo field can carry optional
+   information from the Attester side that helps the Verifier prepare
+   the TPM 2.0 challenge, such as which Attestation Key certificates are
+   available.
 
    The resulting NonceResponse corresponds to the TPM 2.0 challenge
    parameters from [RFC9684], with one exception: the nonce-value from
@@ -1384,9 +1335,10 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
    parameters, such as the selected PCR bank, PCR indices, and the
    selected Attestation Key certificate, are conveyed in respInfo.
 
-   The exact syntax of reqInfo and respInfo is defined by the nonce-
-   exchange type identified in the type field.  The JSON objects below
-   are only examples used to explain the role of these fields:
+   The exact syntax of reqInfo and respInfo is defined by the
+   attestation statement type identified in the type field.  The JSON-
+   like notation below shows examples only and is used to explain the
+   role of these fields:
 
    NonceRequest = {
      "len": 32,
@@ -1431,10 +1383,10 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
       Evidence associated with the returned nonce.
 
    This example is intended only to explain the purpose of reqInfo and
-   respInfo.  It does not define a new nonce-exchange type, a new OID,
-   or a TPM attestation profile.  The TPM quote itself, its signature,
-   and any optional unsigned PCR values are conveyed later as Evidence
-   and are not part of respInfo.
+   respInfo.  It does not define a new attestation statement type, a new
+   OID, or a TPM attestation profile.  The TPM quote itself, its
+   signature, and any optional unsigned PCR values are conveyed later as
+   Evidence and are not part of respInfo.
 
 Appendix B.  ASN.1 Module
 
