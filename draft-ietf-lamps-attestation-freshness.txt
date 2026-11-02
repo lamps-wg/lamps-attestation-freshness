@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 3 May 2027                                            J. Mandel
+Expires: 6 May 2027                                            J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                         30 October 2026
+                                                         2 November 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 May 2027.
+   This Internet-Draft will expire on 6 May 2027.
 
 Copyright Notice
 
@@ -263,7 +263,9 @@ Table of Contents
    together with a conceptual message wrapper (CMW)
    [I-D.ietf-rats-msg-wrap] structure, as described in Section 4.3 of
    [I-D.ietf-lamps-csr-attestation].  The lead Attester should then pass
-   the nonce to the sub-Attesters.  Based on Figure 2 of
+   the nonce, or a value derived from it if the selected attestation
+   statement type defines a deterministic nonce transformation (see
+   Section 8), to the sub-Attesters.  Based on Figure 2 of
    [I-D.richardson-rats-composite-attesters], Figure 2 shows an example
    of how a nonce can be distributed among several Attesters in an end
    entity.  If multiple respInfo structures are required, the reqInfo
@@ -397,7 +399,7 @@ Table of Contents
        -- contains the nonce of length len
        -- a zero-length OCTET STRING indicates that no freshness
        --   proof is required
-       expiry   INTEGER OPTIONAL,
+       expiry   INTEGER (0..MAX) OPTIONAL,
        -- indicates how long in seconds the nonce issuer considers
        --   the nonce valid
        respTypeInfo NonceResponseTypeInfo OPTIONAL
@@ -813,79 +815,75 @@ Table of Contents
    by [RFC7030], [RFC9148], and [RFC8295] and additional two path
    segments defined by this document:
 
-    +======================+=============================+===========+
-    | Path Segment         | Description                 | Reference |
-    +======================+=============================+===========+
-    | cacerts              | Distribution of CA          | [RFC7030] |
-    |                      | Certificates over HTTP      |           |
-    +----------------------+-----------------------------+-----------+
-    | simpleenroll         | Enrollment of Clients over  | [RFC7030] |
-    |                      | HTTP                        |           |
-    +----------------------+-----------------------------+-----------+
-    | simplereenroll       | Re-enrollment of Clients    | [RFC7030] |
-    |                      | over HTTP                   |           |
-    +----------------------+-----------------------------+-----------+
-    | fullcmc              | Full CMC over HTTP          | [RFC7030] |
-    +----------------------+-----------------------------+-----------+
-    | serverkeygen         | Server-Side Key Generation  | [RFC7030] |
-    |                      | over HTTP                   | [RFC8295] |
-    +----------------------+-----------------------------+-----------+
-    | serverkeygen\return  | Server-Side Key Generation  | [RFC8295] |
-    |                      | Receipts & Errors over HTTP |           |
-    +----------------------+-----------------------------+-----------+
-    | csrattrs             | CSR Attributes over HTTP    | [RFC7030] |
-    +----------------------+-----------------------------+-----------+
-    | pal                  | Package Availability List   | [RFC8295] |
-    |                      | over HTTP                   |           |
-    +----------------------+-----------------------------+-----------+
-    | eecerts              | Distribution of End-Entity  | [RFC8295] |
-    |                      | Certificates over HTTP      |           |
-    +----------------------+-----------------------------+-----------+
-    | crls                 | Distribution of CRLs over   | [RFC8295] |
-    |                      | HTTP                        |           |
-    +----------------------+-----------------------------+-----------+
-    | symmetrickeys        | Distribution of Symmetric   | [RFC8295] |
-    |                      | Keys over HTTP              |           |
-    +----------------------+-----------------------------+-----------+
-    | symmetrickeys\return | Return of Symmetric Keys    | [RFC8295] |
-    |                      | Receipts & Errors over HTTP |           |
-    +----------------------+-----------------------------+-----------+
-    | firmware             | Distribution of Firmware    | [RFC8295] |
-    |                      | over HTTP                   |           |
-    +----------------------+-----------------------------+-----------+
-    | firmware\return      | Return of Firmware Receipts | [RFC8295] |
-    |                      | & Errors over HTTP          |           |
-    +----------------------+-----------------------------+-----------+
-    | tamp                 | Distribution of TAMP        | [RFC8295] |
-    |                      | Messages over HTTP          |           |
-    +----------------------+-----------------------------+-----------+
-    | tamp\return          | Return of TAMP Receipts &   | [RFC8295] |
-    |                      | Errors over HTTP            |           |
-    +----------------------+-----------------------------+-----------+
-    | crts                 | Distribution of CA          | [RFC9148] |
-    |                      | Certificates over CoAP      |           |
-    +----------------------+-----------------------------+-----------+
-    | sen                  | Enrollment of Clients over  | [RFC9148] |
-    |                      | CoAP                        |           |
-    +----------------------+-----------------------------+-----------+
-    | sren                 | Re-enrollment of Clients    | [RFC9148] |
-    |                      | over CoAP                   |           |
-    +----------------------+-----------------------------+-----------+
-    | skg                  | Server-Side Key Generation  | [RFC9148] |
-    |                      | (PKCS #7) over CoAP         |           |
-    +----------------------+-----------------------------+-----------+
-    | skc                  | Server-Side Key Generation  | [RFC9148] |
-    |                      | (application/pkix-cert)     |           |
-    |                      | over CoAP                   |           |
-    +----------------------+-----------------------------+-----------+
-    | att                  | CSR Attributes over CoAP    | [RFC9148] |
-    +----------------------+-----------------------------+-----------+
-    | getnonce             | Get Attestation Freshness   | This-RFC  |
-    |                      | Nonce over HTTP             |           |
-    +----------------------+-----------------------------+-----------+
-    | nonce                | Get Attestation Freshness   | This-RFC  |
-    |                      | Nonce over CoAP             |           |
-    +----------------------+-----------------------------+-----------+
+    +================+===================================+===========+
+    | Path Segment   | Description                       | Reference |
+    +================+===================================+===========+
+    | cacerts        | Distribution of CA Certificates   | [RFC7030] |
+    |                | over HTTP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | simpleenroll   | Enrollment of Clients over HTTP   | [RFC7030] |
+    +----------------+-----------------------------------+-----------+
+    | simplereenroll | Re-enrollment of Clients over     | [RFC7030] |
+    |                | HTTP                              |           |
+    +----------------+-----------------------------------+-----------+
+    | fullcmc        | Full CMC over HTTP                | [RFC7030] |
+    +----------------+-----------------------------------+-----------+
+    | serverkeygen   | Server-Side Key Generation over   | [RFC7030] |
+    |                | HTTP                              | [RFC8295] |
+    +----------------+-----------------------------------+-----------+
+    | serverkeygen/  | Server-Side Key Generation        | [RFC8295] |
+    | return         | Receipts & Errors over HTTP       |           |
+    +----------------+-----------------------------------+-----------+
+    | csrattrs       | CSR Attributes over HTTP          | [RFC7030] |
+    +----------------+-----------------------------------+-----------+
+    | pal            | Package Availability List over    | [RFC8295] |
+    |                | HTTP                              |           |
+    +----------------+-----------------------------------+-----------+
+    | eecerts        | Distribution of End-Entity        | [RFC8295] |
+    |                | Certificates over HTTP            |           |
+    +----------------+-----------------------------------+-----------+
+    | crls           | Distribution of CRLs over HTTP    | [RFC8295] |
+    +----------------+-----------------------------------+-----------+
+    | symmetrickeys  | Distribution of Symmetric Keys    | [RFC8295] |
+    |                | over HTTP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | symmetrickeys/ | Return of Symmetric Keys Receipts | [RFC8295] |
+    | return         | & Errors over HTTP                |           |
+    +----------------+-----------------------------------+-----------+
+    | firmware       | Distribution of Firmware over     | [RFC8295] |
+    |                | HTTP                              |           |
+    +----------------+-----------------------------------+-----------+
+    | firmware/      | Return of Firmware Receipts &     | [RFC8295] |
+    | return         | Errors over HTTP                  |           |
+    +----------------+-----------------------------------+-----------+
+    | tamp           | Distribution of TAMP Messages     | [RFC8295] |
+    |                | over HTTP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | tamp/return    | Return of TAMP Receipts & Errors  | [RFC8295] |
+    |                | over HTTP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | crts           | Distribution of CA Certificates   | [RFC9148] |
+    |                | over CoAP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | sen            | Enrollment of Clients over CoAP   | [RFC9148] |
+    +----------------+-----------------------------------+-----------+
+    | sren           | Re-enrollment of Clients over     | [RFC9148] |
+    |                | CoAP                              |           |
+    +----------------+-----------------------------------+-----------+
+    | skg            | Server-Side Key Generation (PKCS  | [RFC9148] |
+    |                | #7) over CoAP                     |           |
+    +----------------+-----------------------------------+-----------+
+    | skc            | Server-Side Key Generation        | [RFC9148] |
+    |                | (application/pkix-cert) over CoAP |           |
+    +----------------+-----------------------------------+-----------+
+    | att            | CSR Attributes over CoAP          | [RFC9148] |
+    +----------------+-----------------------------------+-----------+
+    | getnonce       | Get Attestation Freshness Nonce   | This-RFC  |
+    |                | over HTTP                         |           |
+    +----------------+-----------------------------------+-----------+
+    | nonce          | Get Attestation Freshness Nonce   | This-RFC  |
+    |                | over CoAP                         |           |
+    +----------------+-----------------------------------+-----------+
 
                                  Table 8
 
@@ -1043,24 +1041,26 @@ Table of Contents
    an Attester and generating Attestation Results for use by a Relying
    Party.
 
-   The nonce value MUST contain a random byte sequence with at least 64
-   bits of entropy.  The RA/CA MUST ensure that a nonce it generates is
-   unique and MUST NOT be reused.  If the RA/CA obtains a nonce from the
-   Verifier, it MUST ensure that the Verifier utilizes the same policy
-   for uniqueness and non-reuse properties.  The length of the nonce
-   depends on the remote attestation technology in use, as specific
-   nonce lengths may be required by the end entity.  This specification
-   assumes that the RA/CA possesses knowledge, either out-of-band or
-   through the len field in the nonce request message, regarding the
-   required nonce length for the attestation technology.  Nonces of
-   incorrect length may cause the remote attestation protocol to fail.
+   A non-empty nonce MUST contain a random byte sequence with at least
+   64 bits of entropy.  The RA/CA MUST ensure that a nonce it generates
+   is unique and MUST NOT reuse it.  If the RA/CA obtains a nonce from
+   the Verifier, it MUST ensure that the Verifier uses the same policy
+   for uniqueness and non-reuse properties.
+
+   The length of the nonce depends on the remote attestation technology
+   in use, as specific nonce lengths may be required by the end entity.
+   This specification assumes that the RA/CA possesses knowledge, either
+   out-of-band or through the len field in the nonce request message,
+   regarding the required nonce length for the attestation technology.
+   Nonces of incorrect length may cause the remote attestation protocol
+   to fail.
 
    For instance, the PSA attestation token [RFC9783] supports nonce
    lengths of 32, 48, and 64 bytes.  Other attestation technologies
    employ nonces of similar lengths.
 
    The end entity MUST use the received nonce if the remote attestation
-   technology used supports the requested length.  If the selected
+   technology supports the requested length.  If the selected
    attestation statement type defines a deterministic nonce
    transformation for use by a specific Attester or sub-Attester, the
    end entity MUST apply only that transformation and only for the
@@ -1115,37 +1115,37 @@ Table of Contents
    CSR, the security considerations outlined in
    [I-D.ietf-lamps-csr-attestation] are pertinent to this specification.
 
-   The nonce itself does not generally require confidentiality
-   protection while maintaining the security properties of the remote
-   attestation protocol.  However, optional attestation-type-specific
-   request or response information conveyed together with the nonce MAY
-   reveal privacy-sensitive or deployment-sensitive information, such as
-   platform topology, certificate identifiers, or measurement
-   selections.  [RFC9334] defines the IETF remote attestation
-   architecture and extensively discusses nonce-based freshness.
+   The security properties of remote attestation do not generally depend
+   on the confidentiality of the nonce.  However, optional attestation-
+   type-specific request or response information conveyed together with
+   the nonce can reveal privacy-sensitive or deployment-sensitive
+   information, such as platform topology, certificate identifiers, or
+   measurement selections.
 
-   Specific attestation technology specifications such as [RFC9711] and
-   [RFC9783] offer guidance on replay protection using nonces.  This
-   document defers specific recommendations to those specifications.
+   [RFC9334] defines the IETF remote attestation architecture and
+   extensively discusses nonce-based freshness.  Specific attestation
+   technology specifications such as [RFC9711] and [RFC9783] offer
+   guidance on replay protection using nonces.  This document defers
+   specific recommendations to those specifications.
 
    If an attestation technology or Composite Attester profile transforms
    a received nonce before embedding it in Evidence, that transformation
-   MUST be deterministic, MUST preserve at least the minimum entropy
-   required by the attestation technology, and MUST provide the Verifier
-   with enough information to reconstruct or validate the transformed
-   value when needed.  Specifications defining such transformations
-   SHOULD use well-analyzed cryptographic mechanisms for nonce expansion
-   or size adjustment to ensure that the resulting entropy and security
-   properties remain acceptable.
+   MUST be deterministic and MUST preserve at least the minimum entropy
+   required by the attestation technology.  The defining specification
+   MUST ensure that the Verifier has enough information to reconstruct
+   or validate the transformed value.  Specifications defining such
+   transformations SHOULD use well-analyzed cryptographic mechanisms for
+   nonce expansion or size adjustment to ensure that the resulting
+   entropy and security properties remain acceptable.
 
    If attestation-type-specific nonce exchange information is used, the
    corresponding specification MUST define the syntax and semantics of
    that information, including any confidentiality requirements.
    Implementations SHOULD minimize the amount of such information
-   returned by the RA/CA and SHOULD protect it using the message or
-   transport security mechanisms of the enrollment protocol when
-   confidentiality is required by deployment policy or by the
-   attestation technology specification.
+   returned by the RA/CA.  When confidentiality is required by
+   deployment policy or by the attestation technology specification,
+   implementations MUST protect this information using the message or
+   transport security mechanisms of the enrollment protocol.
 
 10.  References
 
@@ -1323,10 +1323,10 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
 
    In this example, the end entity wants to obtain a nonce for use with
    a TPM 2.0 attestation statement.  The end entity first requests a
-   nonce from the Relying Party or Verifier.  The reqInfo field can
-   carry optional information from the Attester side that helps the
-   Verifier prepare the TPM 2.0 challenge, such as which Attestation Key
-   certificates are available.
+   nonce from the RA/CA.  The reqInfo field can carry optional
+   information from the Attester side that helps the Verifier prepare
+   the TPM 2.0 challenge, such as which Attestation Key certificates are
+   available.
 
    The resulting NonceResponse corresponds to the TPM 2.0 challenge
    parameters from [RFC9684], with one exception: the nonce-value from
@@ -1335,9 +1335,10 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
    parameters, such as the selected PCR bank, PCR indices, and the
    selected Attestation Key certificate, are conveyed in respInfo.
 
-   The exact syntax of reqInfo and respInfo is defined by the nonce-
-   exchange type identified in the type field.  The JSON objects below
-   are only examples used to explain the role of these fields:
+   The exact syntax of reqInfo and respInfo is defined by the
+   attestation statement type identified in the type field.  The JSON-
+   like notation below shows examples only and is used to explain the
+   role of these fields:
 
    NonceRequest = {
      "len": 32,
@@ -1382,10 +1383,10 @@ Appendix A.  Example: TPM 2.0 PCR Selection for reqInfo and respInfo
       Evidence associated with the returned nonce.
 
    This example is intended only to explain the purpose of reqInfo and
-   respInfo.  It does not define a new nonce-exchange type, a new OID,
-   or a TPM attestation profile.  The TPM quote itself, its signature,
-   and any optional unsigned PCR values are conveyed later as Evidence
-   and are not part of respInfo.
+   respInfo.  It does not define a new attestation statement type, a new
+   OID, or a TPM attestation profile.  The TPM quote itself, its
+   signature, and any optional unsigned PCR values are conveyed later as
+   Evidence and are not part of respInfo.
 
 Appendix B.  ASN.1 Module
 
@@ -1463,7 +1464,7 @@ Appendix B.  ASN.1 Module
        -- contains the nonce of length len
        -- a zero-length OCTET STRING indicates that no freshness
        --   proof is required
-       expiry   INTEGER OPTIONAL,
+       expiry   INTEGER (0..MAX) OPTIONAL,
        -- indicates how long in seconds the nonce issuer considers
        --   the nonce valid
        respTypeInfo NonceResponseTypeInfo OPTIONAL
