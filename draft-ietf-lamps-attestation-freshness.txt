@@ -5,11 +5,11 @@
 LAMPS Working Group                                        H. Tschofenig
 Internet-Draft                                              H. Brockhaus
 Intended status: Standards Track                                 Siemens
-Expires: 6 May 2027                                            J. Mandel
+Expires: 20 May 2027                                           J. Mandel
                                                                   AKAYLA
                                                                S. Turner
                                                                    sn3rd
-                                                         2 November 2026
+                                                        16 November 2026
 
 
   Requesting a Freshness Nonce for Attestation Evidence in Certificate
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 May 2027.
+   This Internet-Draft will expire on 20 May 2027.
 
 Copyright Notice
 
@@ -1187,9 +1187,9 @@ Table of Contents
               Ounsworth, M., Tschofenig, H., Birkholz, H., Wiseman, M.,
               and N. Smith, "Use of Remote Attestation with
               Certification Signing Requests", Work in Progress,
-              Internet-Draft, draft-ietf-lamps-csr-attestation-32, 22
-              October 2026, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-lamps-csr-attestation-32>.
+              Internet-Draft, draft-ietf-lamps-csr-attestation-33, 2
+              November 2026, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lamps-csr-attestation-33>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
